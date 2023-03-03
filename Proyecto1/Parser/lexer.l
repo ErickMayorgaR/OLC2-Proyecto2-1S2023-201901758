@@ -53,7 +53,7 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
 "//"[^\n]*\n            ; /* comentarios de una linea */
 
-[ \t\v\r\n\f]             ; /* caracteres en blanco */
+[ \t\v\r\n\f]             ; /* caracteres en blanco */                
     /* Lexemas */
     /* defincion moderna
         token::ID ID sin caracteres especiales
@@ -63,7 +63,23 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 "-"     return Parser::symbol_type( token::MENOS, loc );
 "*"     return Parser::symbol_type( token::POR, loc );
 "/"     return Parser::symbol_type( token::DIV, loc );
+"^"     return Parser::symbol_type( token::POT, loc );
+"%"     return Parser::symbol_type( token::MOD, loc );
+"++"     return Parser::symbol_type( token::INC, loc );
 
+    /* Caracteres para operaciones lógicas */
+"&&" return Parser::symbol_type(token::AND, loc);
+"||" return Parser::symbol_type(token::OR, loc);
+"!"  return Parser::symbol_type(token::NOT, loc);
+
+    /*Caracteres para operaciones comparativas */
+"==" return Parser::symbol_type(token::EQU, loc); //Equal
+"!=" return Parser::symbol_type(token::DIFF, loc);//Not Equal 
+">" return Parser::symbol_type(token::MAYOR, loc);
+"<" return Parser::symbol_type(token::MENOR, loc);
+">=" return Parser::symbol_type(token::MAYEQU, loc);
+"<=" return Parser::symbol_type(token::MENEQU, loc);
+  
     /* defincion clásica / para caracteres especiales */
 ";"     return Parser::symbol_type( token_type(';'), loc );
 
@@ -76,20 +92,29 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
     /* TOKENS  */
 "printf"    return Parser::symbol_type( token::PRINTF, loc );
+"if"    return Parser::symbol_type( token::IF, loc );
+"else"    return Parser::symbol_type( token::ELSE, loc );
+"while"    return Parser::symbol_type( token::WHILE, loc );
+"for"    return Parser::symbol_type( token::FOR, loc );
 "void"    return Parser::symbol_type( token::VOID, loc );
-"int"    return Parser::symbol_type( token::INT, loc );
 "main"    return Parser::symbol_type( token::RMAIN, loc );
+"NULL"    return Parser::symbol_type( token::NLL, loc);
+
+    /* TIPOS DE DATOS */
+"int"    return Parser::symbol_type( token::INT, loc );
+"float"  return Parser::symbol_type( token::FLOAT, loc );
+"bool"   return Parser::symbol_type( token::BOOL, loc );
 
 {ID}  return Parser::make_ID(yytext, loc);
 {NUMERO} return Parser::make_NUMERO(yytext, loc);
 \"(\\.|[^"\\])*\" return Parser::make_STRING (yytext, loc);
 
+
+[=;]      return Parser::make_STRING (yytext[0], loc);
 .  {std::cerr<<loc <<": "<<"error token no esperado"<<  std::endl; }
 
     /*si no se usa yyterminate() se agrega lo siguiente*/
     /* <<EOF>> {return Parser::make_END(loc);} */
-
-
 
 %%
 

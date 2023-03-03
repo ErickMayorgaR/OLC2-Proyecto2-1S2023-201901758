@@ -10,7 +10,7 @@ operation::operation(int line, int col, expression *op_izq, expression *op_der, 
 
 symbol operation::ejecutar(environment *env, ast *tree)
 {
-    symbol sym = *new symbol(this->Line,this->Col,"",NULO,"",0);
+    symbol sym = *new symbol(this->Line,this->Col,"",NULO,"",0,0.0,false);
     symbol op1 = this->Op_izq->ejecutar(env, tree);
     symbol op2 = this->Op_der->ejecutar(env, tree);
 
@@ -28,11 +28,17 @@ symbol operation::ejecutar(environment *env, ast *tree)
     {
         if(Dominante == INTEGER)
         {
-            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal+op2.NumVal);
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal+op2.NumVal,0.0,false);
         }
         else if(Dominante == STRING)
         {
-            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,op1.StrVal+op2.StrVal,0);
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,op1.StrVal+op2.StrVal,0,0.0,false);
+        }
+        else if(Dominante == FLOAT){
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal+op2.FloatVal,false);
+        }
+        else if(Dominante == NULO){
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,0.0,op1.BoolVal+op2.BoolVal);
         }
         else
         {
@@ -44,7 +50,15 @@ symbol operation::ejecutar(environment *env, ast *tree)
     {
         if(Dominante == INTEGER)
         {
-            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal-op2.NumVal);
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal-op2.NumVal,0.0, false);
+        }
+        else if(Dominante == FLOAT)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal-op2.FloatVal,false);
+        }
+        else if(Dominante == NULO)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,0.0,op1.BoolVal-op2.BoolVal);
         }
         else
         {
@@ -56,7 +70,15 @@ symbol operation::ejecutar(environment *env, ast *tree)
     {
         if(Dominante == INTEGER)
         {
-            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal*op2.NumVal);
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal*op2.NumVal,0.0,false);
+        }
+        else if(Dominante == FLOAT)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal*op2.FloatVal,false);
+        }
+        else if(Dominante == NULO)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,0.0,op1.BoolVal*op2.BoolVal);
         }
         else
         {
@@ -68,7 +90,47 @@ symbol operation::ejecutar(environment *env, ast *tree)
     {
         if(Dominante == INTEGER)
         {
-            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal/op2.NumVal);
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal/op2.NumVal,0.0,false);
+        }
+        else if(Dominante == FLOAT)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal/op2.FloatVal,false);
+        }
+        else if(Dominante == NULO)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,0.0,op1.BoolVal/op2.BoolVal);
+        }
+        else
+        {
+            //se reporta un error
+            tree->ErrorOut += "Error: tipo incorrecto";
+        }
+    }
+    else if(this->Operator == "%")
+    {
+        if(Dominante == INTEGER)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal%op2.NumVal,0.0,false);
+        }
+        else if(Dominante == NULO)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,0.0,op1.BoolVal%op2.BoolVal);
+        }
+        else
+        {
+            //se reporta un error
+            tree->ErrorOut += "Error: tipo incorrecto";
+        }
+    }
+        else if(this->Operator == "++")
+    {
+        if(Dominante == INTEGER)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal++,0.0,false);
+        }
+        else if(Dominante == FLOAT)
+        {
+            sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal++,false);
         }
         else
         {

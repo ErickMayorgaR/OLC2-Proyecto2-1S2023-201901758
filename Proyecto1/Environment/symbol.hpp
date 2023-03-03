@@ -12,6 +12,8 @@ public:
     TipoDato Tipo;
     std::string StrVal;
     int NumVal;
+    float FloatVal;
+    bool BoolVal;
 
     symbol(int line, int col, std::string id, TipoDato tipo, std::string strval, int numval);
 };

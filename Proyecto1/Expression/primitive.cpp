@@ -12,6 +12,22 @@ primitive::primitive(int line, int col, TipoDato tipo, std::string StrVal, int N
 
 symbol primitive::ejecutar(environment *env, ast* tree)
 {
-    symbol sym = *new symbol(this->Line,this->Col,"",this->Tipo,this->StrVal,this->NumVal,this->FloatVal,this->BoolVal);
+    symbol sym (Line,Col,"",NULO,nullptr);
+    switch (Tipo) {
+    case INTEGER:
+        sym = symbol(Line,Col,"",Tipo,&NumVal);
+        break;
+    case STRING:
+        sym = symbol(Line,Col,"",Tipo,&StrVal);
+        break;
+    case BOOL:
+        sym = symbol(Line,Col,"",Tipo,&BoolVal);
+        break;
+    case FLOAT:
+        sym = symbol(Line,Col,"",Tipo,&FloatVal);
+        break;
+    default:
+        break;
+    }
     return sym;
 }

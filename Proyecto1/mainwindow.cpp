@@ -23,7 +23,7 @@ void MainWindow::on_pushButton_2_clicked()
 {
     QMessageBox *msg = new QMessageBox();
     //creando entorno global
-    environment *GlobalEnv = new environment();
+    environment *GlobalEnv = new environment(nullptr, "Global");
     //creando ast
     ast *Root = new ast();
     //ejecuta el analizador
@@ -32,27 +32,22 @@ void MainWindow::on_pushButton_2_clicked()
     //ejecutar main
     analizador.Main->ejecutar(GlobalEnv, Root);
     //valio errores
-    if(Root->ErrorOut == "")
-    {
+        if(Root->ErrorOut == "")
+        {
         //despliega el mensaje
         msg->setText(QString::fromStdString(analizador.Salida));
         msg->exec();
         ui->textEdit_2->setText(QString::fromStdString(Root->ConsoleOut));
-    }
-    else
-    {
+        }
+        else
+        {
         //despliega el mensaje
         msg->setText(QString::fromStdString("Se encontraron algunos errores.."));
         msg->exec();
-        ui->textEdit_2->setText(QString::fromStdString(Root->ErrorOut));
-    }
+        ui->textEdit_3->setText(QString::fromStdString(Root->ErrorOut));
+        }
 
 }
-
-
-
-
-
 
 
 

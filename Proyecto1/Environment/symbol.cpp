@@ -1,12 +1,13 @@
 #include "symbol.hpp"
+symbol::symbol()
+{
 
-symbol::symbol(int line, int col, std::string id, TipoDato tipo, std::string strval, int numval, float floatval, bool boolval){
-    this->Line = line;
-    this->Col = col;
-    this->Id = id;
-    this->Tipo = tipo;
-    this->StrVal = strval;
-    this->NumVal = numval;
-    this->FloatVal = floatval;
-    this->BoolVal = boolval;
+}
+
+symbol::symbol(int line, int col, std::string id, TipoDato tipo, void* value){
+    Line = line;
+    Col = col;
+    Id = id;
+    Tipo = tipo;
+    Value = value;
 }

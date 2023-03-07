@@ -10,15 +10,13 @@ class location;
 }
 
 namespace OCL2Calc {
-class ParserCtx
-{
+class ParserCtx {
 public:
     void* lexer;
     yy::location* loc;
     yy::Parser* Parser;
     std::string Salida;
     instruction *Main;
-
     ParserCtx();
     ~ParserCtx();
     std::string Analizar(std::string entrada);

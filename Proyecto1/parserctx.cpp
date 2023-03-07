@@ -20,7 +20,6 @@ ParserCtx::~ParserCtx(){
     delete loc;
     delete Parser;
 }
-
 std::string ParserCtx::Analizar(std::string entrada){
     // cargamos la entrada
     yy_scan_string(entrada .c_str(), lexer );
@@ -30,5 +29,4 @@ std::string ParserCtx::Analizar(std::string entrada){
     this->Parser->parse();
     return "";
 }
-
 }

@@ -2,6 +2,8 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include "Parser/parser.hpp"
+#include "parserctx.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,11 +16,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 private slots:
     void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
+
 };
 #endif // MAINWINDOW_HPP

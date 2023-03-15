@@ -48,38 +48,54 @@
 #line 33 "parser.y"
 
     /* cabeceras iniciales */
-    #include <iostream> 
-    #include <string> 
+    #include <iostream>
+    #include <string>
     #include <vector>
     #include "parserctx.hpp"
 
-    /* expresiones */
+    /* enviroments */
+    #include "../Proyecto1/Environment/type.h"
+    /*interfaces*/
+    #include "../Proyecto1/Interfaces/expression.hpp"
+    /* expressions */
     #include "../Proyecto1/Expression/primitive.hpp"
     #include "../Proyecto1/Expression/access.hpp"
     #include "../Proyecto1/Expression/array_access.hpp"
-    #include "../Proyecto1/Expression/struct_access.hpp"
     #include "../Proyecto1/Expression/operation.hpp"
-    #include "../Proyecto1/Environment/type.h"
-    #include "../Proyecto1/Interfaces/expression.hpp"
+    #include "../Proyecto1/Expression/func_atoi.hpp"
+    #include "../Proyecto1/Expression/func_atof.hpp"
+    #include "../Proyecto1/Expression/func_iota.hpp"
+    #include "../Proyecto1/Expression/struct_access.hpp"
     #include "../Proyecto1/Expression/map_struct_dec.hpp"
     #include "../Proyecto1/Expression/list_expression.hpp"
-
-    /* instrucciones */
+    #include "../Proyecto1/Expression/call_exp.hpp"
+    #include "../Proyecto1/Expression/expression_array.hpp"
+    /* instructions */
     #include "../Proyecto1/Interfaces/instruction.hpp"
     #include "../Proyecto1/Instruction/print.hpp"
+    #include "../Proyecto1/Instruction/func_expression.hpp"
     #include "../Proyecto1/Instruction/list_instruction.hpp"
     #include "../Proyecto1/Instruction/func_main.hpp"
     #include "../Proyecto1/Instruction/func_if.hpp"
+    #include "../Proyecto1/Instruction/func_for.hpp"
+    #include "../Proyecto1/Instruction/func_while.hpp"
+    #include "../Proyecto1/Instruction/func_break.hpp"
+    #include "../Proyecto1/Instruction/func_return.hpp"
+    #include "../Proyecto1/Instruction/func_continue.hpp"
     #include "../Proyecto1/Instruction/declare.hpp"
-    #include "../Proyecto1/Instruction/dec_struct.hpp"
+    #include "../Proyecto1/Instruction/assign.hpp"
+    #include "../Proyecto1/Instruction/declare_struct.hpp"
     #include "../Proyecto1/Instruction/create_struct.hpp"
+    #include "../Proyecto1/Instruction/function.hpp"
+    #include "../Proyecto1/Instruction/call_inst.hpp"
 
-    #include "../Proyecto1/mainwindow.hpp" 
+    #include "../Proyecto1/mainwindow.hpp"
     #include <QApplication>
     #include <QMainWindow>
-    #include "ui_mainwindow.h"   
+    #include "ui_mainwindow.h"
 
-#line 83 "parser.hpp"
+
+#line 99 "parser.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -208,7 +224,7 @@
 #endif
 
 namespace yy {
-#line 212 "parser.hpp"
+#line 228 "parser.hpp"
 
 
 
@@ -403,31 +419,48 @@ namespace yy {
       char dummy1[sizeof (TipoDato)];
 
       // EXP
+      // ATOI
+      // ATOF
+      // IOTA
+      // INCREMENT
+      // PREFIX_INCREMENT
       // PRIMITIVE
       // LIST_ARR
+      // CALL_EXP
       char dummy2[sizeof (expression*)];
 
       // START
       // MAIN
       char dummy3[sizeof (func_main*)];
 
+      // FUNCTION
       // INSTRUCTION
       // PRINT
       // IF
       // ELSEIF
+      // WHILE
+      // FOR
+      // EXPRESSION
       // DECLARE_STRUCT
       // CREATE_STRUCT
       // DECLARATION
+      // ASSIGNATION
+      // BREAK
+      // CONTINUE
+      // RETURN
+      // CALL_INST
       char dummy4[sizeof (instruction*)];
 
       // EXP_LIST
       char dummy5[sizeof (list_expression*)];
 
+      // LIST_FUNC
       // LIST_INST
       // ELSEIF_LIST
       // ELSE
       char dummy6[sizeof (list_instruction*)];
 
+      // FUNCTION_LIST
       // DECLARE_LIST
       char dummy7[sizeof (map_struct_dec*)];
 
@@ -438,6 +471,7 @@ namespace yy {
       // FLOAT
       // BOOLEAN
       // STRUCT
+      // ARRAY
       // INT
       // BOOLTRUE
       // BOOLFALSE
@@ -454,24 +488,22 @@ namespace yy {
       // MENOS
       // POR
       // DIV
-      // POT
       // INC
       // MOD
       // RIF
       // RELSE
-      // WHILE
-      // FOR
+      // RWHILE
+      // RFOR
       // PRINTF
-      // ASIGNAR
       // MEDIA
       // MEDIANA
       // MODA
-      // ATOI
-      // ATOF
-      // IOTA
-      // BREAK
-      // CONTINUE
-      // RETURN
+      // RATOI
+      // RATOF
+      // RIOTA
+      // RBREAK
+      // RCONTINUE
+      // RRETURN
       // MAYOR
       // MENOR
       // MAYEQU
@@ -537,49 +569,48 @@ namespace yy {
     FLOAT = 262,                   // FLOAT
     BOOLEAN = 263,                 // BOOLEAN
     STRUCT = 264,                  // STRUCT
-    INT = 265,                     // INT
-    BOOLTRUE = 266,                // BOOLTRUE
-    BOOLFALSE = 267,               // BOOLFALSE
-    PARA = 268,                    // PARA
-    PARC = 269,                    // PARC
-    LLAVA = 270,                   // LLAVA
-    LLAVC = 271,                   // LLAVC
-    CORA = 272,                    // CORA
-    CORC = 273,                    // CORC
-    VOID = 274,                    // VOID
-    RMAIN = 275,                   // RMAIN
-    NLL = 276,                     // NLL
-    SUMA = 277,                    // SUMA
-    MENOS = 278,                   // MENOS
-    POR = 279,                     // POR
-    DIV = 280,                     // DIV
-    POT = 281,                     // POT
+    ARRAY = 265,                   // ARRAY
+    INT = 266,                     // INT
+    BOOLTRUE = 267,                // BOOLTRUE
+    BOOLFALSE = 268,               // BOOLFALSE
+    PARA = 269,                    // PARA
+    PARC = 270,                    // PARC
+    LLAVA = 271,                   // LLAVA
+    LLAVC = 272,                   // LLAVC
+    CORA = 273,                    // CORA
+    CORC = 274,                    // CORC
+    VOID = 275,                    // VOID
+    RMAIN = 276,                   // RMAIN
+    NLL = 277,                     // NLL
+    SUMA = 278,                    // SUMA
+    MENOS = 279,                   // MENOS
+    POR = 280,                     // POR
+    DIV = 281,                     // DIV
     INC = 282,                     // INC
     MOD = 283,                     // MOD
     RIF = 284,                     // RIF
     RELSE = 285,                   // RELSE
-    WHILE = 286,                   // WHILE
-    FOR = 287,                     // FOR
+    RWHILE = 286,                  // RWHILE
+    RFOR = 287,                    // RFOR
     PRINTF = 288,                  // PRINTF
-    ASIGNAR = 289,                 // ASIGNAR
-    MEDIA = 290,                   // MEDIA
-    MEDIANA = 291,                 // MEDIANA
-    MODA = 292,                    // MODA
-    ATOI = 293,                    // ATOI
-    ATOF = 294,                    // ATOF
-    IOTA = 295,                    // IOTA
-    BREAK = 296,                   // BREAK
-    CONTINUE = 297,                // CONTINUE
-    RETURN = 298,                  // RETURN
-    MAYOR = 299,                   // MAYOR
-    MENOR = 300,                   // MENOR
-    MAYEQU = 301,                  // MAYEQU
-    MENEQU = 302,                  // MENEQU
-    EQU = 303,                     // EQU
-    DIFF = 304,                    // DIFF
-    AND = 305,                     // AND
-    OR = 306,                      // OR
-    NOT = 307                      // NOT
+    MEDIA = 289,                   // MEDIA
+    MEDIANA = 290,                 // MEDIANA
+    MODA = 291,                    // MODA
+    RATOI = 292,                   // RATOI
+    RATOF = 293,                   // RATOF
+    RIOTA = 294,                   // RIOTA
+    RBREAK = 295,                  // RBREAK
+    RCONTINUE = 296,               // RCONTINUE
+    RRETURN = 297,                 // RRETURN
+    MAYOR = 298,                   // MAYOR
+    MENOR = 299,                   // MENOR
+    MAYEQU = 300,                  // MAYEQU
+    MENEQU = 301,                  // MENEQU
+    EQU = 302,                     // EQU
+    DIFF = 303,                    // DIFF
+    AND = 304,                     // AND
+    OR = 305,                      // OR
+    NOT = 306                      // NOT
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -596,7 +627,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 57, ///< Number of tokens.
+        YYNTOKENS = 56, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // END
         S_YYerror = 1,                           // error
@@ -608,72 +639,88 @@ namespace yy {
         S_FLOAT = 7,                             // FLOAT
         S_BOOLEAN = 8,                           // BOOLEAN
         S_STRUCT = 9,                            // STRUCT
-        S_INT = 10,                              // INT
-        S_BOOLTRUE = 11,                         // BOOLTRUE
-        S_BOOLFALSE = 12,                        // BOOLFALSE
-        S_PARA = 13,                             // PARA
-        S_PARC = 14,                             // PARC
-        S_LLAVA = 15,                            // LLAVA
-        S_LLAVC = 16,                            // LLAVC
-        S_CORA = 17,                             // CORA
-        S_CORC = 18,                             // CORC
-        S_VOID = 19,                             // VOID
-        S_RMAIN = 20,                            // RMAIN
-        S_NLL = 21,                              // NLL
-        S_SUMA = 22,                             // SUMA
-        S_MENOS = 23,                            // MENOS
-        S_POR = 24,                              // POR
-        S_DIV = 25,                              // DIV
-        S_POT = 26,                              // POT
+        S_ARRAY = 10,                            // ARRAY
+        S_INT = 11,                              // INT
+        S_BOOLTRUE = 12,                         // BOOLTRUE
+        S_BOOLFALSE = 13,                        // BOOLFALSE
+        S_PARA = 14,                             // PARA
+        S_PARC = 15,                             // PARC
+        S_LLAVA = 16,                            // LLAVA
+        S_LLAVC = 17,                            // LLAVC
+        S_CORA = 18,                             // CORA
+        S_CORC = 19,                             // CORC
+        S_VOID = 20,                             // VOID
+        S_RMAIN = 21,                            // RMAIN
+        S_NLL = 22,                              // NLL
+        S_SUMA = 23,                             // SUMA
+        S_MENOS = 24,                            // MENOS
+        S_POR = 25,                              // POR
+        S_DIV = 26,                              // DIV
         S_INC = 27,                              // INC
         S_MOD = 28,                              // MOD
         S_RIF = 29,                              // RIF
         S_RELSE = 30,                            // RELSE
-        S_WHILE = 31,                            // WHILE
-        S_FOR = 32,                              // FOR
+        S_RWHILE = 31,                           // RWHILE
+        S_RFOR = 32,                             // RFOR
         S_PRINTF = 33,                           // PRINTF
-        S_ASIGNAR = 34,                          // ASIGNAR
-        S_MEDIA = 35,                            // MEDIA
-        S_MEDIANA = 36,                          // MEDIANA
-        S_MODA = 37,                             // MODA
-        S_ATOI = 38,                             // ATOI
-        S_ATOF = 39,                             // ATOF
-        S_IOTA = 40,                             // IOTA
-        S_BREAK = 41,                            // BREAK
-        S_CONTINUE = 42,                         // CONTINUE
-        S_RETURN = 43,                           // RETURN
-        S_MAYOR = 44,                            // MAYOR
-        S_MENOR = 45,                            // MENOR
-        S_MAYEQU = 46,                           // MAYEQU
-        S_MENEQU = 47,                           // MENEQU
-        S_EQU = 48,                              // EQU
-        S_DIFF = 49,                             // DIFF
-        S_AND = 50,                              // AND
-        S_OR = 51,                               // OR
-        S_NOT = 52,                              // NOT
-        S_53_ = 53,                              // ';'
-        S_54_ = 54,                              // '='
-        S_55_ = 55,                              // ','
-        S_56_ = 56,                              // '.'
-        S_YYACCEPT = 57,                         // $accept
-        S_START = 58,                            // START
-        S_MAIN = 59,                             // MAIN
-        S_LIST_INST = 60,                        // LIST_INST
-        S_INSTRUCTION = 61,                      // INSTRUCTION
-        S_PRINT = 62,                            // PRINT
-        S_IF = 63,                               // IF
-        S_ELSEIF_LIST = 64,                      // ELSEIF_LIST
-        S_ELSEIF = 65,                           // ELSEIF
-        S_ELSE = 66,                             // ELSE
-        S_DECLARE_STRUCT = 67,                   // DECLARE_STRUCT
-        S_DECLARE_LIST = 68,                     // DECLARE_LIST
-        S_CREATE_STRUCT = 69,                    // CREATE_STRUCT
-        S_EXP_LIST = 70,                         // EXP_LIST
-        S_DECLARATION = 71,                      // DECLARATION
-        S_TYPES = 72,                            // TYPES
-        S_EXP = 73,                              // EXP
-        S_PRIMITIVE = 74,                        // PRIMITIVE
-        S_LIST_ARR = 75                          // LIST_ARR
+        S_MEDIA = 34,                            // MEDIA
+        S_MEDIANA = 35,                          // MEDIANA
+        S_MODA = 36,                             // MODA
+        S_RATOI = 37,                            // RATOI
+        S_RATOF = 38,                            // RATOF
+        S_RIOTA = 39,                            // RIOTA
+        S_RBREAK = 40,                           // RBREAK
+        S_RCONTINUE = 41,                        // RCONTINUE
+        S_RRETURN = 42,                          // RRETURN
+        S_MAYOR = 43,                            // MAYOR
+        S_MENOR = 44,                            // MENOR
+        S_MAYEQU = 45,                           // MAYEQU
+        S_MENEQU = 46,                           // MENEQU
+        S_EQU = 47,                              // EQU
+        S_DIFF = 48,                             // DIFF
+        S_AND = 49,                              // AND
+        S_OR = 50,                               // OR
+        S_NOT = 51,                              // NOT
+        S_52_ = 52,                              // ';'
+        S_53_ = 53,                              // '='
+        S_54_ = 54,                              // ','
+        S_55_ = 55,                              // '.'
+        S_YYACCEPT = 56,                         // $accept
+        S_START = 57,                            // START
+        S_LIST_FUNC = 58,                        // LIST_FUNC
+        S_FUNCTION = 59,                         // FUNCTION
+        S_FUNCTION_LIST = 60,                    // FUNCTION_LIST
+        S_MAIN = 61,                             // MAIN
+        S_LIST_INST = 62,                        // LIST_INST
+        S_INSTRUCTION = 63,                      // INSTRUCTION
+        S_PRINT = 64,                            // PRINT
+        S_IF = 65,                               // IF
+        S_ELSEIF_LIST = 66,                      // ELSEIF_LIST
+        S_ELSEIF = 67,                           // ELSEIF
+        S_ELSE = 68,                             // ELSE
+        S_WHILE = 69,                            // WHILE
+        S_FOR = 70,                              // FOR
+        S_EXPRESSION = 71,                       // EXPRESSION
+        S_DECLARE_STRUCT = 72,                   // DECLARE_STRUCT
+        S_DECLARE_LIST = 73,                     // DECLARE_LIST
+        S_CREATE_STRUCT = 74,                    // CREATE_STRUCT
+        S_EXP_LIST = 75,                         // EXP_LIST
+        S_DECLARATION = 76,                      // DECLARATION
+        S_ASSIGNATION = 77,                      // ASSIGNATION
+        S_BREAK = 78,                            // BREAK
+        S_CONTINUE = 79,                         // CONTINUE
+        S_RETURN = 80,                           // RETURN
+        S_TYPES = 81,                            // TYPES
+        S_EXP = 82,                              // EXP
+        S_ATOI = 83,                             // ATOI
+        S_ATOF = 84,                             // ATOF
+        S_IOTA = 85,                             // IOTA
+        S_INCREMENT = 86,                        // INCREMENT
+        S_PREFIX_INCREMENT = 87,                 // PREFIX_INCREMENT
+        S_PRIMITIVE = 88,                        // PRIMITIVE
+        S_LIST_ARR = 89,                         // LIST_ARR
+        S_CALL_EXP = 90,                         // CALL_EXP
+        S_CALL_INST = 91                         // CALL_INST
       };
     };
 
@@ -715,8 +762,14 @@ namespace yy {
         break;
 
       case symbol_kind::S_EXP: // EXP
+      case symbol_kind::S_ATOI: // ATOI
+      case symbol_kind::S_ATOF: // ATOF
+      case symbol_kind::S_IOTA: // IOTA
+      case symbol_kind::S_INCREMENT: // INCREMENT
+      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.move< expression* > (std::move (that.value));
         break;
 
@@ -725,13 +778,22 @@ namespace yy {
         value.move< func_main* > (std::move (that.value));
         break;
 
+      case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_EXPRESSION: // EXPRESSION
       case symbol_kind::S_DECLARE_STRUCT: // DECLARE_STRUCT
       case symbol_kind::S_CREATE_STRUCT: // CREATE_STRUCT
       case symbol_kind::S_DECLARATION: // DECLARATION
+      case symbol_kind::S_ASSIGNATION: // ASSIGNATION
+      case symbol_kind::S_BREAK: // BREAK
+      case symbol_kind::S_CONTINUE: // CONTINUE
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_CALL_INST: // CALL_INST
         value.move< instruction* > (std::move (that.value));
         break;
 
@@ -739,12 +801,14 @@ namespace yy {
         value.move< list_expression* > (std::move (that.value));
         break;
 
+      case symbol_kind::S_LIST_FUNC: // LIST_FUNC
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
         value.move< list_instruction* > (std::move (that.value));
         break;
 
+      case symbol_kind::S_FUNCTION_LIST: // FUNCTION_LIST
       case symbol_kind::S_DECLARE_LIST: // DECLARE_LIST
         value.move< map_struct_dec* > (std::move (that.value));
         break;
@@ -756,6 +820,7 @@ namespace yy {
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
       case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_ARRAY: // ARRAY
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -772,24 +837,22 @@ namespace yy {
       case symbol_kind::S_MENOS: // MENOS
       case symbol_kind::S_POR: // POR
       case symbol_kind::S_DIV: // DIV
-      case symbol_kind::S_POT: // POT
       case symbol_kind::S_INC: // INC
       case symbol_kind::S_MOD: // MOD
       case symbol_kind::S_RIF: // RIF
       case symbol_kind::S_RELSE: // RELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RWHILE: // RWHILE
+      case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_ASIGNAR: // ASIGNAR
       case symbol_kind::S_MEDIA: // MEDIA
       case symbol_kind::S_MEDIANA: // MEDIANA
       case symbol_kind::S_MODA: // MODA
-      case symbol_kind::S_ATOI: // ATOI
-      case symbol_kind::S_ATOF: // ATOF
-      case symbol_kind::S_IOTA: // IOTA
-      case symbol_kind::S_BREAK: // BREAK
-      case symbol_kind::S_CONTINUE: // CONTINUE
-      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_RATOI: // RATOI
+      case symbol_kind::S_RATOF: // RATOF
+      case symbol_kind::S_RIOTA: // RIOTA
+      case symbol_kind::S_RBREAK: // RBREAK
+      case symbol_kind::S_RCONTINUE: // RCONTINUE
+      case symbol_kind::S_RRETURN: // RRETURN
       case symbol_kind::S_MAYOR: // MAYOR
       case symbol_kind::S_MENOR: // MENOR
       case symbol_kind::S_MAYEQU: // MAYEQU
@@ -964,8 +1027,14 @@ switch (yykind)
         break;
 
       case symbol_kind::S_EXP: // EXP
+      case symbol_kind::S_ATOI: // ATOI
+      case symbol_kind::S_ATOF: // ATOF
+      case symbol_kind::S_IOTA: // IOTA
+      case symbol_kind::S_INCREMENT: // INCREMENT
+      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.template destroy< expression* > ();
         break;
 
@@ -974,13 +1043,22 @@ switch (yykind)
         value.template destroy< func_main* > ();
         break;
 
+      case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_EXPRESSION: // EXPRESSION
       case symbol_kind::S_DECLARE_STRUCT: // DECLARE_STRUCT
       case symbol_kind::S_CREATE_STRUCT: // CREATE_STRUCT
       case symbol_kind::S_DECLARATION: // DECLARATION
+      case symbol_kind::S_ASSIGNATION: // ASSIGNATION
+      case symbol_kind::S_BREAK: // BREAK
+      case symbol_kind::S_CONTINUE: // CONTINUE
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_CALL_INST: // CALL_INST
         value.template destroy< instruction* > ();
         break;
 
@@ -988,12 +1066,14 @@ switch (yykind)
         value.template destroy< list_expression* > ();
         break;
 
+      case symbol_kind::S_LIST_FUNC: // LIST_FUNC
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
         value.template destroy< list_instruction* > ();
         break;
 
+      case symbol_kind::S_FUNCTION_LIST: // FUNCTION_LIST
       case symbol_kind::S_DECLARE_LIST: // DECLARE_LIST
         value.template destroy< map_struct_dec* > ();
         break;
@@ -1005,6 +1085,7 @@ switch (yykind)
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
       case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_ARRAY: // ARRAY
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -1021,24 +1102,22 @@ switch (yykind)
       case symbol_kind::S_MENOS: // MENOS
       case symbol_kind::S_POR: // POR
       case symbol_kind::S_DIV: // DIV
-      case symbol_kind::S_POT: // POT
       case symbol_kind::S_INC: // INC
       case symbol_kind::S_MOD: // MOD
       case symbol_kind::S_RIF: // RIF
       case symbol_kind::S_RELSE: // RELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RWHILE: // RWHILE
+      case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_ASIGNAR: // ASIGNAR
       case symbol_kind::S_MEDIA: // MEDIA
       case symbol_kind::S_MEDIANA: // MEDIANA
       case symbol_kind::S_MODA: // MODA
-      case symbol_kind::S_ATOI: // ATOI
-      case symbol_kind::S_ATOF: // ATOF
-      case symbol_kind::S_IOTA: // IOTA
-      case symbol_kind::S_BREAK: // BREAK
-      case symbol_kind::S_CONTINUE: // CONTINUE
-      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_RATOI: // RATOI
+      case symbol_kind::S_RATOF: // RATOF
+      case symbol_kind::S_RIOTA: // RIOTA
+      case symbol_kind::S_RBREAK: // RBREAK
+      case symbol_kind::S_RCONTINUE: // RCONTINUE
+      case symbol_kind::S_RRETURN: // RRETURN
       case symbol_kind::S_MAYOR: // MAYOR
       case symbol_kind::S_MENOR: // MENOR
       case symbol_kind::S_MAYEQU: // MAYEQU
@@ -1058,11 +1137,14 @@ switch (yykind)
         Base::clear ();
       }
 
+#if YYDEBUG || 0
       /// The user-facing name of this symbol.
-      std::string name () const YY_NOEXCEPT
+      const char *name () const YY_NOEXCEPT
       {
         return Parser::symbol_name (this->kind ());
       }
+#endif // #if YYDEBUG || 0
+
 
       /// Backward compatibility (Bison 3.6).
       symbol_kind_type type_get () const YY_NOEXCEPT;
@@ -1196,9 +1278,12 @@ switch (yykind)
     /// Report a syntax error.
     void error (const syntax_error& err);
 
+#if YYDEBUG || 0
     /// The user-facing name of the symbol whose (internal) number is
     /// YYSYMBOL.  No bounds checking.
-    static std::string symbol_name (symbol_kind_type yysymbol);
+    static const char *symbol_name (symbol_kind_type yysymbol);
+#endif // #if YYDEBUG || 0
+
 
     // Implementation of make_symbol for each symbol type.
 #if 201103L <= YY_CPLUSPLUS
@@ -1349,6 +1434,21 @@ switch (yykind)
       make_STRUCT (const std::string& v, const location_type& l)
       {
         return symbol_type (token::STRUCT, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_ARRAY (std::string v, location_type l)
+      {
+        return symbol_type (token::ARRAY, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_ARRAY (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::ARRAY, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1594,21 +1694,6 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_POT (std::string v, location_type l)
-      {
-        return symbol_type (token::POT, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_POT (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::POT, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
       make_INC (std::string v, location_type l)
       {
         return symbol_type (token::INC, std::move (v), std::move (l));
@@ -1669,31 +1754,31 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_WHILE (std::string v, location_type l)
+      make_RWHILE (std::string v, location_type l)
       {
-        return symbol_type (token::WHILE, std::move (v), std::move (l));
+        return symbol_type (token::RWHILE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_WHILE (const std::string& v, const location_type& l)
+      make_RWHILE (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::WHILE, v, l);
+        return symbol_type (token::RWHILE, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_FOR (std::string v, location_type l)
+      make_RFOR (std::string v, location_type l)
       {
-        return symbol_type (token::FOR, std::move (v), std::move (l));
+        return symbol_type (token::RFOR, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_FOR (const std::string& v, const location_type& l)
+      make_RFOR (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::FOR, v, l);
+        return symbol_type (token::RFOR, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1709,21 +1794,6 @@ switch (yykind)
       make_PRINTF (const std::string& v, const location_type& l)
       {
         return symbol_type (token::PRINTF, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_ASIGNAR (std::string v, location_type l)
-      {
-        return symbol_type (token::ASIGNAR, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_ASIGNAR (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::ASIGNAR, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1774,91 +1844,91 @@ switch (yykind)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_ATOI (std::string v, location_type l)
+      make_RATOI (std::string v, location_type l)
       {
-        return symbol_type (token::ATOI, std::move (v), std::move (l));
+        return symbol_type (token::RATOI, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_ATOI (const std::string& v, const location_type& l)
+      make_RATOI (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::ATOI, v, l);
+        return symbol_type (token::RATOI, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_ATOF (std::string v, location_type l)
+      make_RATOF (std::string v, location_type l)
       {
-        return symbol_type (token::ATOF, std::move (v), std::move (l));
+        return symbol_type (token::RATOF, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_ATOF (const std::string& v, const location_type& l)
+      make_RATOF (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::ATOF, v, l);
+        return symbol_type (token::RATOF, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_IOTA (std::string v, location_type l)
+      make_RIOTA (std::string v, location_type l)
       {
-        return symbol_type (token::IOTA, std::move (v), std::move (l));
+        return symbol_type (token::RIOTA, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_IOTA (const std::string& v, const location_type& l)
+      make_RIOTA (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::IOTA, v, l);
+        return symbol_type (token::RIOTA, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_BREAK (std::string v, location_type l)
+      make_RBREAK (std::string v, location_type l)
       {
-        return symbol_type (token::BREAK, std::move (v), std::move (l));
+        return symbol_type (token::RBREAK, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_BREAK (const std::string& v, const location_type& l)
+      make_RBREAK (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::BREAK, v, l);
+        return symbol_type (token::RBREAK, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_CONTINUE (std::string v, location_type l)
+      make_RCONTINUE (std::string v, location_type l)
       {
-        return symbol_type (token::CONTINUE, std::move (v), std::move (l));
+        return symbol_type (token::RCONTINUE, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_CONTINUE (const std::string& v, const location_type& l)
+      make_RCONTINUE (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::CONTINUE, v, l);
+        return symbol_type (token::RCONTINUE, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_RETURN (std::string v, location_type l)
+      make_RRETURN (std::string v, location_type l)
       {
-        return symbol_type (token::RETURN, std::move (v), std::move (l));
+        return symbol_type (token::RRETURN, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_RETURN (const std::string& v, const location_type& l)
+      make_RRETURN (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::RETURN, v, l);
+        return symbol_type (token::RRETURN, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1998,24 +2068,6 @@ switch (yykind)
 #endif
 
 
-    class context
-    {
-    public:
-      context (const Parser& yyparser, const symbol_type& yyla);
-      const symbol_type& lookahead () const { return yyla_; }
-      symbol_kind_type token () const { return yyla_.kind (); }
-      const location_type& location () const { return yyla_.location; }
-
-      /// Put in YYARG at most YYARGN of the expected tokens, and return the
-      /// number of tokens stored in YYARG.  If YYARG is null, return the
-      /// number of expected tokens (guaranteed to be less than YYNTOKENS).
-      int expected_tokens (symbol_kind_type yyarg[], int yyargn) const;
-
-    private:
-      const Parser& yyparser_;
-      const symbol_type& yyla_;
-    };
-
   private:
 #if YY_CPLUSPLUS < 201103L
     /// Non copyable.
@@ -2026,15 +2078,8 @@ switch (yykind)
 
 
     /// Stored state numbers (used for stacks).
-    typedef signed char state_type;
+    typedef unsigned char state_type;
 
-    /// The arguments of the error message.
-    int yy_syntax_error_arguments_ (const context& yyctx,
-                                    symbol_kind_type yyarg[], int yyargn) const;
-
-    /// Generate an error message.
-    /// \param yyctx     the context in which the error occurred.
-    virtual std::string yysyntax_error_ (const context& yyctx) const;
     /// Compute post-reduction state.
     /// \param yystate   the current state
     /// \param yysym     the nonterminal to push on the stack
@@ -2056,11 +2101,10 @@ switch (yykind)
     /// are valid, yet not members of the token_type enum.
     static symbol_kind_type yytranslate_ (int t);
 
-    /// Convert the symbol name \a n to a form suitable for a diagnostic.
-    static std::string yytnamerr_ (const char *yystr);
-
+#if YYDEBUG || 0
     /// For a symbol, its name in clear.
     static const char* const yytname_[];
+#endif // #if YYDEBUG || 0
 
 
     // Tables.
@@ -2074,17 +2118,17 @@ switch (yykind)
     static const signed char yydefact_[];
 
     // YYPGOTO[NTERM-NUM].
-    static const signed char yypgoto_[];
+    static const short yypgoto_[];
 
     // YYDEFGOTO[NTERM-NUM].
-    static const signed char yydefgoto_[];
+    static const short yydefgoto_[];
 
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const signed char yytable_[];
+    static const short yytable_[];
 
-    static const signed char yycheck_[];
+    static const short yycheck_[];
 
     // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
     // symbol of state STATE-NUM.
@@ -2326,9 +2370,9 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 307,     ///< Last index in yytable_.
-      yynnts_ = 19,  ///< Number of nonterminal symbols.
-      yyfinal_ = 5 ///< Termination state number.
+      yylast_ = 1345,     ///< Last index in yytable_.
+      yynnts_ = 36,  ///< Number of nonterminal symbols.
+      yyfinal_ = 12 ///< Termination state number.
     };
 
 
@@ -2353,9 +2397,9 @@ switch (yykind)
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    55,     2,    56,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    53,
-       2,    54,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    54,     2,    55,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    52,
+       2,    53,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -2379,10 +2423,10 @@ switch (yykind)
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50,    51,    52
+      45,    46,    47,    48,    49,    50,    51
     };
     // Last valid token kind.
-    const int code_max = 307;
+    const int code_max = 306;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -2406,8 +2450,14 @@ switch (yykind)
         break;
 
       case symbol_kind::S_EXP: // EXP
+      case symbol_kind::S_ATOI: // ATOI
+      case symbol_kind::S_ATOF: // ATOF
+      case symbol_kind::S_IOTA: // IOTA
+      case symbol_kind::S_INCREMENT: // INCREMENT
+      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.copy< expression* > (YY_MOVE (that.value));
         break;
 
@@ -2416,13 +2466,22 @@ switch (yykind)
         value.copy< func_main* > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_EXPRESSION: // EXPRESSION
       case symbol_kind::S_DECLARE_STRUCT: // DECLARE_STRUCT
       case symbol_kind::S_CREATE_STRUCT: // CREATE_STRUCT
       case symbol_kind::S_DECLARATION: // DECLARATION
+      case symbol_kind::S_ASSIGNATION: // ASSIGNATION
+      case symbol_kind::S_BREAK: // BREAK
+      case symbol_kind::S_CONTINUE: // CONTINUE
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_CALL_INST: // CALL_INST
         value.copy< instruction* > (YY_MOVE (that.value));
         break;
 
@@ -2430,12 +2489,14 @@ switch (yykind)
         value.copy< list_expression* > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_LIST_FUNC: // LIST_FUNC
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
         value.copy< list_instruction* > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_FUNCTION_LIST: // FUNCTION_LIST
       case symbol_kind::S_DECLARE_LIST: // DECLARE_LIST
         value.copy< map_struct_dec* > (YY_MOVE (that.value));
         break;
@@ -2447,6 +2508,7 @@ switch (yykind)
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
       case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_ARRAY: // ARRAY
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -2463,24 +2525,22 @@ switch (yykind)
       case symbol_kind::S_MENOS: // MENOS
       case symbol_kind::S_POR: // POR
       case symbol_kind::S_DIV: // DIV
-      case symbol_kind::S_POT: // POT
       case symbol_kind::S_INC: // INC
       case symbol_kind::S_MOD: // MOD
       case symbol_kind::S_RIF: // RIF
       case symbol_kind::S_RELSE: // RELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RWHILE: // RWHILE
+      case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_ASIGNAR: // ASIGNAR
       case symbol_kind::S_MEDIA: // MEDIA
       case symbol_kind::S_MEDIANA: // MEDIANA
       case symbol_kind::S_MODA: // MODA
-      case symbol_kind::S_ATOI: // ATOI
-      case symbol_kind::S_ATOF: // ATOF
-      case symbol_kind::S_IOTA: // IOTA
-      case symbol_kind::S_BREAK: // BREAK
-      case symbol_kind::S_CONTINUE: // CONTINUE
-      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_RATOI: // RATOI
+      case symbol_kind::S_RATOF: // RATOF
+      case symbol_kind::S_RIOTA: // RIOTA
+      case symbol_kind::S_RBREAK: // RBREAK
+      case symbol_kind::S_RCONTINUE: // RCONTINUE
+      case symbol_kind::S_RRETURN: // RRETURN
       case symbol_kind::S_MAYOR: // MAYOR
       case symbol_kind::S_MENOR: // MENOR
       case symbol_kind::S_MAYEQU: // MAYEQU
@@ -2527,8 +2587,14 @@ switch (yykind)
         break;
 
       case symbol_kind::S_EXP: // EXP
+      case symbol_kind::S_ATOI: // ATOI
+      case symbol_kind::S_ATOF: // ATOF
+      case symbol_kind::S_IOTA: // IOTA
+      case symbol_kind::S_INCREMENT: // INCREMENT
+      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.move< expression* > (YY_MOVE (s.value));
         break;
 
@@ -2537,13 +2603,22 @@ switch (yykind)
         value.move< func_main* > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
+      case symbol_kind::S_WHILE: // WHILE
+      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_EXPRESSION: // EXPRESSION
       case symbol_kind::S_DECLARE_STRUCT: // DECLARE_STRUCT
       case symbol_kind::S_CREATE_STRUCT: // CREATE_STRUCT
       case symbol_kind::S_DECLARATION: // DECLARATION
+      case symbol_kind::S_ASSIGNATION: // ASSIGNATION
+      case symbol_kind::S_BREAK: // BREAK
+      case symbol_kind::S_CONTINUE: // CONTINUE
+      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_CALL_INST: // CALL_INST
         value.move< instruction* > (YY_MOVE (s.value));
         break;
 
@@ -2551,12 +2626,14 @@ switch (yykind)
         value.move< list_expression* > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_LIST_FUNC: // LIST_FUNC
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
         value.move< list_instruction* > (YY_MOVE (s.value));
         break;
 
+      case symbol_kind::S_FUNCTION_LIST: // FUNCTION_LIST
       case symbol_kind::S_DECLARE_LIST: // DECLARE_LIST
         value.move< map_struct_dec* > (YY_MOVE (s.value));
         break;
@@ -2568,6 +2645,7 @@ switch (yykind)
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
       case symbol_kind::S_STRUCT: // STRUCT
+      case symbol_kind::S_ARRAY: // ARRAY
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -2584,24 +2662,22 @@ switch (yykind)
       case symbol_kind::S_MENOS: // MENOS
       case symbol_kind::S_POR: // POR
       case symbol_kind::S_DIV: // DIV
-      case symbol_kind::S_POT: // POT
       case symbol_kind::S_INC: // INC
       case symbol_kind::S_MOD: // MOD
       case symbol_kind::S_RIF: // RIF
       case symbol_kind::S_RELSE: // RELSE
-      case symbol_kind::S_WHILE: // WHILE
-      case symbol_kind::S_FOR: // FOR
+      case symbol_kind::S_RWHILE: // RWHILE
+      case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_ASIGNAR: // ASIGNAR
       case symbol_kind::S_MEDIA: // MEDIA
       case symbol_kind::S_MEDIANA: // MEDIANA
       case symbol_kind::S_MODA: // MODA
-      case symbol_kind::S_ATOI: // ATOI
-      case symbol_kind::S_ATOF: // ATOF
-      case symbol_kind::S_IOTA: // IOTA
-      case symbol_kind::S_BREAK: // BREAK
-      case symbol_kind::S_CONTINUE: // CONTINUE
-      case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_RATOI: // RATOI
+      case symbol_kind::S_RATOF: // RATOF
+      case symbol_kind::S_RIOTA: // RIOTA
+      case symbol_kind::S_RBREAK: // RBREAK
+      case symbol_kind::S_RCONTINUE: // RCONTINUE
+      case symbol_kind::S_RRETURN: // RRETURN
       case symbol_kind::S_MAYOR: // MAYOR
       case symbol_kind::S_MENOR: // MENOR
       case symbol_kind::S_MAYEQU: // MAYEQU
@@ -2676,7 +2752,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2680 "parser.hpp"
+#line 2756 "parser.hpp"
 
 
 

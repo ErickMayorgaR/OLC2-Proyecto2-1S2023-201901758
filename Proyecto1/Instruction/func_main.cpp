@@ -1,6 +1,6 @@
 #include "func_main.hpp"
 
-func_main::func_main(int line, int col, std::string tipo, list_instruction *listainst)
+func_main::func_main(int line, int col, TipoDato tipo, list_instruction *listainst)
 {
     this->Line = line;
     this->Col = col;

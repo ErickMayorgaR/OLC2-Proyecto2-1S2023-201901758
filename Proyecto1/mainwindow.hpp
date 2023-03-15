@@ -2,8 +2,6 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include "Parser/parser.hpp"
-#include "parserctx.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +16,7 @@ public:
     ~MainWindow();
 private slots:
     void on_pushButton_2_clicked();
+    void on_pushButton_3_clicked();
 
 private:
     Ui::MainWindow *ui;

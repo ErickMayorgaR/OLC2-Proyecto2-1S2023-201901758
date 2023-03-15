@@ -1,21 +1,42 @@
-#include "print.hpp"
+#include "func_while.hpp"
 
-print::print(int line, int col, expression *valor)
+func_while::func_while(int line, int col, expression *sentence,instruction *block)
 {
-    this->Line = line;
-    this->Col = col;
-    this->Valor = valor;
+    Line = line;
+    Col = col;
+    Sentence = sentence;
+    Block = block;
 }
 
-void print::ejecutar(environment *env, ast *tree)
+void func_while::ejecutar(environment *env, ast *tree)
 {
-    symbol sym = this->Valor->ejecutar(env, tree);
-    if(sym.Tipo == STRING)
+    symbol sym = Sentence->ejecutar(env, tree);
+    if(sym.Tipo == BOOL)
     {
-        tree->ConsoleOut += sym.StrVal+"\n";
+        env->Inside_While = true;
+        while(*static_cast<bool*>(Sentence->ejecutar(env, tree).Value)){      
+            //ejecuta el bloque
+            if(env->Break_flag){
+                env->Break_flag = false;
+                break;
+            }
+            if(env->Continue_flag){
+                env->Continue_flag = false;
+                continue;
+            }
+            Block->ejecutar(env, tree);
+        }
+        env->Inside_While = false;
+
+            return;
+
     }
+
     else
     {
-        tree->ConsoleOut += std::to_string(sym.NumVal)+"\n";
+        //se reporta un error
+        std::string msg = "invalid type for while loop condition. Expected boolean.";
+        tree->addError(msg,Line,Col);
     }
 }
+

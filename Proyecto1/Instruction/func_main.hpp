@@ -9,10 +9,10 @@ class func_main : public instruction
 public:
     int Line;
     int Col;
-    std::string Tipo;
+    TipoDato Tipo;
     list_instruction *ListaInstr;
 
-    func_main(int line, int col, std::string tipo, list_instruction *listainst);
+    func_main(int line, int col, TipoDato tipo, list_instruction *listainst);
     void ejecutar(environment *env, ast* tree) override;
 };
 

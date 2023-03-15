@@ -15,12 +15,30 @@ void environment::SaveVariable(symbol sym, std::string id, ast *tree)
     else
     {
         //se reporta un error
-        tree->ErrorOut += "Ya existe la variable "+id;
+        std::string msg = "Variable exist already"+id;
+        tree->addError(msg,sym.Line,sym.Col);
     }
 }
 
-void environment::SaveStruct(map<std::string, TipoDato> tabla, std::string id, ast *tree)
+void environment::AssignVariable(symbol sym, std::string id, ast *tree)
 {
+    if (Tabla.find(id) != Tabla.end())
+    {
+        Tabla[id] = sym;
+    }
+    else
+    {
+        //se reporta un error
+        std::string msg = "Variable doesn't exist";
+        tree->addError(msg,sym.Line,sym.Col);
+    }
+}
+
+void environment::SaveStruct(int line, int col, map<std::string, TipoDato> tabla, std::string id, ast *tree)
+{
+   Line = line;
+   Col = col;
+   
     if (TablaStructs.find(id) == TablaStructs.end())
     {
         TablaStructs[id] = tabla;
@@ -28,35 +46,52 @@ void environment::SaveStruct(map<std::string, TipoDato> tabla, std::string id, a
     else
     {
         //se reporta un error
-        tree->ErrorOut += "Ya existe el struct "+id;
+        std::string msg = "Struct exist already"+id;
+        tree->addError(msg,Line,Col);
     }
 }
 
-symbol environment::GetVariable(std::string id, environment *env, ast *tree)
+void environment::SaveFunction(func_symbol funcSym, std::string id, ast *tree)
+{
+    if (TablaFunctions.find(id) == TablaFunctions.end())
+    {
+        TablaFunctions[id] = funcSym;
+    }
+    else
+    {
+        //se reporta un error
+        std::string msg = "function exist already"+id;
+        tree->addError(msg,Line,Col);   
+    }
+}
+
+symbol environment::GetVariable(int rline, int rcol, std::string id, environment *env, ast *tree)
 {
     symbol sym (0,0,"",NULO,nullptr);
-    environment tmpEnv = *env;
+    environment glbEnv = *env;
 
     for( ; ;)
     {
-        if (tmpEnv.Tabla.find(id) == tmpEnv.Tabla.end())
+        if (glbEnv.Tabla.find(id) == glbEnv.Tabla.end())
         {
-            if(tmpEnv.Anterior == nullptr)
+            if(glbEnv.Anterior == nullptr)
             {
+                std::string msg = "invalid id";
+                tree->addError(msg,rline,rcol);
                 break;
             }
             else
             {
-                tmpEnv = *tmpEnv.Anterior;
+                glbEnv = *glbEnv.Anterior;
             }
         }
         else
         {
-            symbol tempSym (tmpEnv.Tabla[id].Line,
-                            tmpEnv.Tabla[id].Col,
-                            tmpEnv.Tabla[id].Id,
-                            tmpEnv.Tabla[id].Tipo,
-                            tmpEnv.Tabla[id].Value);
+            symbol tempSym (glbEnv.Tabla[id].Line,
+                            glbEnv.Tabla[id].Col,
+                            glbEnv.Tabla[id].Id,
+                            glbEnv.Tabla[id].Tipo,
+                            glbEnv.Tabla[id].Value);
             sym = tempSym;
             break;
         }
@@ -69,27 +104,55 @@ symbol environment::GetVariable(std::string id, environment *env, ast *tree)
 map<std::string, TipoDato> environment::GetStruct(std::string id, environment *env, ast *tree)
 {
     map<std::string, TipoDato> sym_struct;
-    environment tmpEnv = *env;
+    environment glbEnv = *env;
 
     for( ; ;)
     {
-        if (tmpEnv.TablaStructs.find(id) == tmpEnv.TablaStructs.end())
+        if (glbEnv.TablaStructs.find(id) == glbEnv.TablaStructs.end())
         {
-            if(tmpEnv.Anterior == nullptr)
+            if(glbEnv.Anterior == nullptr)
             {
                 break;
             }
             else
             {
-                tmpEnv = *tmpEnv.Anterior;
+                glbEnv = *glbEnv.Anterior;
             }
         }
         else
         {
-            sym_struct = tmpEnv.TablaStructs[id];
+            sym_struct = glbEnv.TablaStructs[id];
             break;
         }
 
     }
     return sym_struct;
+}
+
+func_symbol environment::GetFunction(std::string id, environment *env, ast *tree)
+{
+    func_symbol sym_func;
+    environment glbEnv = *env;
+
+    for( ; ;)
+    {
+        if (glbEnv.TablaFunctions.find(id) == glbEnv.TablaFunctions.end())
+        {
+            if(glbEnv.Anterior == nullptr)
+            {
+                break;
+            }
+            else
+            {
+                glbEnv = *glbEnv.Anterior;
+            }
+        }
+        else
+        {
+            sym_func = glbEnv.TablaFunctions[id];
+            break;
+        }
+
+    }
+    return sym_func;
 }

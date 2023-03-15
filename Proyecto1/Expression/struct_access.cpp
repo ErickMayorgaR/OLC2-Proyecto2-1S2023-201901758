@@ -16,6 +16,6 @@ symbol struct_access::ejecutar(environment *env, ast *tree)
     symbol symStruct = StructExp->ejecutar(env, tree);
     environment *envStruct = (environment *)symStruct.Value;
 
-    sym = envStruct->GetVariable(Id, envStruct,tree);
+    sym = envStruct->GetVariable(Line, Col, Id, envStruct,tree);
     return sym;
 }

@@ -1,6 +1,6 @@
 #include "primitive.hpp"
 
-primitive::primitive(int line, int col, TipoDato tipo, std::string StrVal, int NumVal, float FloatVal, bool Boolval){
+primitive::primitive(int line, int col, TipoDato tipo, std::string StrVal, int NumVal, float FloatVal, bool BoolVal){
     this->Line = line;
     this->Col = col;
     this->Tipo = tipo;

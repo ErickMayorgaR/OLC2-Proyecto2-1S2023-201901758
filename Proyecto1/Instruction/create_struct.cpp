@@ -29,7 +29,8 @@ void create_struct::ejecutar(environment *env, ast *tree)
             }
             else
             {
-                tree->ErrorOut += "Error: tipos incompatibles";
+                std::string msg = "incompatibles types for struct";
+                tree->addError(msg,Line,Col);
                 return;
             }
             cont++;
@@ -40,7 +41,8 @@ void create_struct::ejecutar(environment *env, ast *tree)
     }
     else
     {
-        tree->ErrorOut += "Error: La cantidad de atributos no coincide\n";
+        std::string msg = "number of attributes does not match";
+        tree->addError(msg,Line,Col);
         return;
     }
 }

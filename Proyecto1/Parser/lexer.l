@@ -6,10 +6,6 @@
 /* %option header-file="lexer.hpp"*/
 %{
     #include <iostream>
-    // definicion del tipo de funcion del retorno de simbolos
-    // yy::Parser ¿Por qué?
-    // yy es el namespace de parser
-    // Parser es el nombre de la clase que lo envuelve (wapper)
     #define YY_DECL yy::Parser::symbol_type yylex(yyscan_t yyscanner, yy::location& loc, class OCL2Calc::ParserCtx & ctx)
     // definición de acciones
     #define YY_USER_ACTION loc.columns(yyleng);
@@ -51,19 +47,15 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
     /* caracteres ignorados */
 
-"//"[^\n]*\n            ; /* comentarios de una linea */
-
-[ \t\v\r\n\f]             ; /* caracteres en blanco */                
+"//"[^\n]*            ; /* comentarios de una linea */
+\n                  {loc.lines(yyleng);loc.step();}
+[ \t\v\r\n\f]             {loc.step();} /* caracteres en blanco */                
     /* Lexemas */
     /* defincion moderna
         token::ID ID sin caracteres especiales
 
 
 "^"     return Parser::symbol_type( token::POT, loc );
-  
-"while"    return Parser::symbol_type( token::WHILE, loc );
-"for"    return Parser::symbol_type( token::FOR, loc );
-
 "NULL"    return Parser::symbol_type( token::NLL, loc);
 
     */
@@ -107,6 +99,14 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 "main"    return Parser::symbol_type( token::RMAIN, loc );
 "if"    return Parser::symbol_type( token::RIF, loc );
 "else"    return Parser::symbol_type( token::RELSE, loc );
+"for"    return Parser::symbol_type( token::RFOR, loc );
+"while"    return Parser::symbol_type( token::RWHILE, loc );
+"break"  return Parser::symbol_type( token::RBREAK, loc );
+"continue"  return Parser::symbol_type( token::RCONTINUE, loc );
+"atoi"  return Parser::symbol_type( token::RATOI, loc );
+"atof"  return Parser::symbol_type( token::RATOF, loc );
+"iota"  return Parser::symbol_type( token::RIOTA, loc );
+"return"    return Parser::symbol_type( token::RRETURN, loc );
 
     /* TIPOS DE DATOS */
 "int"    return Parser::symbol_type( token::INT, loc );
@@ -116,13 +116,13 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 "struct"    return Parser::symbol_type( token::STRUCT, loc );
 "true"   return Parser::symbol_type( token::BOOLTRUE, loc );
 "false"   return Parser::symbol_type( token::BOOLFALSE, loc );
+"array"    return Parser::symbol_type( token::ARRAY, loc );
 
 {ID}  return Parser::make_ID(yytext, loc);
 {NUMERO} return Parser::make_NUMERO(yytext, loc);
 \"(\\.|[^"\\])*\" return Parser::make_STRING (yytext, loc);
 
-.                       {printf("ERROR LEXICO %s\n",yytext);}
-
+.  {std::cerr<<loc <<": "<<"error token no esperado"<<  std::endl; }
 
     /*si no se usa yyterminate() se agrega lo siguiente*/
     /* <<EOF>> {return Parser::make_END(loc);} */

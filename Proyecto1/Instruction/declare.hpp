@@ -11,8 +11,10 @@ public:
     TipoDato Tipo;
     std::string Id;
     expression *Valor;
+    std::string msgtipo;
+    std::string msgdata;
 
-    declare(int line, int col,TipoDato tipo,std::string id,expression *valor);
+    declare(int line, int col,TipoDato tipo,std::string Id,expression *valor);
     void ejecutar(environment *env, ast *tree) override;
 };
 

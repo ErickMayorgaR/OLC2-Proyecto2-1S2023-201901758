@@ -14,7 +14,7 @@ void func_if::ejecutar(environment *env, ast *tree)
 {
 
     symbol sym = Condition->ejecutar(env, tree);
-
+    //creando entorno if
     if(sym.Tipo == BOOL)
     {
         //si se cumple el if
@@ -54,7 +54,8 @@ void func_if::ejecutar(environment *env, ast *tree)
     else
     {
         //se reporta un error
-        tree->ErrorOut += "Error: tipo incorrecto para If";
+        std::string msg = "invalid combination, incorrect type for if";
+        tree->addError(msg,Line,Col);
     }
 
 }

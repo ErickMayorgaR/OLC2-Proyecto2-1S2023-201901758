@@ -1,17 +1,18 @@
-#ifndef PRINT_HPP
-#define PRINT_HPP
+#ifndef FUNC_WHILE_HPP
+#define FUNC_WHILE_HPP
 #include "Interfaces/expression.hpp"
 #include "Interfaces/instruction.hpp"
 
-class print : public instruction
+class func_while : public instruction
 {
 public:
     int Line;
     int Col;
-    expression *Valor;
+    expression *Sentence;
+    instruction *Block;
 
-    print(int line, int col, expression *valor);
+    func_while(int line, int col,expression *sentence,instruction *block);
     void ejecutar(environment *env, ast *tree) override;
 };
 
-#endif // PRINT_HPP
+#endif // FUNC_WHILE_HPP

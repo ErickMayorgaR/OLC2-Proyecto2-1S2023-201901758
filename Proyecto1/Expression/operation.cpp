@@ -51,7 +51,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for sum";
+            tree->addError(msg,Line,Col);
         }
     }
     else if(Operator == "-")
@@ -73,7 +74,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto para resta\n";
+            std::string msg = "invalid combination, incorrect type for minus";
+            tree->addError(msg,Line,Col);
         }
     }
     else if(Operator == "*")
@@ -95,7 +97,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for multiplication";
+            tree->addError(msg,Line,Col);
         }
     }
     else if(Operator == "/")
@@ -112,7 +115,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
             else
             {
                 //se reporta un error
-                tree->ErrorOut += "Error: no se puede dividir entre cero\n";
+                std::string msg = "can not divide by zero";
+                tree->addError(msg,Line,Col);
             }
         }
         else if(Dominante == FLOAT)
@@ -127,13 +131,15 @@ symbol operation::ejecutar(environment *env, ast *tree)
             else
             {
                 //se reporta un error
-                tree->ErrorOut += "Error: no se puede dividir entre cero\n";
+                std::string msg = "can not divide by zero";
+                tree->addError(msg,Line,Col);
             }
         }
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for divition";
+            tree->addError(msg,Line,Col);
         }
     }
      else if(Operator == "%")
@@ -150,46 +156,68 @@ symbol operation::ejecutar(environment *env, ast *tree)
             else
             {
                 //se reporta un error
-                tree->ErrorOut += "Error: no se puede realizar el modulo entre cero\n";
+                std::string msg = "can not obtain module of zero";
+                tree->addError(msg,Line,Col);
             }
         }
          
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for module";
+            tree->addError(msg,Line,Col);
         }
     } 
 /*-----------------------------------------------------------------------------------------------------------------------
                                           OPERADOR ++
 -----------------------------------------------------------------------------------------------------------------------*/
-/*     else if(Operator == "++")
+     else if(Operator == "++A")
     {
         if(Dominante == INTEGER)
         {
-            if(op1.Tipo != 0){
-                sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",op1.NumVal++,0.0,false);
-            } 
-            else{
-                sym = *new symbol(this->Line,this->Col,"",op2.Tipo,"",op2.NumVal++,0.0,false);
-            }  
+            int *val1 = (int *)op1.Value;
+            int result = (*val1)++;
+            sym = symbol(Line,Col,"",Dominante,&result);  
         }
         else if(Dominante == FLOAT)
         {
-            if(op1.Tipo != 0){
-                sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal++,false);
-            }
-            else{
-                sym = *new symbol(this->Line,this->Col,"",op1.Tipo,"",0,op1.FloatVal++,false);  
-            }
+            float *val1 = (float *)op1.Value;
+            float result = (*val1)++;
+            sym = symbol(Line,Col,"",Dominante,&result); 
             
         }
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto";
+            std::string msg = "invalid combination, incorrect type for inc++";
+            tree->addError(msg,Line,Col);
         }
-    }  */
+    }  
+
+    else if(Operator == "++B")
+    {
+        if(Dominante == INTEGER)
+        {
+            int *val1 = (int *)op1.Value;
+            *val1 = (*val1) + 1;
+            int result = (*val1);
+            sym = symbol(Line,Col,"",Dominante,&result);  
+        }
+        else if(Dominante == FLOAT)
+        {
+            float *val1 = (float *)op1.Value;
+            *val1 = (*val1) + 1.0;
+            float result = (*val1);
+            sym = symbol(Line,Col,"",Dominante,&result); 
+            
+        }
+        else
+        {
+            //se reporta un error
+            std::string msg = "invalid combination, incorrect type for ++inc";
+            tree->addError(msg,Line,Col);
+        }
+    }  
 /*-----------------------------------------------------------------------------------------------------------------------
                                           NEGACION UNARIA
 -----------------------------------------------------------------------------------------------------------------------*/
@@ -216,7 +244,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for negation";
+            tree->addError(msg,Line,Col);
         }
     } 
 /*-----------------------------------------------------------------------------------------------------------------------
@@ -236,13 +265,15 @@ symbol operation::ejecutar(environment *env, ast *tree)
             else
             {
                 //se reporta un error
-                tree->ErrorOut += "Error: tipo incorrecto, solo se acepta tipo bool\n";
+                std::string msg = "invalid type, type has to be bool";
+                tree->addError(msg,Line,Col);
             }
         }
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto, solo se acepta tipo bool\n";
+            std::string msg = "invalid type, type has to be bool";
+            tree->addError(msg,Line,Col);
         }
     } 
     else if(Operator == "||")
@@ -258,18 +289,20 @@ symbol operation::ejecutar(environment *env, ast *tree)
             else
             {
                 //se reporta un error
-                tree->ErrorOut += "Error: tipo incorrecto, solo se acepta tipo bool\n";
+                std::string msg = "invalid type, type has to be bool";
+                tree->addError(msg,Line,Col);
             }
         }
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto, solo se aceptan tipo bool\n";
+            std::string msg = "invalid type, type has to be bool";
+            tree->addError(msg,Line,Col);
         }
     } 
     else if(Operator == "!")
     {
-        if(Dominante == BOOL)
+        if(op1.Tipo == BOOL)
         {
             bool *val1 = (bool *)op1.Value;
             bool result = !(*val1) ;
@@ -278,7 +311,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: tipo incorrecto\n";
+            std::string msg = "invalid type, type has to be bool";
+            tree->addError(msg,Line,Col);
         }
     } 
 /*-----------------------------------------------------------------------------------------------------------------------
@@ -317,7 +351,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for ==";
+            tree->addError(msg,Line,Col);
         }
     }
     else if(Operator == "!=")
@@ -353,7 +388,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto\n";
+            std::string msg = "invalid combination, incorrect type for !=";
+            tree->addError(msg,Line,Col);
         }
     }
 /*-----------------------------------------------------------------------------------------------------------------------
@@ -385,7 +421,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto";
+            std::string msg = "invalid combination, incorrect type for >";
+            tree->addError(msg,Line,Col);
         }     
     }
     else if(Operator == "<")
@@ -414,7 +451,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto";
+            std::string msg = "invalid combination, incorrect type for <";
+            tree->addError(msg,Line,Col);
         }      
     }
     else if(Operator == ">=")
@@ -443,7 +481,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto";
+            std::string msg = "invalid combination, incorrect type for >=";
+            tree->addError(msg,Line,Col);
         }        
     }
     else if(Operator == "<=")
@@ -472,7 +511,8 @@ symbol operation::ejecutar(environment *env, ast *tree)
         else
         {
             //se reporta un error
-            tree->ErrorOut += "Error: combinacion invalida, tipo incorrecto";
+            std::string msg = "invalid combination, incorrect type for <=";
+            tree->addError(msg,Line,Col);
         }       
     }
     return sym;

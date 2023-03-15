@@ -1,17 +1,20 @@
-#ifndef PRINT_HPP
-#define PRINT_HPP
+#ifndef FUNC_FOR_HPP
+#define FUNC_FOR_HPP
 #include "Interfaces/expression.hpp"
 #include "Interfaces/instruction.hpp"
 
-class print : public instruction
+class func_for : public instruction
 {
 public:
     int Line;
     int Col;
-    expression *Valor;
+    instruction *Sentence1;
+    expression *Comparative;
+    expression *Sentence2;
+    instruction *Block;
 
-    print(int line, int col, expression *valor);
+    func_for(int line, int col, instruction *sentence1, expression *comparative, expression *sentence2, instruction *block);
     void ejecutar(environment *env, ast *tree) override;
 };
 
-#endif // PRINT_HPP
+#endif // FUNC_FOR_HPP

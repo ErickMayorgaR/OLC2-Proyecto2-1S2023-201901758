@@ -17,6 +17,8 @@ public:
     yy::Parser* Parser;
     std::string Salida;
     instruction *Main;
+    list_instruction *Functions;
+    
     ParserCtx();
     ~ParserCtx();
     std::string Analizar(std::string entrada);

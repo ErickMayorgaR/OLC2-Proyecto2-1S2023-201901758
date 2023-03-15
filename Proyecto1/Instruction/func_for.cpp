@@ -1,21 +1,43 @@
-#include "print.hpp"
+#include "func_for.hpp"
 
-print::print(int line, int col, expression *valor)
+func_for::func_for(int line, int col, instruction *sentence1, expression *comparative, expression *sentence2, instruction *block)
 {
-    this->Line = line;
-    this->Col = col;
-    this->Valor = valor;
+    Line = line;
+    Col = col;
+    Sentence1 = sentence1;
+    Comparative = comparative;
+    Sentence2 = sentence2;
+    Block = block;
 }
 
-void print::ejecutar(environment *env, ast *tree)
+void func_for::ejecutar(environment *env, ast *tree)
 {
-    symbol sym = this->Valor->ejecutar(env, tree);
-    if(sym.Tipo == STRING)
+    Sentence1->ejecutar(env,tree);
+    symbol sym = Comparative->ejecutar(env, tree);
+    if(sym.Tipo == BOOL)
     {
-        tree->ConsoleOut += sym.StrVal+"\n";
+        while(*static_cast<bool*>(Comparative->ejecutar(env, tree).Value)){
+            env->Inside_For = true;
+            //ejecuta el bloque
+            if(env->Continue_flag){
+                env->Continue_flag = false;
+                Sentence2->ejecutar(env, tree);
+                continue;
+            }
+            Block->ejecutar(env, tree);
+            Sentence2->ejecutar(env, tree);
+        }
+        
+        env->Inside_For = false;
+        return;
+
     }
+
     else
     {
-        tree->ConsoleOut += std::to_string(sym.NumVal)+"\n";
+        //se reporta un error
+        std::string msg = "invalid combination, incorrect type for for";
+        tree->addError(msg,Line,Col);
     }
 }
+

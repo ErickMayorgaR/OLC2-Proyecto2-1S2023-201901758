@@ -37,6 +37,13 @@ symbol func_iota::ejecutar(environment *env, ast *tree)
         std::string *result_ptr = new std::string(result);
         return symbol(Line, Col, "", STRING, result_ptr);    
     }
+    else if(sym2.Tipo == STRING)
+    {
+        std::string *val1 = (std::string *)sym2.Value;
+        std::string result = (*val1);
+        std::string *result_ptr = new std::string(result);
+        return symbol(Line, Col, "", STRING, result_ptr);
+    }
     else{
         // report an error
         std::string msg = "invalid type. Numeric or Bool expected.";

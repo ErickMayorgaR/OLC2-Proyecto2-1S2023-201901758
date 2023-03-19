@@ -1,6 +1,7 @@
 #include "ast.hpp"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 ast::ast()
 {
@@ -24,7 +25,7 @@ void ast::addSymbol(std::string id,std::string tipoSymbol,std::string tipo, std:
                 tipoSymbol.append(count1, ' ');
                 int count2 = 14-tipo.length();
                 tipo.append(count2, ' ');
-                int count3 = 14-data.length();
+                int count3 = 30-data.length();
                 data.append(count3, ' ');
 
                 std::string msgSymbol = id + tipoSymbol +tipo + " "+ data +std::to_string(line) + "       " + std::to_string(column);
@@ -35,9 +36,8 @@ const std::vector<std::string>& ast::getSymbolTable(){
 }
 
 void ast::changeSymbol(std::string msgId, std::string dataAfter) {
-                int count = 14-dataAfter.length();
+                int count = 30-dataAfter.length();
                 dataAfter.append(count, ' ');
-
                 int elemIndex = -1;
 
                 for (int i = 0; i < SymbolTable.size() && elemIndex == -1; i++) {
@@ -48,10 +48,58 @@ void ast::changeSymbol(std::string msgId, std::string dataAfter) {
                     }
                 }
                
-                int charIndex = 41;
-                for (int i = charIndex; i < 55; i++) {
-                    SymbolTable[elemIndex][i+1] = dataAfter[i - charIndex];
+                if (elemIndex != -1) {
+                    int charIndex = 42;
+                    SymbolTable[elemIndex].erase(charIndex+1, dataAfter.length());
+                    SymbolTable[elemIndex].insert(charIndex+1, dataAfter);
                 }
                 
                 
             }
+
+void ast::addNode(std::string parent, std::string label,std::vector<std::string> values)
+{
+    if(label == "Instruccion"){
+        if((nodeCount-3) == (nodeTemp2)){
+            nodeTemp2 = nodeTemp2 + 3;
+            nodeCount++;
+            return;}
+        else{
+        nodeTemp = nodeCount;
+        nodeTemp2 = nodeTemp;
+        }
+    }
+    // Create a new node with a unique name
+    nodeName = "node" + std::to_string(nodeCount++);
+    // Add the node to the graph
+    std::string nodeString = nodeName + " [label=\"" + label + "\"];\n";
+    dot += nodeString;
+
+    if(nodeCount == 3){
+        dot += "node1 -> node2;\n";
+    }
+    // Add edges to the parent node
+    if (parent != "") {
+        std::string edgeString = "";
+        for (const auto& value : values) {
+            edgeString += nodeName + " -> " + value + ";\n";
+        }
+        dot += edgeString;
+    }
+}
+
+void ast::ConnectChild(std::string parent){
+        dot += parent + " -> " + nodeName + ";\n";
+}
+
+void ast::ConnectNode(){
+        std::string nodeBefore = "node" + std::to_string(nodeTemp);
+        dot += nodeBefore + " -> " + nodeName + ";\n";
+}
+
+void ast::writeToFile() {
+        FILE* outfile = fopen("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment\\ast.dot", "w");
+        dot += "\n}";
+        fprintf(outfile, "%s", dot.c_str());
+        fclose(outfile);
+    }

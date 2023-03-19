@@ -18,6 +18,7 @@ public:
     std::string Salida;
     instruction *Main;
     list_instruction *Functions;
+    list_instruction *Structs;
     
     ParserCtx();
     ~ParserCtx();

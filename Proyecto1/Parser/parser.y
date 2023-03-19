@@ -44,16 +44,21 @@
     /* expressions */
     #include "../Proyecto1/Expression/primitive.hpp"
     #include "../Proyecto1/Expression/access.hpp"
-    #include "../Proyecto1/Expression/array_access.hpp"
+    #include "../Proyecto1/Expression/vector_access.hpp"
     #include "../Proyecto1/Expression/operation.hpp"
     #include "../Proyecto1/Expression/func_atoi.hpp"
     #include "../Proyecto1/Expression/func_atof.hpp"
     #include "../Proyecto1/Expression/func_iota.hpp"
+    #include "../Proyecto1/Expression/func_mean.hpp"
+    #include "../Proyecto1/Expression/func_median.hpp"
+    #include "../Proyecto1/Expression/func_mode.hpp"
     #include "../Proyecto1/Expression/struct_access.hpp"
     #include "../Proyecto1/Expression/map_struct_dec.hpp"
     #include "../Proyecto1/Expression/list_expression.hpp"
     #include "../Proyecto1/Expression/call_exp.hpp"
-    #include "../Proyecto1/Expression/expression_array.hpp"
+    #include "../Proyecto1/Expression/expression_vector.hpp"
+    #include "../Proyecto1/Expression/func_get.hpp"
+    #include "../Proyecto1/Expression/func_size.hpp"
     /* instructions */
     #include "../Proyecto1/Interfaces/instruction.hpp"
     #include "../Proyecto1/Instruction/print.hpp"
@@ -69,6 +74,12 @@
     #include "../Proyecto1/Instruction/declare.hpp"
     #include "../Proyecto1/Instruction/assign.hpp"
     #include "../Proyecto1/Instruction/declare_struct.hpp"
+    #include "../Proyecto1/Instruction/declare_vector.hpp"
+    #include "../Proyecto1/Instruction/declare_matrix.hpp"
+    #include "../Proyecto1/Instruction/assign_vector.hpp"
+    #include "../Proyecto1/Instruction/func_pushback.hpp"
+    #include "../Proyecto1/Instruction/func_remove.hpp"
+    #include "../Proyecto1/Instruction/func_pushfront.hpp"
     #include "../Proyecto1/Instruction/create_struct.hpp"
     #include "../Proyecto1/Instruction/function.hpp"
     #include "../Proyecto1/Instruction/call_inst.hpp"
@@ -80,12 +91,6 @@
 
 }
 
-/*
-FALTAN:
--> MATRICES
--> VECTORES
-*/
-
 /* enlace con la función del retorno de simbolos */
 %code {yy::Parser::symbol_type yylex(void* yyscanner, yy::location& loc, class OCL2Calc::ParserCtx & ctx); }
 
@@ -93,15 +98,16 @@ FALTAN:
 %token END 0;
 
 /*tokens*/
-%token <std::string> NUMERO ID STRING TSTRING FLOAT BOOLEAN STRUCT ARRAY INT BOOLTRUE BOOLFALSE
+%token <std::string> NUMERO ID STRING TSTRING FLOAT BOOLEAN RSTRUCT RVECTOR INT BOOLTRUE BOOLFALSE
 %token <std::string> PARA PARC LLAVA LLAVC CORA CORC
 %token <std::string> VOID RMAIN NLL
 %token <std::string> SUMA MENOS POR DIV INC MOD 
 %token <std::string> RIF RELSE RWHILE RFOR
-%token <std::string> PRINTF MEDIA MEDIANA MODA RATOI RATOF RIOTA
+%token <std::string> PRINTF RMEAN RMEDIAN RMODE RATOI RATOF RIOTA
 %token <std::string> RBREAK RCONTINUE RRETURN
 %token <std::string> MAYOR MENOR MAYEQU MENEQU EQU DIFF
-%token <std::string> AND OR NOT
+%token <std::string> AND OR NOT 
+%token <std::string> VPBACK VGET VREMOVE VSIZE VPFRONT
 %token ';' '=' ',' '.'
 
 /* precedencia de operadores */
@@ -137,6 +143,7 @@ FALTAN:
 %type<list_instruction*> ELSE;
 %type<list_expression*> EXP_LIST;
 %type<list_instruction*> LIST_FUNC;
+%type<list_instruction*> LIST_STRUCT;
 %type<instruction*> INSTRUCTION;
 
 //FUNCIONES EMBEBIDAS
@@ -147,9 +154,11 @@ FALTAN:
 %type<expression*> IOTA;
 %type<instruction*> FUNCTION;
 %type<instruction*> CALL_INST;
-/* %type<instruction*> MEDIA;
-%type<instruction*> MEDIANA;
-%type<instruction*> MODA; */
+%type<instruction*> DECLARE_VECTOR;
+%type<instruction*> DECLARE_MATRIX;
+%type<expression*> MEAN;
+%type<expression*> MEDIAN;
+%type<expression*> MODE;  
 
 //FUNCIONES DE ASIGNACION
 %type<instruction*> ASSIGNATION; 
@@ -169,6 +178,13 @@ FALTAN:
 //ESTRUCTURA DE DATOS
  %type<instruction*> DECLARE_STRUCT;
  %type<instruction*> CREATE_STRUCT;
+
+ //FUNCIONES DE VECTORES
+%type<instruction*> PUSHBACK;
+%type<instruction*> PUSHFRONT;
+%type<expression*> GET;
+%type<expression*> SIZE;
+%type<instruction*> REMOVE;
 
 //TYPES DATA
 %type<TipoDato> TYPES;
@@ -196,6 +212,14 @@ START : MAIN
         ctx.Salida = "!Ejecución realizada con éxito!";
         $$ = $2;
     }
+    | LIST_STRUCT LIST_FUNC MAIN
+    {
+        ctx.Main = $3;
+        ctx.Structs = $1;
+        ctx.Functions = $2;
+        ctx.Salida = "!Ejecución realizada con éxito!";
+        $$ = $3;
+    }
 ;
 
 LIST_FUNC : LIST_FUNC FUNCTION 
@@ -210,6 +234,18 @@ LIST_FUNC : LIST_FUNC FUNCTION
         }
 ;
 
+LIST_STRUCT : LIST_STRUCT DECLARE_STRUCT 
+        { 
+            $1->newInst($2);
+            $$ = $1;
+        }  
+        | DECLARE_STRUCT 
+        {
+            $$ = new list_instruction();
+            $$->newInst($1);
+        }
+;
+
 FUNCTION : TYPES ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
         {
             $$ = new function(0,0,$1,$2,$4,$7);
@@ -218,6 +254,10 @@ FUNCTION : TYPES ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
         {
             $$ = new function(0,0,$1,$2,nullptr,$6);
         }
+        | ID ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
+        {
+            $$ = new function(0,0,STRUCT,$2,$4,$7);
+        }
 ;
 
 FUNCTION_LIST : FUNCTION_LIST ',' TYPES ID 
@@ -225,10 +265,20 @@ FUNCTION_LIST : FUNCTION_LIST ',' TYPES ID
             $1->newMap($4,$3);
             $$ = $1;
         }
+        | FUNCTION_LIST ',' RVECTOR MENOR TYPES MAYOR ID 
+        {
+            $1->newMap($7,VECTOR);
+            $$ = $1;
+        }
         | TYPES ID 
         {   
             $$ = new map_struct_dec();
             $$->newMap($2, $1);
+        }
+        | RVECTOR MENOR TYPES MAYOR ID 
+        {
+            $$ = new map_struct_dec();
+            $$->newMap($5, VECTOR);
         }
 ;
 
@@ -259,16 +309,33 @@ INSTRUCTION : PRINT ';' { $$ = $1; }
             | ASSIGNATION ';' {$$ = $1;}
             | DECLARE_STRUCT { $$ = $1; }
             | CREATE_STRUCT { $$ = $1; }
+            | DECLARE_VECTOR ';' {$$ = $1;}
+            | DECLARE_MATRIX ';' {$$ = $1;}
             | BREAK ';' {$$ = $1;}
             | CONTINUE ';' {$$ = $1;}
             | RETURN ';' {$$ = $1;}
             | CALL_INST { $$ = $1; }
-/*            | MEDIA ';' {$$ = $1;}
-            | MEDIANA ';' {$$ = $1;}
-            | MODA ';' {$$ = $1;}  */
+            | PUSHBACK ';' {$$ = $1;}
+            | PUSHFRONT ';' {$$ = $1;}
+            | REMOVE ';' {$$ = $1;}
 ;
 
-PRINT : PRINTF PARA EXP PARC { $$ = new print(0,0,$3); }
+PRINT : PRINTF PARA EXP_LIST  PARC { $$ = new print(@1.begin.line, @1.begin.column,$3); }
+;
+
+PUSHBACK : ID '.' VPBACK PARA EXP PARC {$$ = new func_pushback(@1.begin.line, @1.begin.column, $1,$5);}
+;
+
+PUSHFRONT : ID '.' VPFRONT PARA EXP PARC {$$ = new func_pushfront(@1.begin.line, @1.begin.column, $1,$5);}
+;
+
+GET : ID '.' VGET PARA EXP PARC {$$ = new func_get(@1.begin.line, @1.begin.column, $1,$5);}
+;
+
+SIZE : ID '.' VSIZE PARA PARC {$$ = new func_size(@1.begin.line, @1.begin.column, $1);}
+;
+
+REMOVE : ID '.' VREMOVE PARA EXP PARC {$$ = new func_remove(@1.begin.line, @1.begin.column, $1,$5);}
 ;
 
 IF : RIF EXP LLAVA LIST_INST LLAVC ELSEIF_LIST ELSE
@@ -321,7 +388,7 @@ FOR : RFOR PARA DECLARATION ';' EXP ';' EXP PARC LLAVA LIST_INST LLAVC {$$ = new
 EXPRESSION : EXP {$$ = new func_expression(@1.begin.line, @1.begin.column,$1);}
 ;
 
-DECLARE_STRUCT: STRUCT ID LLAVA DECLARE_LIST LLAVC {$$ = new declare_struct(@1.begin.line, @1.begin.column,$4,$2); }
+DECLARE_STRUCT: RSTRUCT ID LLAVA DECLARE_LIST LLAVC {$$ = new declare_struct(@1.begin.line, @1.begin.column,$4,$2); }
 ;
 
 DECLARE_LIST : DECLARE_LIST TYPES ID ';'
@@ -329,14 +396,24 @@ DECLARE_LIST : DECLARE_LIST TYPES ID ';'
             $1->newMap($3,$2);
             $$ = $1;
         }
+        | DECLARE_LIST ID ID ';'
+        {
+            $1->newMap($3,STRUCT);
+            $$ = $1;
+        }
         | TYPES ID ';'
         {
             $$ = new map_struct_dec();
             $$->newMap($2, $1);
         }
+        | ID ID ';'
+        {
+            $$ = new map_struct_dec();
+            $$->newMap($2, STRUCT);
+        }
 ;
 
-CREATE_STRUCT : STRUCT ID ID '=' LLAVA EXP_LIST LLAVC
+CREATE_STRUCT : RSTRUCT ID ID '=' LLAVA EXP_LIST LLAVC ';'
                 {
                     $$ = new create_struct(@1.begin.line, @1.begin.column,$2,$3,$6);
                 }
@@ -358,6 +435,7 @@ DECLARATION : TYPES ID '=' EXP {$$ = new declare(@1.begin.line, @1.begin.column,
             | TYPES ID {$$ = new declare(@1.begin.line, @1.begin.column,$1,$2,nullptr);}
 
 ASSIGNATION : ID '=' EXP {$$ = new assign(@1.begin.line, @1.begin.column,$1,$3);}
+            | ID CORA PRIMITIVE CORC '=' PRIMITIVE {$$ = new assign_vector(@1.begin.line, @1.begin.column, $1,$3,$6);}
 ;   
 
 BREAK : RBREAK {$$ = new func_break(@1.begin.line, @1.begin.column);}
@@ -366,27 +444,25 @@ BREAK : RBREAK {$$ = new func_break(@1.begin.line, @1.begin.column);}
 CONTINUE : RCONTINUE {$$ = new func_continue(@1.begin.line, @1.begin.column);}
 ;
 
-RETURN : RRETURN EXP { $$ = new func_return(0,0,$2); }
-        | RRETURN { $$ = new func_return(0,0,nullptr); }
-;
-/*
-MEDIA : MEDIA PARA VARIABLE PARC ';' {$$ = }
+RETURN : RRETURN EXP { $$ = new func_return(@1.begin.line, @1.begin.column,$2); }
+        | RRETURN { $$ = new func_return(@1.begin.line, @1.begin.column,nullptr); }
 ;
 
-MEDIANA : MEDIANA PARA VARIABLE PARC ';' {$$ = }
+MEAN : RMEAN PARA ID PARC {$$ = new func_mean(@1.begin.line, @1.begin.column,$3);}
 ;
 
-MODA : MODA PARA VARIABLE PARC ';' {$$ = }
+MEDIAN : RMEDIAN PARA ID PARC {$$ = new func_median(@1.begin.line, @1.begin.column,$3);}
 ;
 
-*/
-
+MODE : RMODE PARA ID PARC {$$ = new func_mode(@1.begin.line, @1.begin.column,$3);}
+;
+ 
 TYPES : INT { $$ = INTEGER; }
     | TSTRING { $$ = STRING; }
     | BOOLEAN { $$ = BOOL; }
     | FLOAT { $$ = FLOAT; }
     | VOID {$$ = VOID;}
-    | ARRAY { $$ = ARRAY; }
+    | RVECTOR {$$ = VECTOR;}
 ;
 //OPERADORES ARITMÉTICOS Y LÓGICOS
 
@@ -420,8 +496,13 @@ EXP : EXP SUMA EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, 
     | ATOI {$$ = $1;}
     | ATOF {$$ = $1;}
     | IOTA {$$ = $1;}
-    | LLAVA EXP_LIST LLAVC { $$ = new expression_array(0,0,$2); }
+    | CORA EXP_LIST CORC { $$ = new expression_vector(@1.begin.line, @1.begin.column,$2); }
     | CALL_EXP { $$ = $1; }
+    | GET {$$ = $1;}
+    | SIZE {$$ = $1;}
+    | MEAN {$$ = $1;}
+    | MEDIAN {$$ = $1;}
+    | MODE {$$ = $1;}   
     //VALOR
     | PRIMITIVE { $$ = $1; }
     
@@ -433,7 +514,7 @@ ATOI : RATOI PARA PRIMITIVE PARC {$$ = new func_atoi(@1.begin.line, @1.begin.col
 ATOF : RATOF PARA PRIMITIVE PARC {$$ = new func_atof(@1.begin.line, @1.begin.column,$3);}
 ;
 
-IOTA : RIOTA PARA PRIMITIVE PARC {$$ = new func_iota(@1.begin.line, @1.begin.column,$3);}
+IOTA : RIOTA PARA EXP PARC {$$ = new func_iota(@1.begin.line, @1.begin.column,$3);}
 ;
 
 
@@ -463,14 +544,26 @@ PRIMITIVE : NUMERO {
             std::string str2 = str1.erase(str1.length()-1,1);
             $$ = new primitive(@1.begin.line, @1.begin.column,STRING,str2,0,0.0,false);
         }
+        | NLL {$$ = new primitive(@1.begin.line, @1.begin.column,NULO,"",0,0.0,false);}
         |BOOLTRUE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, true);}
         |BOOLFALSE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, false);}
         |LIST_ARR {$$ = $1;}
 ;
 
-LIST_ARR : LIST_ARR CORA EXP CORC { $$ = new array_access(@1.begin.line, @1.begin.column,$1,$3); }
+LIST_ARR : LIST_ARR CORA EXP CORC { $$ = new vector_access(@1.begin.line, @1.begin.column,$1,$3); }
         | LIST_ARR '.' ID { $$ = new struct_access(@1.begin.line, @1.begin.column,$1,$3); }
         | ID {$$ = new access(@1.begin.line, @1.begin.column,$1); }
+;
+
+DECLARE_VECTOR : RVECTOR MENOR TYPES MAYOR ID '=' EXP  {$$ = new declare_vector(@1.begin.line, @1.begin.column, $3, $5, $7);}
+                | RVECTOR MENOR TYPES MAYOR ID  {$$ = new declare_vector(@1.begin.line, @1.begin.column, $3, $5, nullptr);}
+;
+
+DECLARE_MATRIX : TYPES ID CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC {$$ = new declare_matrix(@1.begin.line, @1.begin.column,$1, $2, $4, nullptr, nullptr, $8);}
+                | TYPES ID CORA PRIMITIVE CORC CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC {$$ = new declare_matrix(@1.begin.line, @1.begin.column,$1, $2, $4 , $7, nullptr, $11);}
+                | TYPES ID CORA PRIMITIVE CORC CORA PRIMITIVE CORC CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC {$$ = new declare_matrix(@1.begin.line, @1.begin.column,$1, $2, $4, $7, $10, $14);}
+;
+
 ;
 CALL_EXP : ID PARA EXP_LIST PARC { $$ = new call_exp(0,0,$1,$3); }
         | ID PARA PARC { $$ = new call_exp(0,0,$1,nullptr); }

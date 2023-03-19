@@ -10,7 +10,7 @@ public:
     int Col;
     expression *Sentence;
     instruction *Block;
-
+    
     func_while(int line, int col,expression *sentence,instruction *block);
     void ejecutar(environment *env, ast *tree) override;
 };

@@ -34,6 +34,9 @@ LETRAS [a-zA-ZñÑ]
 NUMERO {DIGITO}+("."{DIGITO}+)?
 ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
+/* Cambiar al estado IN_COMMENT */
+%x IN_COMMENT 
+
 %%
 
 %{
@@ -46,7 +49,14 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
 
     /* caracteres ignorados */
-
+"/*"           { BEGIN(IN_COMMENT); } /* Cambiar al estado IN_COMMENT */
+<IN_COMMENT>{
+  "*/"        { BEGIN(INITIAL); }    /* Volver al estado inicial */
+  [^*\n]+     { }                    /* Ignorar todo lo demás */
+  \n          { loc.lines(yyleng);loc.step(); }        /* Contar las nuevas líneas */
+  "*"         { /* Ignorar */ }      /* Ignorar los asteriscos */
+  "*"+        { /* Ignorar */ }      /* Ignorar más de un asterisco */
+}
 "//"[^\n]*            ; /* comentarios de una linea */
 \n                  {loc.lines(yyleng);loc.step();}
 [ \t\v\r\n\f]             {loc.step();} /* caracteres en blanco */                
@@ -56,8 +66,6 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
 
 "^"     return Parser::symbol_type( token::POT, loc );
-"NULL"    return Parser::symbol_type( token::NLL, loc);
-
     */
 
 "+"     return Parser::symbol_type( token::SUMA, loc );
@@ -107,16 +115,27 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 "atof"  return Parser::symbol_type( token::RATOF, loc );
 "iota"  return Parser::symbol_type( token::RIOTA, loc );
 "return"    return Parser::symbol_type( token::RRETURN, loc );
+"NULL"    return Parser::symbol_type( token::NLL, loc);
+"mean"  return Parser::symbol_type( token::RMEAN, loc );
+"median"  return Parser::symbol_type( token::RMEDIAN, loc );
+"mode"  return Parser::symbol_type( token::RMODE, loc );
+
+    /* VECTOR FUNCTIONS  */
+"push_back"    return Parser::symbol_type( token::VPBACK, loc );
+"get"    return Parser::symbol_type( token::VGET, loc );
+"remove"    return Parser::symbol_type( token::VREMOVE, loc );
+"size"    return Parser::symbol_type( token::VSIZE, loc );
+"push_front"    return Parser::symbol_type( token::VPFRONT, loc );
 
     /* TIPOS DE DATOS */
 "int"    return Parser::symbol_type( token::INT, loc );
 "float"  return Parser::symbol_type( token::FLOAT, loc );
 "string"    return Parser::symbol_type( token::TSTRING, loc );
 "bool"   return Parser::symbol_type( token::BOOLEAN, loc );
-"struct"    return Parser::symbol_type( token::STRUCT, loc );
+"struct"    return Parser::symbol_type( token::RSTRUCT, loc );
 "true"   return Parser::symbol_type( token::BOOLTRUE, loc );
 "false"   return Parser::symbol_type( token::BOOLFALSE, loc );
-"array"    return Parser::symbol_type( token::ARRAY, loc );
+"vector"  return Parser::symbol_type(token::RVECTOR, loc);
 
 {ID}  return Parser::make_ID(yytext, loc);
 {NUMERO} return Parser::make_NUMERO(yytext, loc);

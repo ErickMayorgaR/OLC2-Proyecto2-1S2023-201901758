@@ -42,7 +42,7 @@
 
 
 // Unqualified %code blocks.
-#line 90 "parser.y"
+#line 95 "parser.y"
 yy::Parser::symbol_type yylex(void* yyscanner, yy::location& loc, class OCL2Calc::ParserCtx & ctx); 
 
 #line 49 "parser.cpp"
@@ -211,6 +211,11 @@ namespace yy {
         value.YY_MOVE_OR_COPY< TipoDato > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_GET: // GET
+      case symbol_kind::S_SIZE: // SIZE
+      case symbol_kind::S_MEAN: // MEAN
+      case symbol_kind::S_MEDIAN: // MEDIAN
+      case symbol_kind::S_MODE: // MODE
       case symbol_kind::S_EXP: // EXP
       case symbol_kind::S_ATOI: // ATOI
       case symbol_kind::S_ATOF: // ATOF
@@ -231,6 +236,9 @@ namespace yy {
       case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+      case symbol_kind::S_REMOVE: // REMOVE
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
       case symbol_kind::S_WHILE: // WHILE
@@ -243,6 +251,8 @@ namespace yy {
       case symbol_kind::S_BREAK: // BREAK
       case symbol_kind::S_CONTINUE: // CONTINUE
       case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
       case symbol_kind::S_CALL_INST: // CALL_INST
         value.YY_MOVE_OR_COPY< instruction* > (YY_MOVE (that.value));
         break;
@@ -252,6 +262,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
@@ -269,8 +280,8 @@ namespace yy {
       case symbol_kind::S_TSTRING: // TSTRING
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_STRUCT: // STRUCT
-      case symbol_kind::S_ARRAY: // ARRAY
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+      case symbol_kind::S_RVECTOR: // RVECTOR
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -294,9 +305,9 @@ namespace yy {
       case symbol_kind::S_RWHILE: // RWHILE
       case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_MEDIA: // MEDIA
-      case symbol_kind::S_MEDIANA: // MEDIANA
-      case symbol_kind::S_MODA: // MODA
+      case symbol_kind::S_RMEAN: // RMEAN
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+      case symbol_kind::S_RMODE: // RMODE
       case symbol_kind::S_RATOI: // RATOI
       case symbol_kind::S_RATOF: // RATOF
       case symbol_kind::S_RIOTA: // RIOTA
@@ -312,6 +323,11 @@ namespace yy {
       case symbol_kind::S_AND: // AND
       case symbol_kind::S_OR: // OR
       case symbol_kind::S_NOT: // NOT
+      case symbol_kind::S_VPBACK: // VPBACK
+      case symbol_kind::S_VGET: // VGET
+      case symbol_kind::S_VREMOVE: // VREMOVE
+      case symbol_kind::S_VSIZE: // VSIZE
+      case symbol_kind::S_VPFRONT: // VPFRONT
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -334,6 +350,11 @@ namespace yy {
         value.move< TipoDato > (YY_MOVE (that.value));
         break;
 
+      case symbol_kind::S_GET: // GET
+      case symbol_kind::S_SIZE: // SIZE
+      case symbol_kind::S_MEAN: // MEAN
+      case symbol_kind::S_MEDIAN: // MEDIAN
+      case symbol_kind::S_MODE: // MODE
       case symbol_kind::S_EXP: // EXP
       case symbol_kind::S_ATOI: // ATOI
       case symbol_kind::S_ATOF: // ATOF
@@ -354,6 +375,9 @@ namespace yy {
       case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+      case symbol_kind::S_REMOVE: // REMOVE
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
       case symbol_kind::S_WHILE: // WHILE
@@ -366,6 +390,8 @@ namespace yy {
       case symbol_kind::S_BREAK: // BREAK
       case symbol_kind::S_CONTINUE: // CONTINUE
       case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
       case symbol_kind::S_CALL_INST: // CALL_INST
         value.move< instruction* > (YY_MOVE (that.value));
         break;
@@ -375,6 +401,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
@@ -392,8 +419,8 @@ namespace yy {
       case symbol_kind::S_TSTRING: // TSTRING
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_STRUCT: // STRUCT
-      case symbol_kind::S_ARRAY: // ARRAY
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+      case symbol_kind::S_RVECTOR: // RVECTOR
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -417,9 +444,9 @@ namespace yy {
       case symbol_kind::S_RWHILE: // RWHILE
       case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_MEDIA: // MEDIA
-      case symbol_kind::S_MEDIANA: // MEDIANA
-      case symbol_kind::S_MODA: // MODA
+      case symbol_kind::S_RMEAN: // RMEAN
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+      case symbol_kind::S_RMODE: // RMODE
       case symbol_kind::S_RATOI: // RATOI
       case symbol_kind::S_RATOF: // RATOF
       case symbol_kind::S_RIOTA: // RIOTA
@@ -435,6 +462,11 @@ namespace yy {
       case symbol_kind::S_AND: // AND
       case symbol_kind::S_OR: // OR
       case symbol_kind::S_NOT: // NOT
+      case symbol_kind::S_VPBACK: // VPBACK
+      case symbol_kind::S_VGET: // VGET
+      case symbol_kind::S_VREMOVE: // VREMOVE
+      case symbol_kind::S_VSIZE: // VSIZE
+      case symbol_kind::S_VPFRONT: // VPFRONT
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -457,6 +489,11 @@ namespace yy {
         value.copy< TipoDato > (that.value);
         break;
 
+      case symbol_kind::S_GET: // GET
+      case symbol_kind::S_SIZE: // SIZE
+      case symbol_kind::S_MEAN: // MEAN
+      case symbol_kind::S_MEDIAN: // MEDIAN
+      case symbol_kind::S_MODE: // MODE
       case symbol_kind::S_EXP: // EXP
       case symbol_kind::S_ATOI: // ATOI
       case symbol_kind::S_ATOF: // ATOF
@@ -477,6 +514,9 @@ namespace yy {
       case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+      case symbol_kind::S_REMOVE: // REMOVE
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
       case symbol_kind::S_WHILE: // WHILE
@@ -489,6 +529,8 @@ namespace yy {
       case symbol_kind::S_BREAK: // BREAK
       case symbol_kind::S_CONTINUE: // CONTINUE
       case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
       case symbol_kind::S_CALL_INST: // CALL_INST
         value.copy< instruction* > (that.value);
         break;
@@ -498,6 +540,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
@@ -515,8 +558,8 @@ namespace yy {
       case symbol_kind::S_TSTRING: // TSTRING
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_STRUCT: // STRUCT
-      case symbol_kind::S_ARRAY: // ARRAY
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+      case symbol_kind::S_RVECTOR: // RVECTOR
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -540,9 +583,9 @@ namespace yy {
       case symbol_kind::S_RWHILE: // RWHILE
       case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_MEDIA: // MEDIA
-      case symbol_kind::S_MEDIANA: // MEDIANA
-      case symbol_kind::S_MODA: // MODA
+      case symbol_kind::S_RMEAN: // RMEAN
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+      case symbol_kind::S_RMODE: // RMODE
       case symbol_kind::S_RATOI: // RATOI
       case symbol_kind::S_RATOF: // RATOF
       case symbol_kind::S_RIOTA: // RIOTA
@@ -558,6 +601,11 @@ namespace yy {
       case symbol_kind::S_AND: // AND
       case symbol_kind::S_OR: // OR
       case symbol_kind::S_NOT: // NOT
+      case symbol_kind::S_VPBACK: // VPBACK
+      case symbol_kind::S_VGET: // VGET
+      case symbol_kind::S_VREMOVE: // VREMOVE
+      case symbol_kind::S_VSIZE: // VSIZE
+      case symbol_kind::S_VPFRONT: // VPFRONT
         value.copy< std::string > (that.value);
         break;
 
@@ -579,6 +627,11 @@ namespace yy {
         value.move< TipoDato > (that.value);
         break;
 
+      case symbol_kind::S_GET: // GET
+      case symbol_kind::S_SIZE: // SIZE
+      case symbol_kind::S_MEAN: // MEAN
+      case symbol_kind::S_MEDIAN: // MEDIAN
+      case symbol_kind::S_MODE: // MODE
       case symbol_kind::S_EXP: // EXP
       case symbol_kind::S_ATOI: // ATOI
       case symbol_kind::S_ATOF: // ATOF
@@ -599,6 +652,9 @@ namespace yy {
       case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+      case symbol_kind::S_REMOVE: // REMOVE
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
       case symbol_kind::S_WHILE: // WHILE
@@ -611,6 +667,8 @@ namespace yy {
       case symbol_kind::S_BREAK: // BREAK
       case symbol_kind::S_CONTINUE: // CONTINUE
       case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
       case symbol_kind::S_CALL_INST: // CALL_INST
         value.move< instruction* > (that.value);
         break;
@@ -620,6 +678,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
@@ -637,8 +696,8 @@ namespace yy {
       case symbol_kind::S_TSTRING: // TSTRING
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_STRUCT: // STRUCT
-      case symbol_kind::S_ARRAY: // ARRAY
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+      case symbol_kind::S_RVECTOR: // RVECTOR
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -662,9 +721,9 @@ namespace yy {
       case symbol_kind::S_RWHILE: // RWHILE
       case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_MEDIA: // MEDIA
-      case symbol_kind::S_MEDIANA: // MEDIANA
-      case symbol_kind::S_MODA: // MODA
+      case symbol_kind::S_RMEAN: // RMEAN
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+      case symbol_kind::S_RMODE: // RMODE
       case symbol_kind::S_RATOI: // RATOI
       case symbol_kind::S_RATOF: // RATOF
       case symbol_kind::S_RIOTA: // RIOTA
@@ -680,6 +739,11 @@ namespace yy {
       case symbol_kind::S_AND: // AND
       case symbol_kind::S_OR: // OR
       case symbol_kind::S_NOT: // NOT
+      case symbol_kind::S_VPBACK: // VPBACK
+      case symbol_kind::S_VGET: // VGET
+      case symbol_kind::S_VREMOVE: // VREMOVE
+      case symbol_kind::S_VSIZE: // VSIZE
+      case symbol_kind::S_VPFRONT: // VPFRONT
         value.move< std::string > (that.value);
         break;
 
@@ -720,507 +784,603 @@ namespace yy {
         switch (yykind)
     {
       case symbol_kind::S_NUMERO: // NUMERO
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 726 "parser.cpp"
+#line 790 "parser.cpp"
         break;
 
       case symbol_kind::S_ID: // ID
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 732 "parser.cpp"
+#line 796 "parser.cpp"
         break;
 
       case symbol_kind::S_STRING: // STRING
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 738 "parser.cpp"
+#line 802 "parser.cpp"
         break;
 
       case symbol_kind::S_TSTRING: // TSTRING
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 744 "parser.cpp"
+#line 808 "parser.cpp"
         break;
 
       case symbol_kind::S_FLOAT: // FLOAT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 750 "parser.cpp"
+#line 814 "parser.cpp"
         break;
 
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 756 "parser.cpp"
+#line 820 "parser.cpp"
         break;
 
-      case symbol_kind::S_STRUCT: // STRUCT
-#line 179 "parser.y"
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 762 "parser.cpp"
+#line 826 "parser.cpp"
         break;
 
-      case symbol_kind::S_ARRAY: // ARRAY
-#line 179 "parser.y"
+      case symbol_kind::S_RVECTOR: // RVECTOR
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 768 "parser.cpp"
+#line 832 "parser.cpp"
         break;
 
       case symbol_kind::S_INT: // INT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 774 "parser.cpp"
+#line 838 "parser.cpp"
         break;
 
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 780 "parser.cpp"
+#line 844 "parser.cpp"
         break;
 
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 786 "parser.cpp"
+#line 850 "parser.cpp"
         break;
 
       case symbol_kind::S_PARA: // PARA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 792 "parser.cpp"
+#line 856 "parser.cpp"
         break;
 
       case symbol_kind::S_PARC: // PARC
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 798 "parser.cpp"
+#line 862 "parser.cpp"
         break;
 
       case symbol_kind::S_LLAVA: // LLAVA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 804 "parser.cpp"
+#line 868 "parser.cpp"
         break;
 
       case symbol_kind::S_LLAVC: // LLAVC
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 810 "parser.cpp"
+#line 874 "parser.cpp"
         break;
 
       case symbol_kind::S_CORA: // CORA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 816 "parser.cpp"
+#line 880 "parser.cpp"
         break;
 
       case symbol_kind::S_CORC: // CORC
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 822 "parser.cpp"
+#line 886 "parser.cpp"
         break;
 
       case symbol_kind::S_VOID: // VOID
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 828 "parser.cpp"
+#line 892 "parser.cpp"
         break;
 
       case symbol_kind::S_RMAIN: // RMAIN
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 834 "parser.cpp"
+#line 898 "parser.cpp"
         break;
 
       case symbol_kind::S_NLL: // NLL
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 840 "parser.cpp"
+#line 904 "parser.cpp"
         break;
 
       case symbol_kind::S_SUMA: // SUMA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 846 "parser.cpp"
+#line 910 "parser.cpp"
         break;
 
       case symbol_kind::S_MENOS: // MENOS
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 852 "parser.cpp"
+#line 916 "parser.cpp"
         break;
 
       case symbol_kind::S_POR: // POR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 858 "parser.cpp"
+#line 922 "parser.cpp"
         break;
 
       case symbol_kind::S_DIV: // DIV
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 864 "parser.cpp"
+#line 928 "parser.cpp"
         break;
 
       case symbol_kind::S_INC: // INC
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 870 "parser.cpp"
+#line 934 "parser.cpp"
         break;
 
       case symbol_kind::S_MOD: // MOD
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 876 "parser.cpp"
+#line 940 "parser.cpp"
         break;
 
       case symbol_kind::S_RIF: // RIF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 882 "parser.cpp"
+#line 946 "parser.cpp"
         break;
 
       case symbol_kind::S_RELSE: // RELSE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 888 "parser.cpp"
+#line 952 "parser.cpp"
         break;
 
       case symbol_kind::S_RWHILE: // RWHILE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 894 "parser.cpp"
+#line 958 "parser.cpp"
         break;
 
       case symbol_kind::S_RFOR: // RFOR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 900 "parser.cpp"
+#line 964 "parser.cpp"
         break;
 
       case symbol_kind::S_PRINTF: // PRINTF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 906 "parser.cpp"
+#line 970 "parser.cpp"
         break;
 
-      case symbol_kind::S_MEDIA: // MEDIA
-#line 179 "parser.y"
+      case symbol_kind::S_RMEAN: // RMEAN
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 912 "parser.cpp"
+#line 976 "parser.cpp"
         break;
 
-      case symbol_kind::S_MEDIANA: // MEDIANA
-#line 179 "parser.y"
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 918 "parser.cpp"
+#line 982 "parser.cpp"
         break;
 
-      case symbol_kind::S_MODA: // MODA
-#line 179 "parser.y"
+      case symbol_kind::S_RMODE: // RMODE
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 924 "parser.cpp"
+#line 988 "parser.cpp"
         break;
 
       case symbol_kind::S_RATOI: // RATOI
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 930 "parser.cpp"
+#line 994 "parser.cpp"
         break;
 
       case symbol_kind::S_RATOF: // RATOF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 936 "parser.cpp"
+#line 1000 "parser.cpp"
         break;
 
       case symbol_kind::S_RIOTA: // RIOTA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 942 "parser.cpp"
+#line 1006 "parser.cpp"
         break;
 
       case symbol_kind::S_RBREAK: // RBREAK
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 948 "parser.cpp"
+#line 1012 "parser.cpp"
         break;
 
       case symbol_kind::S_RCONTINUE: // RCONTINUE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 954 "parser.cpp"
+#line 1018 "parser.cpp"
         break;
 
       case symbol_kind::S_RRETURN: // RRETURN
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 960 "parser.cpp"
+#line 1024 "parser.cpp"
         break;
 
       case symbol_kind::S_MAYOR: // MAYOR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 966 "parser.cpp"
+#line 1030 "parser.cpp"
         break;
 
       case symbol_kind::S_MENOR: // MENOR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 972 "parser.cpp"
+#line 1036 "parser.cpp"
         break;
 
       case symbol_kind::S_MAYEQU: // MAYEQU
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 978 "parser.cpp"
+#line 1042 "parser.cpp"
         break;
 
       case symbol_kind::S_MENEQU: // MENEQU
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 984 "parser.cpp"
+#line 1048 "parser.cpp"
         break;
 
       case symbol_kind::S_EQU: // EQU
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 990 "parser.cpp"
+#line 1054 "parser.cpp"
         break;
 
       case symbol_kind::S_DIFF: // DIFF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 996 "parser.cpp"
+#line 1060 "parser.cpp"
         break;
 
       case symbol_kind::S_AND: // AND
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 1002 "parser.cpp"
+#line 1066 "parser.cpp"
         break;
 
       case symbol_kind::S_OR: // OR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 1008 "parser.cpp"
+#line 1072 "parser.cpp"
         break;
 
       case symbol_kind::S_NOT: // NOT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < std::string > (); }
-#line 1014 "parser.cpp"
+#line 1078 "parser.cpp"
+        break;
+
+      case symbol_kind::S_VPBACK: // VPBACK
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < std::string > (); }
+#line 1084 "parser.cpp"
+        break;
+
+      case symbol_kind::S_VGET: // VGET
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < std::string > (); }
+#line 1090 "parser.cpp"
+        break;
+
+      case symbol_kind::S_VREMOVE: // VREMOVE
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < std::string > (); }
+#line 1096 "parser.cpp"
+        break;
+
+      case symbol_kind::S_VSIZE: // VSIZE
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < std::string > (); }
+#line 1102 "parser.cpp"
+        break;
+
+      case symbol_kind::S_VPFRONT: // VPFRONT
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < std::string > (); }
+#line 1108 "parser.cpp"
         break;
 
       case symbol_kind::S_START: // START
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < func_main* > (); }
-#line 1020 "parser.cpp"
+#line 1114 "parser.cpp"
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < list_instruction* > (); }
-#line 1026 "parser.cpp"
+#line 1120 "parser.cpp"
+        break;
+
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < list_instruction* > (); }
+#line 1126 "parser.cpp"
         break;
 
       case symbol_kind::S_FUNCTION: // FUNCTION
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1032 "parser.cpp"
+#line 1132 "parser.cpp"
         break;
 
       case symbol_kind::S_FUNCTION_LIST: // FUNCTION_LIST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < map_struct_dec* > (); }
-#line 1038 "parser.cpp"
+#line 1138 "parser.cpp"
         break;
 
       case symbol_kind::S_MAIN: // MAIN
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < func_main* > (); }
-#line 1044 "parser.cpp"
+#line 1144 "parser.cpp"
         break;
 
       case symbol_kind::S_LIST_INST: // LIST_INST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < list_instruction* > (); }
-#line 1050 "parser.cpp"
+#line 1150 "parser.cpp"
         break;
 
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1056 "parser.cpp"
+#line 1156 "parser.cpp"
         break;
 
       case symbol_kind::S_PRINT: // PRINT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1062 "parser.cpp"
+#line 1162 "parser.cpp"
+        break;
+
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < instruction* > (); }
+#line 1168 "parser.cpp"
+        break;
+
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < instruction* > (); }
+#line 1174 "parser.cpp"
+        break;
+
+      case symbol_kind::S_GET: // GET
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < expression* > (); }
+#line 1180 "parser.cpp"
+        break;
+
+      case symbol_kind::S_SIZE: // SIZE
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < expression* > (); }
+#line 1186 "parser.cpp"
+        break;
+
+      case symbol_kind::S_REMOVE: // REMOVE
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < instruction* > (); }
+#line 1192 "parser.cpp"
         break;
 
       case symbol_kind::S_IF: // IF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1068 "parser.cpp"
+#line 1198 "parser.cpp"
         break;
 
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < list_instruction* > (); }
-#line 1074 "parser.cpp"
+#line 1204 "parser.cpp"
         break;
 
       case symbol_kind::S_ELSEIF: // ELSEIF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1080 "parser.cpp"
+#line 1210 "parser.cpp"
         break;
 
       case symbol_kind::S_ELSE: // ELSE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < list_instruction* > (); }
-#line 1086 "parser.cpp"
+#line 1216 "parser.cpp"
         break;
 
       case symbol_kind::S_WHILE: // WHILE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1092 "parser.cpp"
+#line 1222 "parser.cpp"
         break;
 
       case symbol_kind::S_FOR: // FOR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1098 "parser.cpp"
+#line 1228 "parser.cpp"
         break;
 
       case symbol_kind::S_EXPRESSION: // EXPRESSION
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1104 "parser.cpp"
+#line 1234 "parser.cpp"
         break;
 
       case symbol_kind::S_DECLARE_STRUCT: // DECLARE_STRUCT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1110 "parser.cpp"
+#line 1240 "parser.cpp"
         break;
 
       case symbol_kind::S_DECLARE_LIST: // DECLARE_LIST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < map_struct_dec* > (); }
-#line 1116 "parser.cpp"
+#line 1246 "parser.cpp"
         break;
 
       case symbol_kind::S_CREATE_STRUCT: // CREATE_STRUCT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1122 "parser.cpp"
+#line 1252 "parser.cpp"
         break;
 
       case symbol_kind::S_EXP_LIST: // EXP_LIST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < list_expression* > (); }
-#line 1128 "parser.cpp"
+#line 1258 "parser.cpp"
         break;
 
       case symbol_kind::S_DECLARATION: // DECLARATION
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1134 "parser.cpp"
+#line 1264 "parser.cpp"
         break;
 
       case symbol_kind::S_ASSIGNATION: // ASSIGNATION
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1140 "parser.cpp"
+#line 1270 "parser.cpp"
         break;
 
       case symbol_kind::S_BREAK: // BREAK
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1146 "parser.cpp"
+#line 1276 "parser.cpp"
         break;
 
       case symbol_kind::S_CONTINUE: // CONTINUE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1152 "parser.cpp"
+#line 1282 "parser.cpp"
         break;
 
       case symbol_kind::S_RETURN: // RETURN
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1158 "parser.cpp"
+#line 1288 "parser.cpp"
+        break;
+
+      case symbol_kind::S_MEAN: // MEAN
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < expression* > (); }
+#line 1294 "parser.cpp"
+        break;
+
+      case symbol_kind::S_MEDIAN: // MEDIAN
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < expression* > (); }
+#line 1300 "parser.cpp"
+        break;
+
+      case symbol_kind::S_MODE: // MODE
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < expression* > (); }
+#line 1306 "parser.cpp"
         break;
 
       case symbol_kind::S_TYPES: // TYPES
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < TipoDato > (); }
-#line 1164 "parser.cpp"
+#line 1312 "parser.cpp"
         break;
 
       case symbol_kind::S_EXP: // EXP
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1170 "parser.cpp"
+#line 1318 "parser.cpp"
         break;
 
       case symbol_kind::S_ATOI: // ATOI
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1176 "parser.cpp"
+#line 1324 "parser.cpp"
         break;
 
       case symbol_kind::S_ATOF: // ATOF
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1182 "parser.cpp"
+#line 1330 "parser.cpp"
         break;
 
       case symbol_kind::S_IOTA: // IOTA
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1188 "parser.cpp"
+#line 1336 "parser.cpp"
         break;
 
       case symbol_kind::S_INCREMENT: // INCREMENT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1194 "parser.cpp"
+#line 1342 "parser.cpp"
         break;
 
       case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1200 "parser.cpp"
+#line 1348 "parser.cpp"
         break;
 
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1206 "parser.cpp"
+#line 1354 "parser.cpp"
         break;
 
       case symbol_kind::S_LIST_ARR: // LIST_ARR
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1212 "parser.cpp"
+#line 1360 "parser.cpp"
+        break;
+
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < instruction* > (); }
+#line 1366 "parser.cpp"
+        break;
+
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
+#line 195 "parser.y"
+                 { yyoutput << yysym.value.template as < instruction* > (); }
+#line 1372 "parser.cpp"
         break;
 
       case symbol_kind::S_CALL_EXP: // CALL_EXP
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < expression* > (); }
-#line 1218 "parser.cpp"
+#line 1378 "parser.cpp"
         break;
 
       case symbol_kind::S_CALL_INST: // CALL_INST
-#line 179 "parser.y"
+#line 195 "parser.y"
                  { yyoutput << yysym.value.template as < instruction* > (); }
-#line 1224 "parser.cpp"
+#line 1384 "parser.cpp"
         break;
 
       default:
@@ -1454,6 +1614,11 @@ namespace yy {
         yylhs.value.emplace< TipoDato > ();
         break;
 
+      case symbol_kind::S_GET: // GET
+      case symbol_kind::S_SIZE: // SIZE
+      case symbol_kind::S_MEAN: // MEAN
+      case symbol_kind::S_MEDIAN: // MEDIAN
+      case symbol_kind::S_MODE: // MODE
       case symbol_kind::S_EXP: // EXP
       case symbol_kind::S_ATOI: // ATOI
       case symbol_kind::S_ATOF: // ATOF
@@ -1474,6 +1639,9 @@ namespace yy {
       case symbol_kind::S_FUNCTION: // FUNCTION
       case symbol_kind::S_INSTRUCTION: // INSTRUCTION
       case symbol_kind::S_PRINT: // PRINT
+      case symbol_kind::S_PUSHBACK: // PUSHBACK
+      case symbol_kind::S_PUSHFRONT: // PUSHFRONT
+      case symbol_kind::S_REMOVE: // REMOVE
       case symbol_kind::S_IF: // IF
       case symbol_kind::S_ELSEIF: // ELSEIF
       case symbol_kind::S_WHILE: // WHILE
@@ -1486,6 +1654,8 @@ namespace yy {
       case symbol_kind::S_BREAK: // BREAK
       case symbol_kind::S_CONTINUE: // CONTINUE
       case symbol_kind::S_RETURN: // RETURN
+      case symbol_kind::S_DECLARE_VECTOR: // DECLARE_VECTOR
+      case symbol_kind::S_DECLARE_MATRIX: // DECLARE_MATRIX
       case symbol_kind::S_CALL_INST: // CALL_INST
         yylhs.value.emplace< instruction* > ();
         break;
@@ -1495,6 +1665,7 @@ namespace yy {
         break;
 
       case symbol_kind::S_LIST_FUNC: // LIST_FUNC
+      case symbol_kind::S_LIST_STRUCT: // LIST_STRUCT
       case symbol_kind::S_LIST_INST: // LIST_INST
       case symbol_kind::S_ELSEIF_LIST: // ELSEIF_LIST
       case symbol_kind::S_ELSE: // ELSE
@@ -1512,8 +1683,8 @@ namespace yy {
       case symbol_kind::S_TSTRING: // TSTRING
       case symbol_kind::S_FLOAT: // FLOAT
       case symbol_kind::S_BOOLEAN: // BOOLEAN
-      case symbol_kind::S_STRUCT: // STRUCT
-      case symbol_kind::S_ARRAY: // ARRAY
+      case symbol_kind::S_RSTRUCT: // RSTRUCT
+      case symbol_kind::S_RVECTOR: // RVECTOR
       case symbol_kind::S_INT: // INT
       case symbol_kind::S_BOOLTRUE: // BOOLTRUE
       case symbol_kind::S_BOOLFALSE: // BOOLFALSE
@@ -1537,9 +1708,9 @@ namespace yy {
       case symbol_kind::S_RWHILE: // RWHILE
       case symbol_kind::S_RFOR: // RFOR
       case symbol_kind::S_PRINTF: // PRINTF
-      case symbol_kind::S_MEDIA: // MEDIA
-      case symbol_kind::S_MEDIANA: // MEDIANA
-      case symbol_kind::S_MODA: // MODA
+      case symbol_kind::S_RMEAN: // RMEAN
+      case symbol_kind::S_RMEDIAN: // RMEDIAN
+      case symbol_kind::S_RMODE: // RMODE
       case symbol_kind::S_RATOI: // RATOI
       case symbol_kind::S_RATOF: // RATOF
       case symbol_kind::S_RIOTA: // RIOTA
@@ -1555,6 +1726,11 @@ namespace yy {
       case symbol_kind::S_AND: // AND
       case symbol_kind::S_OR: // OR
       case symbol_kind::S_NOT: // NOT
+      case symbol_kind::S_VPBACK: // VPBACK
+      case symbol_kind::S_VGET: // VGET
+      case symbol_kind::S_VREMOVE: // VREMOVE
+      case symbol_kind::S_VSIZE: // VSIZE
+      case symbol_kind::S_VPFRONT: // VPFRONT
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -1579,590 +1755,778 @@ namespace yy {
           switch (yyn)
             {
   case 2: // START: MAIN
-#line 187 "parser.y"
+#line 203 "parser.y"
     {
         ctx.Main = yystack_[0].value.as < func_main* > ();
         ctx.Salida = "!Ejecución realizada con éxito!";
         yylhs.value.as < func_main* > () = yystack_[0].value.as < func_main* > ();
     }
-#line 1589 "parser.cpp"
+#line 1765 "parser.cpp"
     break;
 
   case 3: // START: LIST_FUNC MAIN
-#line 193 "parser.y"
+#line 209 "parser.y"
     {
         ctx.Main = yystack_[0].value.as < func_main* > ();
         ctx.Functions = yystack_[1].value.as < list_instruction* > ();
         ctx.Salida = "!Ejecución realizada con éxito!";
         yylhs.value.as < func_main* > () = yystack_[0].value.as < func_main* > ();
     }
-#line 1600 "parser.cpp"
+#line 1776 "parser.cpp"
     break;
 
-  case 4: // LIST_FUNC: LIST_FUNC FUNCTION
-#line 202 "parser.y"
+  case 4: // START: LIST_STRUCT LIST_FUNC MAIN
+#line 216 "parser.y"
+    {
+        ctx.Main = yystack_[0].value.as < func_main* > ();
+        ctx.Structs = yystack_[2].value.as < list_instruction* > ();
+        ctx.Functions = yystack_[1].value.as < list_instruction* > ();
+        ctx.Salida = "!Ejecución realizada con éxito!";
+        yylhs.value.as < func_main* > () = yystack_[0].value.as < func_main* > ();
+    }
+#line 1788 "parser.cpp"
+    break;
+
+  case 5: // LIST_FUNC: LIST_FUNC FUNCTION
+#line 226 "parser.y"
         { 
             yystack_[1].value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
             yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > ();
         }
-#line 1609 "parser.cpp"
+#line 1797 "parser.cpp"
     break;
 
-  case 5: // LIST_FUNC: FUNCTION
-#line 207 "parser.y"
+  case 6: // LIST_FUNC: FUNCTION
+#line 231 "parser.y"
         {
             yylhs.value.as < list_instruction* > () = new list_instruction();
             yylhs.value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
         }
-#line 1618 "parser.cpp"
+#line 1806 "parser.cpp"
     break;
 
-  case 6: // FUNCTION: TYPES ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
-#line 214 "parser.y"
+  case 7: // LIST_STRUCT: LIST_STRUCT DECLARE_STRUCT
+#line 238 "parser.y"
+        { 
+            yystack_[1].value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
+            yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > ();
+        }
+#line 1815 "parser.cpp"
+    break;
+
+  case 8: // LIST_STRUCT: DECLARE_STRUCT
+#line 243 "parser.y"
+        {
+            yylhs.value.as < list_instruction* > () = new list_instruction();
+            yylhs.value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
+        }
+#line 1824 "parser.cpp"
+    break;
+
+  case 9: // FUNCTION: TYPES ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
+#line 250 "parser.y"
         {
             yylhs.value.as < instruction* > () = new function(0,0,yystack_[7].value.as < TipoDato > (),yystack_[6].value.as < std::string > (),yystack_[4].value.as < map_struct_dec* > (),yystack_[1].value.as < list_instruction* > ());
         }
-#line 1626 "parser.cpp"
+#line 1832 "parser.cpp"
     break;
 
-  case 7: // FUNCTION: TYPES ID PARA PARC LLAVA LIST_INST LLAVC
-#line 218 "parser.y"
+  case 10: // FUNCTION: TYPES ID PARA PARC LLAVA LIST_INST LLAVC
+#line 254 "parser.y"
         {
             yylhs.value.as < instruction* > () = new function(0,0,yystack_[6].value.as < TipoDato > (),yystack_[5].value.as < std::string > (),nullptr,yystack_[1].value.as < list_instruction* > ());
         }
-#line 1634 "parser.cpp"
+#line 1840 "parser.cpp"
     break;
 
-  case 8: // FUNCTION_LIST: FUNCTION_LIST ',' TYPES ID
-#line 224 "parser.y"
+  case 11: // FUNCTION: ID ID PARA FUNCTION_LIST PARC LLAVA LIST_INST LLAVC
+#line 258 "parser.y"
+        {
+            yylhs.value.as < instruction* > () = new function(0,0,STRUCT,yystack_[6].value.as < std::string > (),yystack_[4].value.as < map_struct_dec* > (),yystack_[1].value.as < list_instruction* > ());
+        }
+#line 1848 "parser.cpp"
+    break;
+
+  case 12: // FUNCTION_LIST: FUNCTION_LIST ',' TYPES ID
+#line 264 "parser.y"
         {
             yystack_[3].value.as < map_struct_dec* > ()->newMap(yystack_[0].value.as < std::string > (),yystack_[1].value.as < TipoDato > ());
             yylhs.value.as < map_struct_dec* > () = yystack_[3].value.as < map_struct_dec* > ();
         }
-#line 1643 "parser.cpp"
+#line 1857 "parser.cpp"
     break;
 
-  case 9: // FUNCTION_LIST: TYPES ID
-#line 229 "parser.y"
+  case 13: // FUNCTION_LIST: FUNCTION_LIST ',' RVECTOR MENOR TYPES MAYOR ID
+#line 269 "parser.y"
+        {
+            yystack_[6].value.as < map_struct_dec* > ()->newMap(yystack_[0].value.as < std::string > (),VECTOR);
+            yylhs.value.as < map_struct_dec* > () = yystack_[6].value.as < map_struct_dec* > ();
+        }
+#line 1866 "parser.cpp"
+    break;
+
+  case 14: // FUNCTION_LIST: TYPES ID
+#line 274 "parser.y"
         {   
             yylhs.value.as < map_struct_dec* > () = new map_struct_dec();
             yylhs.value.as < map_struct_dec* > ()->newMap(yystack_[0].value.as < std::string > (), yystack_[1].value.as < TipoDato > ());
         }
-#line 1652 "parser.cpp"
+#line 1875 "parser.cpp"
     break;
 
-  case 10: // MAIN: TYPES RMAIN PARA PARC LLAVA LIST_INST LLAVC
-#line 236 "parser.y"
+  case 15: // FUNCTION_LIST: RVECTOR MENOR TYPES MAYOR ID
+#line 279 "parser.y"
+        {
+            yylhs.value.as < map_struct_dec* > () = new map_struct_dec();
+            yylhs.value.as < map_struct_dec* > ()->newMap(yystack_[0].value.as < std::string > (), VECTOR);
+        }
+#line 1884 "parser.cpp"
+    break;
+
+  case 16: // MAIN: TYPES RMAIN PARA PARC LLAVA LIST_INST LLAVC
+#line 286 "parser.y"
 {
     yylhs.value.as < func_main* > () = new func_main(0, 0, yystack_[6].value.as < TipoDato > (), yystack_[1].value.as < list_instruction* > ());
 }
-#line 1660 "parser.cpp"
+#line 1892 "parser.cpp"
     break;
 
-  case 11: // LIST_INST: LIST_INST INSTRUCTION
-#line 242 "parser.y"
+  case 17: // LIST_INST: LIST_INST INSTRUCTION
+#line 292 "parser.y"
         {
             yystack_[1].value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
             yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > ();
         }
-#line 1669 "parser.cpp"
+#line 1901 "parser.cpp"
     break;
 
-  case 12: // LIST_INST: INSTRUCTION
-#line 247 "parser.y"
+  case 18: // LIST_INST: INSTRUCTION
+#line 297 "parser.y"
         {
             yylhs.value.as < list_instruction* > () = new list_instruction();
             yylhs.value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
         }
-#line 1678 "parser.cpp"
+#line 1910 "parser.cpp"
     break;
 
-  case 13: // INSTRUCTION: PRINT ';'
-#line 253 "parser.y"
+  case 19: // INSTRUCTION: PRINT ';'
+#line 303 "parser.y"
                         { yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > (); }
-#line 1684 "parser.cpp"
+#line 1916 "parser.cpp"
     break;
 
-  case 14: // INSTRUCTION: EXPRESSION ';'
-#line 254 "parser.y"
+  case 20: // INSTRUCTION: EXPRESSION ';'
+#line 304 "parser.y"
                             {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1690 "parser.cpp"
+#line 1922 "parser.cpp"
     break;
 
-  case 15: // INSTRUCTION: IF
-#line 255 "parser.y"
+  case 21: // INSTRUCTION: IF
+#line 305 "parser.y"
                  { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1696 "parser.cpp"
+#line 1928 "parser.cpp"
     break;
 
-  case 16: // INSTRUCTION: WHILE
-#line 256 "parser.y"
+  case 22: // INSTRUCTION: WHILE
+#line 306 "parser.y"
                     { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1702 "parser.cpp"
+#line 1934 "parser.cpp"
     break;
 
-  case 17: // INSTRUCTION: FOR
-#line 257 "parser.y"
+  case 23: // INSTRUCTION: FOR
+#line 307 "parser.y"
                   { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1708 "parser.cpp"
+#line 1940 "parser.cpp"
     break;
 
-  case 18: // INSTRUCTION: DECLARATION ';'
-#line 258 "parser.y"
+  case 24: // INSTRUCTION: DECLARATION ';'
+#line 308 "parser.y"
                               {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1714 "parser.cpp"
+#line 1946 "parser.cpp"
     break;
 
-  case 19: // INSTRUCTION: ASSIGNATION ';'
-#line 259 "parser.y"
+  case 25: // INSTRUCTION: ASSIGNATION ';'
+#line 309 "parser.y"
                               {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1720 "parser.cpp"
+#line 1952 "parser.cpp"
     break;
 
-  case 20: // INSTRUCTION: DECLARE_STRUCT
-#line 260 "parser.y"
+  case 26: // INSTRUCTION: DECLARE_STRUCT
+#line 310 "parser.y"
                              { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1726 "parser.cpp"
+#line 1958 "parser.cpp"
     break;
 
-  case 21: // INSTRUCTION: CREATE_STRUCT
-#line 261 "parser.y"
+  case 27: // INSTRUCTION: CREATE_STRUCT
+#line 311 "parser.y"
                             { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1732 "parser.cpp"
+#line 1964 "parser.cpp"
     break;
 
-  case 22: // INSTRUCTION: BREAK ';'
-#line 262 "parser.y"
+  case 28: // INSTRUCTION: DECLARE_VECTOR ';'
+#line 312 "parser.y"
+                                 {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
+#line 1970 "parser.cpp"
+    break;
+
+  case 29: // INSTRUCTION: DECLARE_MATRIX ';'
+#line 313 "parser.y"
+                                 {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
+#line 1976 "parser.cpp"
+    break;
+
+  case 30: // INSTRUCTION: BREAK ';'
+#line 314 "parser.y"
                         {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1738 "parser.cpp"
+#line 1982 "parser.cpp"
     break;
 
-  case 23: // INSTRUCTION: CONTINUE ';'
-#line 263 "parser.y"
+  case 31: // INSTRUCTION: CONTINUE ';'
+#line 315 "parser.y"
                            {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1744 "parser.cpp"
+#line 1988 "parser.cpp"
     break;
 
-  case 24: // INSTRUCTION: RETURN ';'
-#line 264 "parser.y"
+  case 32: // INSTRUCTION: RETURN ';'
+#line 316 "parser.y"
                          {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
-#line 1750 "parser.cpp"
+#line 1994 "parser.cpp"
     break;
 
-  case 25: // INSTRUCTION: CALL_INST
-#line 265 "parser.y"
+  case 33: // INSTRUCTION: CALL_INST
+#line 317 "parser.y"
                         { yylhs.value.as < instruction* > () = yystack_[0].value.as < instruction* > (); }
-#line 1756 "parser.cpp"
+#line 2000 "parser.cpp"
     break;
 
-  case 26: // PRINT: PRINTF PARA EXP PARC
-#line 271 "parser.y"
-                             { yylhs.value.as < instruction* > () = new print(0,0,yystack_[1].value.as < expression* > ()); }
-#line 1762 "parser.cpp"
+  case 34: // INSTRUCTION: PUSHBACK ';'
+#line 318 "parser.y"
+                           {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
+#line 2006 "parser.cpp"
     break;
 
-  case 27: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSEIF_LIST ELSE
-#line 275 "parser.y"
+  case 35: // INSTRUCTION: PUSHFRONT ';'
+#line 319 "parser.y"
+                            {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
+#line 2012 "parser.cpp"
+    break;
+
+  case 36: // INSTRUCTION: REMOVE ';'
+#line 320 "parser.y"
+                         {yylhs.value.as < instruction* > () = yystack_[1].value.as < instruction* > ();}
+#line 2018 "parser.cpp"
+    break;
+
+  case 37: // PRINT: PRINTF PARA EXP_LIST PARC
+#line 323 "parser.y"
+                                   { yylhs.value.as < instruction* > () = new print(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < list_expression* > ()); }
+#line 2024 "parser.cpp"
+    break;
+
+  case 38: // PUSHBACK: ID '.' VPBACK PARA EXP PARC
+#line 326 "parser.y"
+                                       {yylhs.value.as < instruction* > () = new func_pushback(yystack_[5].location.begin.line, yystack_[5].location.begin.column, yystack_[5].value.as < std::string > (),yystack_[1].value.as < expression* > ());}
+#line 2030 "parser.cpp"
+    break;
+
+  case 39: // PUSHFRONT: ID '.' VPFRONT PARA EXP PARC
+#line 329 "parser.y"
+                                         {yylhs.value.as < instruction* > () = new func_pushfront(yystack_[5].location.begin.line, yystack_[5].location.begin.column, yystack_[5].value.as < std::string > (),yystack_[1].value.as < expression* > ());}
+#line 2036 "parser.cpp"
+    break;
+
+  case 40: // GET: ID '.' VGET PARA EXP PARC
+#line 332 "parser.y"
+                                {yylhs.value.as < expression* > () = new func_get(yystack_[5].location.begin.line, yystack_[5].location.begin.column, yystack_[5].value.as < std::string > (),yystack_[1].value.as < expression* > ());}
+#line 2042 "parser.cpp"
+    break;
+
+  case 41: // SIZE: ID '.' VSIZE PARA PARC
+#line 335 "parser.y"
+                              {yylhs.value.as < expression* > () = new func_size(yystack_[4].location.begin.line, yystack_[4].location.begin.column, yystack_[4].value.as < std::string > ());}
+#line 2048 "parser.cpp"
+    break;
+
+  case 42: // REMOVE: ID '.' VREMOVE PARA EXP PARC
+#line 338 "parser.y"
+                                      {yylhs.value.as < instruction* > () = new func_remove(yystack_[5].location.begin.line, yystack_[5].location.begin.column, yystack_[5].value.as < std::string > (),yystack_[1].value.as < expression* > ());}
+#line 2054 "parser.cpp"
+    break;
+
+  case 43: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSEIF_LIST ELSE
+#line 342 "parser.y"
     {
         yylhs.value.as < instruction* > () = new func_if(yystack_[6].location.begin.line, yystack_[6].location.begin.column,yystack_[5].value.as < expression* > (),yystack_[3].value.as < list_instruction* > (),yystack_[1].value.as < list_instruction* > (),yystack_[0].value.as < list_instruction* > ());
     }
-#line 1770 "parser.cpp"
-    break;
-
-  case 28: // IF: RIF EXP LLAVA LIST_INST LLAVC
-#line 279 "parser.y"
-    {
-        yylhs.value.as < instruction* > () = new func_if(yystack_[4].location.begin.line, yystack_[4].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < list_instruction* > (),nullptr,nullptr);
-    }
-#line 1778 "parser.cpp"
-    break;
-
-  case 29: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSEIF_LIST
-#line 283 "parser.y"
-    {
-        yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[2].value.as < list_instruction* > (),yystack_[0].value.as < list_instruction* > (),nullptr);
-    }
-#line 1786 "parser.cpp"
-    break;
-
-  case 30: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSE
-#line 287 "parser.y"
-    {
-        yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[2].value.as < list_instruction* > (),nullptr,yystack_[0].value.as < list_instruction* > ());
-    }
-#line 1794 "parser.cpp"
-    break;
-
-  case 31: // ELSEIF_LIST: ELSEIF_LIST ELSEIF
-#line 293 "parser.y"
-        {
-            yystack_[1].value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
-            yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > ();
-        }
-#line 1803 "parser.cpp"
-    break;
-
-  case 32: // ELSEIF_LIST: ELSEIF
-#line 298 "parser.y"
-        {
-            yylhs.value.as < list_instruction* > () = new list_instruction();
-            yylhs.value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
-        }
-#line 1812 "parser.cpp"
-    break;
-
-  case 33: // ELSEIF: RELSE RIF EXP LLAVA LIST_INST LLAVC
-#line 305 "parser.y"
-        {
-            yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < list_instruction* > (), nullptr, nullptr);
-        }
-#line 1820 "parser.cpp"
-    break;
-
-  case 34: // ELSE: RELSE LLAVA LIST_INST LLAVC
-#line 310 "parser.y"
-                                   { yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > (); }
-#line 1826 "parser.cpp"
-    break;
-
-  case 35: // ELSE: %empty
-#line 311 "parser.y"
-             { }
-#line 1832 "parser.cpp"
-    break;
-
-  case 36: // WHILE: RWHILE PARA EXP PARC LLAVA LIST_INST LLAVC
-#line 315 "parser.y"
-                                                  {yylhs.value.as < instruction* > () = new func_while(yystack_[6].location.begin.line, yystack_[6].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[1].value.as < list_instruction* > ());}
-#line 1838 "parser.cpp"
-    break;
-
-  case 37: // FOR: RFOR PARA DECLARATION ';' EXP ';' EXP PARC LLAVA LIST_INST LLAVC
-#line 318 "parser.y"
-                                                                       {yylhs.value.as < instruction* > () = new func_for(yystack_[10].location.begin.line, yystack_[10].location.begin.column,yystack_[8].value.as < instruction* > (),yystack_[6].value.as < expression* > (),yystack_[4].value.as < expression* > (),yystack_[1].value.as < list_instruction* > ());}
-#line 1844 "parser.cpp"
-    break;
-
-  case 38: // EXPRESSION: EXP
-#line 321 "parser.y"
-                 {yylhs.value.as < instruction* > () = new func_expression(yystack_[0].location.begin.line, yystack_[0].location.begin.column,yystack_[0].value.as < expression* > ());}
-#line 1850 "parser.cpp"
-    break;
-
-  case 39: // DECLARE_STRUCT: STRUCT ID LLAVA DECLARE_LIST LLAVC
-#line 324 "parser.y"
-                                                   {yylhs.value.as < instruction* > () = new declare_struct(yystack_[4].location.begin.line, yystack_[4].location.begin.column,yystack_[1].value.as < map_struct_dec* > (),yystack_[3].value.as < std::string > ()); }
-#line 1856 "parser.cpp"
-    break;
-
-  case 40: // DECLARE_LIST: DECLARE_LIST TYPES ID ';'
-#line 328 "parser.y"
-        {
-            yystack_[3].value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (),yystack_[2].value.as < TipoDato > ());
-            yylhs.value.as < map_struct_dec* > () = yystack_[3].value.as < map_struct_dec* > ();
-        }
-#line 1865 "parser.cpp"
-    break;
-
-  case 41: // DECLARE_LIST: TYPES ID ';'
-#line 333 "parser.y"
-        {
-            yylhs.value.as < map_struct_dec* > () = new map_struct_dec();
-            yylhs.value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (), yystack_[2].value.as < TipoDato > ());
-        }
-#line 1874 "parser.cpp"
-    break;
-
-  case 42: // CREATE_STRUCT: STRUCT ID ID '=' LLAVA EXP_LIST LLAVC
-#line 340 "parser.y"
-                {
-                    yylhs.value.as < instruction* > () = new create_struct(0,0,yystack_[5].value.as < std::string > (),yystack_[4].value.as < std::string > (),yystack_[1].value.as < list_expression* > ());
-                }
-#line 1882 "parser.cpp"
-    break;
-
-  case 43: // EXP_LIST: EXP_LIST ',' EXP
-#line 346 "parser.y"
-        {
-            yystack_[2].value.as < list_expression* > ()->newExp(yystack_[0].value.as < expression* > ());
-            yylhs.value.as < list_expression* > () = yystack_[2].value.as < list_expression* > ();
-        }
-#line 1891 "parser.cpp"
-    break;
-
-  case 44: // EXP_LIST: EXP
-#line 351 "parser.y"
-        {
-            yylhs.value.as < list_expression* > () = new list_expression();
-            yylhs.value.as < list_expression* > ()->newExp(yystack_[0].value.as < expression* > ());
-        }
-#line 1900 "parser.cpp"
-    break;
-
-  case 45: // DECLARATION: TYPES ID '=' EXP
-#line 357 "parser.y"
-                               {yylhs.value.as < instruction* > () = new declare(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[3].value.as < TipoDato > (),yystack_[2].value.as < std::string > (),yystack_[0].value.as < expression* > ());}
-#line 1906 "parser.cpp"
-    break;
-
-  case 46: // DECLARATION: TYPES ID
-#line 358 "parser.y"
-                       {yylhs.value.as < instruction* > () = new declare(yystack_[1].location.begin.line, yystack_[1].location.begin.column,yystack_[1].value.as < TipoDato > (),yystack_[0].value.as < std::string > (),nullptr);}
-#line 1912 "parser.cpp"
-    break;
-
-  case 47: // ASSIGNATION: ID '=' EXP
-#line 360 "parser.y"
-                         {yylhs.value.as < instruction* > () = new assign(yystack_[2].location.begin.line, yystack_[2].location.begin.column,yystack_[2].value.as < std::string > (),yystack_[0].value.as < expression* > ());}
-#line 1918 "parser.cpp"
-    break;
-
-  case 48: // BREAK: RBREAK
-#line 363 "parser.y"
-               {yylhs.value.as < instruction* > () = new func_break(yystack_[0].location.begin.line, yystack_[0].location.begin.column);}
-#line 1924 "parser.cpp"
-    break;
-
-  case 49: // CONTINUE: RCONTINUE
-#line 366 "parser.y"
-                     {yylhs.value.as < instruction* > () = new func_continue(yystack_[0].location.begin.line, yystack_[0].location.begin.column);}
-#line 1930 "parser.cpp"
-    break;
-
-  case 50: // RETURN: RRETURN EXP
-#line 369 "parser.y"
-                     { yylhs.value.as < instruction* > () = new func_return(0,0,yystack_[0].value.as < expression* > ()); }
-#line 1936 "parser.cpp"
-    break;
-
-  case 51: // RETURN: RRETURN
-#line 370 "parser.y"
-                  { yylhs.value.as < instruction* > () = new func_return(0,0,nullptr); }
-#line 1942 "parser.cpp"
-    break;
-
-  case 52: // TYPES: INT
-#line 384 "parser.y"
-            { yylhs.value.as < TipoDato > () = INTEGER; }
-#line 1948 "parser.cpp"
-    break;
-
-  case 53: // TYPES: TSTRING
-#line 385 "parser.y"
-              { yylhs.value.as < TipoDato > () = STRING; }
-#line 1954 "parser.cpp"
-    break;
-
-  case 54: // TYPES: BOOLEAN
-#line 386 "parser.y"
-              { yylhs.value.as < TipoDato > () = BOOL; }
-#line 1960 "parser.cpp"
-    break;
-
-  case 55: // TYPES: FLOAT
-#line 387 "parser.y"
-            { yylhs.value.as < TipoDato > () = FLOAT; }
-#line 1966 "parser.cpp"
-    break;
-
-  case 56: // TYPES: VOID
-#line 388 "parser.y"
-           {yylhs.value.as < TipoDato > () = VOID;}
-#line 1972 "parser.cpp"
-    break;
-
-  case 57: // TYPES: ARRAY
-#line 389 "parser.y"
-            { yylhs.value.as < TipoDato > () = ARRAY; }
-#line 1978 "parser.cpp"
-    break;
-
-  case 58: // EXP: EXP SUMA EXP
-#line 393 "parser.y"
-                   { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "+"); }
-#line 1984 "parser.cpp"
-    break;
-
-  case 59: // EXP: EXP MENOS EXP
-#line 394 "parser.y"
-                    { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "-"); }
-#line 1990 "parser.cpp"
-    break;
-
-  case 60: // EXP: EXP POR EXP
-#line 395 "parser.y"
-                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "*"); }
-#line 1996 "parser.cpp"
-    break;
-
-  case 61: // EXP: EXP DIV EXP
-#line 396 "parser.y"
-                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "/"); }
-#line 2002 "parser.cpp"
-    break;
-
-  case 62: // EXP: EXP MOD EXP
-#line 397 "parser.y"
-                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "%"); }
-#line 2008 "parser.cpp"
-    break;
-
-  case 63: // EXP: INCREMENT
-#line 399 "parser.y"
-                {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2014 "parser.cpp"
-    break;
-
-  case 64: // EXP: EXP MAYOR EXP
-#line 401 "parser.y"
-                    {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), ">");}
-#line 2020 "parser.cpp"
-    break;
-
-  case 65: // EXP: EXP MAYEQU EXP
-#line 402 "parser.y"
-                     {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), ">=");}
-#line 2026 "parser.cpp"
-    break;
-
-  case 66: // EXP: EXP MENOR EXP
-#line 403 "parser.y"
-                    {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "<");}
-#line 2032 "parser.cpp"
-    break;
-
-  case 67: // EXP: EXP MENEQU EXP
-#line 404 "parser.y"
-                     {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "<=");}
-#line 2038 "parser.cpp"
-    break;
-
-  case 68: // EXP: EXP EQU EXP
-#line 405 "parser.y"
-                  {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "==");}
-#line 2044 "parser.cpp"
-    break;
-
-  case 69: // EXP: EXP DIFF EXP
-#line 406 "parser.y"
-                   {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "!=");}
-#line 2050 "parser.cpp"
-    break;
-
-  case 70: // EXP: EXP AND EXP
-#line 408 "parser.y"
-                  {yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "&&");}
-#line 2056 "parser.cpp"
-    break;
-
-  case 71: // EXP: EXP OR EXP
-#line 409 "parser.y"
-                 {yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "||");}
 #line 2062 "parser.cpp"
     break;
 
-  case 72: // EXP: NOT EXP
-#line 411 "parser.y"
+  case 44: // IF: RIF EXP LLAVA LIST_INST LLAVC
+#line 346 "parser.y"
     {
-        yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column, yystack_[0].value.as < expression* > (), new primitive(0,0,BOOL, "", 0,0.0,false), "!");
+        yylhs.value.as < instruction* > () = new func_if(yystack_[4].location.begin.line, yystack_[4].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < list_instruction* > (),nullptr,nullptr);
     }
 #line 2070 "parser.cpp"
     break;
 
-  case 73: // EXP: MENOS EXP
-#line 415 "parser.y"
-                {
-        yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column,yystack_[0].value.as < expression* > (),new primitive(0,0,INTEGER, "", 0,0.0,false),"NEG");
-        }
+  case 45: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSEIF_LIST
+#line 350 "parser.y"
+    {
+        yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[2].value.as < list_instruction* > (),yystack_[0].value.as < list_instruction* > (),nullptr);
+    }
 #line 2078 "parser.cpp"
     break;
 
-  case 74: // EXP: PARA EXP PARC
-#line 419 "parser.y"
-                    { yylhs.value.as < expression* > () = yystack_[1].value.as < expression* > (); }
-#line 2084 "parser.cpp"
+  case 46: // IF: RIF EXP LLAVA LIST_INST LLAVC ELSE
+#line 354 "parser.y"
+    {
+        yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[2].value.as < list_instruction* > (),nullptr,yystack_[0].value.as < list_instruction* > ());
+    }
+#line 2086 "parser.cpp"
     break;
 
-  case 75: // EXP: ATOI
-#line 420 "parser.y"
-           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2090 "parser.cpp"
+  case 47: // ELSEIF_LIST: ELSEIF_LIST ELSEIF
+#line 360 "parser.y"
+        {
+            yystack_[1].value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
+            yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > ();
+        }
+#line 2095 "parser.cpp"
     break;
 
-  case 76: // EXP: ATOF
-#line 421 "parser.y"
-           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2096 "parser.cpp"
+  case 48: // ELSEIF_LIST: ELSEIF
+#line 365 "parser.y"
+        {
+            yylhs.value.as < list_instruction* > () = new list_instruction();
+            yylhs.value.as < list_instruction* > ()->newInst(yystack_[0].value.as < instruction* > ());
+        }
+#line 2104 "parser.cpp"
     break;
 
-  case 77: // EXP: IOTA
-#line 422 "parser.y"
-           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2102 "parser.cpp"
+  case 49: // ELSEIF: RELSE RIF EXP LLAVA LIST_INST LLAVC
+#line 372 "parser.y"
+        {
+            yylhs.value.as < instruction* > () = new func_if(yystack_[5].location.begin.line, yystack_[5].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < list_instruction* > (), nullptr, nullptr);
+        }
+#line 2112 "parser.cpp"
     break;
 
-  case 78: // EXP: LLAVA EXP_LIST LLAVC
+  case 50: // ELSE: RELSE LLAVA LIST_INST LLAVC
+#line 377 "parser.y"
+                                   { yylhs.value.as < list_instruction* > () = yystack_[1].value.as < list_instruction* > (); }
+#line 2118 "parser.cpp"
+    break;
+
+  case 51: // ELSE: %empty
+#line 378 "parser.y"
+             { }
+#line 2124 "parser.cpp"
+    break;
+
+  case 52: // WHILE: RWHILE PARA EXP PARC LLAVA LIST_INST LLAVC
+#line 382 "parser.y"
+                                                  {yylhs.value.as < instruction* > () = new func_while(yystack_[6].location.begin.line, yystack_[6].location.begin.column,yystack_[4].value.as < expression* > (),yystack_[1].value.as < list_instruction* > ());}
+#line 2130 "parser.cpp"
+    break;
+
+  case 53: // FOR: RFOR PARA DECLARATION ';' EXP ';' EXP PARC LLAVA LIST_INST LLAVC
+#line 385 "parser.y"
+                                                                       {yylhs.value.as < instruction* > () = new func_for(yystack_[10].location.begin.line, yystack_[10].location.begin.column,yystack_[8].value.as < instruction* > (),yystack_[6].value.as < expression* > (),yystack_[4].value.as < expression* > (),yystack_[1].value.as < list_instruction* > ());}
+#line 2136 "parser.cpp"
+    break;
+
+  case 54: // EXPRESSION: EXP
+#line 388 "parser.y"
+                 {yylhs.value.as < instruction* > () = new func_expression(yystack_[0].location.begin.line, yystack_[0].location.begin.column,yystack_[0].value.as < expression* > ());}
+#line 2142 "parser.cpp"
+    break;
+
+  case 55: // DECLARE_STRUCT: RSTRUCT ID LLAVA DECLARE_LIST LLAVC
+#line 391 "parser.y"
+                                                    {yylhs.value.as < instruction* > () = new declare_struct(yystack_[4].location.begin.line, yystack_[4].location.begin.column,yystack_[1].value.as < map_struct_dec* > (),yystack_[3].value.as < std::string > ()); }
+#line 2148 "parser.cpp"
+    break;
+
+  case 56: // DECLARE_LIST: DECLARE_LIST TYPES ID ';'
+#line 395 "parser.y"
+        {
+            yystack_[3].value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (),yystack_[2].value.as < TipoDato > ());
+            yylhs.value.as < map_struct_dec* > () = yystack_[3].value.as < map_struct_dec* > ();
+        }
+#line 2157 "parser.cpp"
+    break;
+
+  case 57: // DECLARE_LIST: DECLARE_LIST ID ID ';'
+#line 400 "parser.y"
+        {
+            yystack_[3].value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (),STRUCT);
+            yylhs.value.as < map_struct_dec* > () = yystack_[3].value.as < map_struct_dec* > ();
+        }
+#line 2166 "parser.cpp"
+    break;
+
+  case 58: // DECLARE_LIST: TYPES ID ';'
+#line 405 "parser.y"
+        {
+            yylhs.value.as < map_struct_dec* > () = new map_struct_dec();
+            yylhs.value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (), yystack_[2].value.as < TipoDato > ());
+        }
+#line 2175 "parser.cpp"
+    break;
+
+  case 59: // DECLARE_LIST: ID ID ';'
+#line 410 "parser.y"
+        {
+            yylhs.value.as < map_struct_dec* > () = new map_struct_dec();
+            yylhs.value.as < map_struct_dec* > ()->newMap(yystack_[1].value.as < std::string > (), STRUCT);
+        }
+#line 2184 "parser.cpp"
+    break;
+
+  case 60: // CREATE_STRUCT: RSTRUCT ID ID '=' LLAVA EXP_LIST LLAVC ';'
+#line 417 "parser.y"
+                {
+                    yylhs.value.as < instruction* > () = new create_struct(yystack_[7].location.begin.line, yystack_[7].location.begin.column,yystack_[6].value.as < std::string > (),yystack_[5].value.as < std::string > (),yystack_[2].value.as < list_expression* > ());
+                }
+#line 2192 "parser.cpp"
+    break;
+
+  case 61: // EXP_LIST: EXP_LIST ',' EXP
 #line 423 "parser.y"
-                           { yylhs.value.as < expression* > () = new expression_array(0,0,yystack_[1].value.as < list_expression* > ()); }
-#line 2108 "parser.cpp"
+        {
+            yystack_[2].value.as < list_expression* > ()->newExp(yystack_[0].value.as < expression* > ());
+            yylhs.value.as < list_expression* > () = yystack_[2].value.as < list_expression* > ();
+        }
+#line 2201 "parser.cpp"
     break;
 
-  case 79: // EXP: CALL_EXP
-#line 424 "parser.y"
-               { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
-#line 2114 "parser.cpp"
+  case 62: // EXP_LIST: EXP
+#line 428 "parser.y"
+        {
+            yylhs.value.as < list_expression* > () = new list_expression();
+            yylhs.value.as < list_expression* > ()->newExp(yystack_[0].value.as < expression* > ());
+        }
+#line 2210 "parser.cpp"
     break;
 
-  case 80: // EXP: PRIMITIVE
-#line 426 "parser.y"
-                { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
-#line 2120 "parser.cpp"
+  case 63: // DECLARATION: TYPES ID '=' EXP
+#line 434 "parser.y"
+                               {yylhs.value.as < instruction* > () = new declare(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[3].value.as < TipoDato > (),yystack_[2].value.as < std::string > (),yystack_[0].value.as < expression* > ());}
+#line 2216 "parser.cpp"
     break;
 
-  case 81: // ATOI: RATOI PARA PRIMITIVE PARC
-#line 430 "parser.y"
-                                 {yylhs.value.as < expression* > () = new func_atoi(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
-#line 2126 "parser.cpp"
+  case 64: // DECLARATION: TYPES ID
+#line 435 "parser.y"
+                       {yylhs.value.as < instruction* > () = new declare(yystack_[1].location.begin.line, yystack_[1].location.begin.column,yystack_[1].value.as < TipoDato > (),yystack_[0].value.as < std::string > (),nullptr);}
+#line 2222 "parser.cpp"
     break;
 
-  case 82: // ATOF: RATOF PARA PRIMITIVE PARC
-#line 433 "parser.y"
-                                 {yylhs.value.as < expression* > () = new func_atof(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
-#line 2132 "parser.cpp"
+  case 65: // ASSIGNATION: ID '=' EXP
+#line 437 "parser.y"
+                         {yylhs.value.as < instruction* > () = new assign(yystack_[2].location.begin.line, yystack_[2].location.begin.column,yystack_[2].value.as < std::string > (),yystack_[0].value.as < expression* > ());}
+#line 2228 "parser.cpp"
     break;
 
-  case 83: // IOTA: RIOTA PARA PRIMITIVE PARC
-#line 436 "parser.y"
-                                 {yylhs.value.as < expression* > () = new func_iota(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
-#line 2138 "parser.cpp"
+  case 66: // ASSIGNATION: ID CORA PRIMITIVE CORC '=' PRIMITIVE
+#line 438 "parser.y"
+                                                   {yylhs.value.as < instruction* > () = new assign_vector(yystack_[5].location.begin.line, yystack_[5].location.begin.column, yystack_[5].value.as < std::string > (),yystack_[3].value.as < expression* > (),yystack_[0].value.as < expression* > ());}
+#line 2234 "parser.cpp"
     break;
 
-  case 84: // INCREMENT: PREFIX_INCREMENT
-#line 440 "parser.y"
-                            { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
-#line 2144 "parser.cpp"
-    break;
-
-  case 85: // INCREMENT: EXP INC
+  case 67: // BREAK: RBREAK
 #line 441 "parser.y"
-                      { yylhs.value.as < expression* > () = new operation(yystack_[1].location.begin.line, yystack_[1].location.begin.column, yystack_[1].value.as < expression* > (), new primitive(0,0,INTEGER, "", 0,0.0,false), "++A"); }
-#line 2150 "parser.cpp"
+               {yylhs.value.as < instruction* > () = new func_break(yystack_[0].location.begin.line, yystack_[0].location.begin.column);}
+#line 2240 "parser.cpp"
     break;
 
-  case 86: // PREFIX_INCREMENT: INC EXP
+  case 68: // CONTINUE: RCONTINUE
 #line 444 "parser.y"
-                          { yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column, yystack_[0].value.as < expression* > (), new primitive(0,0,INTEGER, "", 0,0.0,false), "++B"); }
-#line 2156 "parser.cpp"
+                     {yylhs.value.as < instruction* > () = new func_continue(yystack_[0].location.begin.line, yystack_[0].location.begin.column);}
+#line 2246 "parser.cpp"
     break;
 
-  case 87: // PREFIX_INCREMENT: EXP PREFIX_INCREMENT
-#line 445 "parser.y"
-                                       {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2162 "parser.cpp"
+  case 69: // RETURN: RRETURN EXP
+#line 447 "parser.y"
+                     { yylhs.value.as < instruction* > () = new func_return(yystack_[1].location.begin.line, yystack_[1].location.begin.column,yystack_[0].value.as < expression* > ()); }
+#line 2252 "parser.cpp"
     break;
 
-  case 88: // PRIMITIVE: NUMERO
+  case 70: // RETURN: RRETURN
 #line 448 "parser.y"
+                  { yylhs.value.as < instruction* > () = new func_return(yystack_[0].location.begin.line, yystack_[0].location.begin.column,nullptr); }
+#line 2258 "parser.cpp"
+    break;
+
+  case 71: // MEAN: RMEAN PARA ID PARC
+#line 451 "parser.y"
+                          {yylhs.value.as < expression* > () = new func_mean(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < std::string > ());}
+#line 2264 "parser.cpp"
+    break;
+
+  case 72: // MEDIAN: RMEDIAN PARA ID PARC
+#line 454 "parser.y"
+                              {yylhs.value.as < expression* > () = new func_median(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < std::string > ());}
+#line 2270 "parser.cpp"
+    break;
+
+  case 73: // MODE: RMODE PARA ID PARC
+#line 457 "parser.y"
+                          {yylhs.value.as < expression* > () = new func_mode(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < std::string > ());}
+#line 2276 "parser.cpp"
+    break;
+
+  case 74: // TYPES: INT
+#line 460 "parser.y"
+            { yylhs.value.as < TipoDato > () = INTEGER; }
+#line 2282 "parser.cpp"
+    break;
+
+  case 75: // TYPES: TSTRING
+#line 461 "parser.y"
+              { yylhs.value.as < TipoDato > () = STRING; }
+#line 2288 "parser.cpp"
+    break;
+
+  case 76: // TYPES: BOOLEAN
+#line 462 "parser.y"
+              { yylhs.value.as < TipoDato > () = BOOL; }
+#line 2294 "parser.cpp"
+    break;
+
+  case 77: // TYPES: FLOAT
+#line 463 "parser.y"
+            { yylhs.value.as < TipoDato > () = FLOAT; }
+#line 2300 "parser.cpp"
+    break;
+
+  case 78: // TYPES: VOID
+#line 464 "parser.y"
+           {yylhs.value.as < TipoDato > () = VOID;}
+#line 2306 "parser.cpp"
+    break;
+
+  case 79: // TYPES: RVECTOR
+#line 465 "parser.y"
+              {yylhs.value.as < TipoDato > () = VECTOR;}
+#line 2312 "parser.cpp"
+    break;
+
+  case 80: // EXP: EXP SUMA EXP
+#line 469 "parser.y"
+                   { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "+"); }
+#line 2318 "parser.cpp"
+    break;
+
+  case 81: // EXP: EXP MENOS EXP
+#line 470 "parser.y"
+                    { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "-"); }
+#line 2324 "parser.cpp"
+    break;
+
+  case 82: // EXP: EXP POR EXP
+#line 471 "parser.y"
+                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "*"); }
+#line 2330 "parser.cpp"
+    break;
+
+  case 83: // EXP: EXP DIV EXP
+#line 472 "parser.y"
+                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "/"); }
+#line 2336 "parser.cpp"
+    break;
+
+  case 84: // EXP: EXP MOD EXP
+#line 473 "parser.y"
+                  { yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "%"); }
+#line 2342 "parser.cpp"
+    break;
+
+  case 85: // EXP: INCREMENT
+#line 475 "parser.y"
+                {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2348 "parser.cpp"
+    break;
+
+  case 86: // EXP: EXP MAYOR EXP
+#line 477 "parser.y"
+                    {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), ">");}
+#line 2354 "parser.cpp"
+    break;
+
+  case 87: // EXP: EXP MAYEQU EXP
+#line 478 "parser.y"
+                     {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), ">=");}
+#line 2360 "parser.cpp"
+    break;
+
+  case 88: // EXP: EXP MENOR EXP
+#line 479 "parser.y"
+                    {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "<");}
+#line 2366 "parser.cpp"
+    break;
+
+  case 89: // EXP: EXP MENEQU EXP
+#line 480 "parser.y"
+                     {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "<=");}
+#line 2372 "parser.cpp"
+    break;
+
+  case 90: // EXP: EXP EQU EXP
+#line 481 "parser.y"
+                  {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "==");}
+#line 2378 "parser.cpp"
+    break;
+
+  case 91: // EXP: EXP DIFF EXP
+#line 482 "parser.y"
+                   {yylhs.value.as < expression* > () =  new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "!=");}
+#line 2384 "parser.cpp"
+    break;
+
+  case 92: // EXP: EXP AND EXP
+#line 484 "parser.y"
+                  {yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "&&");}
+#line 2390 "parser.cpp"
+    break;
+
+  case 93: // EXP: EXP OR EXP
+#line 485 "parser.y"
+                 {yylhs.value.as < expression* > () = new operation(yystack_[2].location.begin.line, yystack_[2].location.begin.column, yystack_[2].value.as < expression* > (), yystack_[0].value.as < expression* > (), "||");}
+#line 2396 "parser.cpp"
+    break;
+
+  case 94: // EXP: NOT EXP
+#line 487 "parser.y"
+    {
+        yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column, yystack_[0].value.as < expression* > (), new primitive(0,0,BOOL, "", 0,0.0,false), "!");
+    }
+#line 2404 "parser.cpp"
+    break;
+
+  case 95: // EXP: MENOS EXP
+#line 491 "parser.y"
+                {
+        yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column,yystack_[0].value.as < expression* > (),new primitive(0,0,INTEGER, "", 0,0.0,false),"NEG");
+        }
+#line 2412 "parser.cpp"
+    break;
+
+  case 96: // EXP: PARA EXP PARC
+#line 495 "parser.y"
+                    { yylhs.value.as < expression* > () = yystack_[1].value.as < expression* > (); }
+#line 2418 "parser.cpp"
+    break;
+
+  case 97: // EXP: ATOI
+#line 496 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2424 "parser.cpp"
+    break;
+
+  case 98: // EXP: ATOF
+#line 497 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2430 "parser.cpp"
+    break;
+
+  case 99: // EXP: IOTA
+#line 498 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2436 "parser.cpp"
+    break;
+
+  case 100: // EXP: CORA EXP_LIST CORC
+#line 499 "parser.y"
+                         { yylhs.value.as < expression* > () = new expression_vector(yystack_[2].location.begin.line, yystack_[2].location.begin.column,yystack_[1].value.as < list_expression* > ()); }
+#line 2442 "parser.cpp"
+    break;
+
+  case 101: // EXP: CALL_EXP
+#line 500 "parser.y"
+               { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
+#line 2448 "parser.cpp"
+    break;
+
+  case 102: // EXP: GET
+#line 501 "parser.y"
+          {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2454 "parser.cpp"
+    break;
+
+  case 103: // EXP: SIZE
+#line 502 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2460 "parser.cpp"
+    break;
+
+  case 104: // EXP: MEAN
+#line 503 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2466 "parser.cpp"
+    break;
+
+  case 105: // EXP: MEDIAN
+#line 504 "parser.y"
+             {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2472 "parser.cpp"
+    break;
+
+  case 106: // EXP: MODE
+#line 505 "parser.y"
+           {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2478 "parser.cpp"
+    break;
+
+  case 107: // EXP: PRIMITIVE
+#line 507 "parser.y"
+                { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
+#line 2484 "parser.cpp"
+    break;
+
+  case 108: // ATOI: RATOI PARA PRIMITIVE PARC
+#line 511 "parser.y"
+                                 {yylhs.value.as < expression* > () = new func_atoi(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
+#line 2490 "parser.cpp"
+    break;
+
+  case 109: // ATOF: RATOF PARA PRIMITIVE PARC
+#line 514 "parser.y"
+                                 {yylhs.value.as < expression* > () = new func_atof(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
+#line 2496 "parser.cpp"
+    break;
+
+  case 110: // IOTA: RIOTA PARA EXP PARC
+#line 517 "parser.y"
+                           {yylhs.value.as < expression* > () = new func_iota(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[1].value.as < expression* > ());}
+#line 2502 "parser.cpp"
+    break;
+
+  case 111: // INCREMENT: PREFIX_INCREMENT
+#line 521 "parser.y"
+                            { yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > (); }
+#line 2508 "parser.cpp"
+    break;
+
+  case 112: // INCREMENT: EXP INC
+#line 522 "parser.y"
+                      { yylhs.value.as < expression* > () = new operation(yystack_[1].location.begin.line, yystack_[1].location.begin.column, yystack_[1].value.as < expression* > (), new primitive(0,0,INTEGER, "", 0,0.0,false), "++A"); }
+#line 2514 "parser.cpp"
+    break;
+
+  case 113: // PREFIX_INCREMENT: INC EXP
+#line 525 "parser.y"
+                          { yylhs.value.as < expression* > () = new operation(yystack_[0].location.begin.line, yystack_[0].location.begin.column, yystack_[0].value.as < expression* > (), new primitive(0,0,INTEGER, "", 0,0.0,false), "++B"); }
+#line 2520 "parser.cpp"
+    break;
+
+  case 114: // PREFIX_INCREMENT: EXP PREFIX_INCREMENT
+#line 526 "parser.y"
+                                       {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
+#line 2526 "parser.cpp"
+    break;
+
+  case 115: // PRIMITIVE: NUMERO
+#line 529 "parser.y"
                    {
             std::string cadena = yystack_[0].value.as < std::string > ();
             if(cadena.find(".") == -1)
@@ -2175,81 +2539,117 @@ namespace yy {
                 yylhs.value.as < expression* > () = new primitive(yystack_[0].location.begin.line, yystack_[0].location.begin.column,FLOAT, "", 0, num,false);}
 
             }
-#line 2179 "parser.cpp"
+#line 2543 "parser.cpp"
     break;
 
-  case 89: // PRIMITIVE: STRING
-#line 461 "parser.y"
+  case 116: // PRIMITIVE: STRING
+#line 542 "parser.y"
         {
             std::string str1 = yystack_[0].value.as < std::string > ().erase(0,1);
             std::string str2 = str1.erase(str1.length()-1,1);
             yylhs.value.as < expression* > () = new primitive(yystack_[0].location.begin.line, yystack_[0].location.begin.column,STRING,str2,0,0.0,false);
         }
-#line 2189 "parser.cpp"
+#line 2553 "parser.cpp"
     break;
 
-  case 90: // PRIMITIVE: BOOLTRUE
-#line 466 "parser.y"
+  case 117: // PRIMITIVE: NLL
+#line 547 "parser.y"
+              {yylhs.value.as < expression* > () = new primitive(yystack_[0].location.begin.line, yystack_[0].location.begin.column,NULO,"",0,0.0,false);}
+#line 2559 "parser.cpp"
+    break;
+
+  case 118: // PRIMITIVE: BOOLTRUE
+#line 548 "parser.y"
                   {yylhs.value.as < expression* > () = new primitive(yystack_[0].location.begin.line, yystack_[0].location.begin.column,BOOL, "", 0, 0.0, true);}
-#line 2195 "parser.cpp"
+#line 2565 "parser.cpp"
     break;
 
-  case 91: // PRIMITIVE: BOOLFALSE
-#line 467 "parser.y"
+  case 119: // PRIMITIVE: BOOLFALSE
+#line 549 "parser.y"
                    {yylhs.value.as < expression* > () = new primitive(yystack_[0].location.begin.line, yystack_[0].location.begin.column,BOOL, "", 0, 0.0, false);}
-#line 2201 "parser.cpp"
+#line 2571 "parser.cpp"
     break;
 
-  case 92: // PRIMITIVE: LIST_ARR
-#line 468 "parser.y"
+  case 120: // PRIMITIVE: LIST_ARR
+#line 550 "parser.y"
                   {yylhs.value.as < expression* > () = yystack_[0].value.as < expression* > ();}
-#line 2207 "parser.cpp"
+#line 2577 "parser.cpp"
     break;
 
-  case 93: // LIST_ARR: LIST_ARR CORA EXP CORC
-#line 471 "parser.y"
-                                  { yylhs.value.as < expression* > () = new array_access(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < expression* > ()); }
-#line 2213 "parser.cpp"
+  case 121: // LIST_ARR: LIST_ARR CORA EXP CORC
+#line 553 "parser.y"
+                                  { yylhs.value.as < expression* > () = new vector_access(yystack_[3].location.begin.line, yystack_[3].location.begin.column,yystack_[3].value.as < expression* > (),yystack_[1].value.as < expression* > ()); }
+#line 2583 "parser.cpp"
     break;
 
-  case 94: // LIST_ARR: LIST_ARR '.' ID
-#line 472 "parser.y"
+  case 122: // LIST_ARR: LIST_ARR '.' ID
+#line 554 "parser.y"
                           { yylhs.value.as < expression* > () = new struct_access(yystack_[2].location.begin.line, yystack_[2].location.begin.column,yystack_[2].value.as < expression* > (),yystack_[0].value.as < std::string > ()); }
-#line 2219 "parser.cpp"
+#line 2589 "parser.cpp"
     break;
 
-  case 95: // LIST_ARR: ID
-#line 473 "parser.y"
+  case 123: // LIST_ARR: ID
+#line 555 "parser.y"
              {yylhs.value.as < expression* > () = new access(yystack_[0].location.begin.line, yystack_[0].location.begin.column,yystack_[0].value.as < std::string > ()); }
-#line 2225 "parser.cpp"
+#line 2595 "parser.cpp"
     break;
 
-  case 96: // CALL_EXP: ID PARA EXP_LIST PARC
-#line 475 "parser.y"
+  case 124: // DECLARE_VECTOR: RVECTOR MENOR TYPES MAYOR ID '=' EXP
+#line 558 "parser.y"
+                                                       {yylhs.value.as < instruction* > () = new declare_vector(yystack_[6].location.begin.line, yystack_[6].location.begin.column, yystack_[4].value.as < TipoDato > (), yystack_[2].value.as < std::string > (), yystack_[0].value.as < expression* > ());}
+#line 2601 "parser.cpp"
+    break;
+
+  case 125: // DECLARE_VECTOR: RVECTOR MENOR TYPES MAYOR ID
+#line 559 "parser.y"
+                                                {yylhs.value.as < instruction* > () = new declare_vector(yystack_[4].location.begin.line, yystack_[4].location.begin.column, yystack_[2].value.as < TipoDato > (), yystack_[0].value.as < std::string > (), nullptr);}
+#line 2607 "parser.cpp"
+    break;
+
+  case 126: // DECLARE_MATRIX: TYPES ID CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC
+#line 562 "parser.y"
+                                                                     {yylhs.value.as < instruction* > () = new declare_matrix(yystack_[8].location.begin.line, yystack_[8].location.begin.column,yystack_[8].value.as < TipoDato > (), yystack_[7].value.as < std::string > (), yystack_[5].value.as < expression* > (), nullptr, nullptr, yystack_[1].value.as < list_expression* > ());}
+#line 2613 "parser.cpp"
+    break;
+
+  case 127: // DECLARE_MATRIX: TYPES ID CORA PRIMITIVE CORC CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC
+#line 563 "parser.y"
+                                                                                          {yylhs.value.as < instruction* > () = new declare_matrix(yystack_[11].location.begin.line, yystack_[11].location.begin.column,yystack_[11].value.as < TipoDato > (), yystack_[10].value.as < std::string > (), yystack_[8].value.as < expression* > () , yystack_[5].value.as < expression* > (), nullptr, yystack_[1].value.as < list_expression* > ());}
+#line 2619 "parser.cpp"
+    break;
+
+  case 128: // DECLARE_MATRIX: TYPES ID CORA PRIMITIVE CORC CORA PRIMITIVE CORC CORA PRIMITIVE CORC '=' CORA EXP_LIST CORC
+#line 564 "parser.y"
+                                                                                                              {yylhs.value.as < instruction* > () = new declare_matrix(yystack_[14].location.begin.line, yystack_[14].location.begin.column,yystack_[14].value.as < TipoDato > (), yystack_[13].value.as < std::string > (), yystack_[11].value.as < expression* > (), yystack_[8].value.as < expression* > (), yystack_[5].value.as < expression* > (), yystack_[1].value.as < list_expression* > ());}
+#line 2625 "parser.cpp"
+    break;
+
+  case 129: // CALL_EXP: ID PARA EXP_LIST PARC
+#line 568 "parser.y"
                                  { yylhs.value.as < expression* > () = new call_exp(0,0,yystack_[3].value.as < std::string > (),yystack_[1].value.as < list_expression* > ()); }
-#line 2231 "parser.cpp"
+#line 2631 "parser.cpp"
     break;
 
-  case 97: // CALL_EXP: ID PARA PARC
-#line 476 "parser.y"
+  case 130: // CALL_EXP: ID PARA PARC
+#line 569 "parser.y"
                        { yylhs.value.as < expression* > () = new call_exp(0,0,yystack_[2].value.as < std::string > (),nullptr); }
-#line 2237 "parser.cpp"
+#line 2637 "parser.cpp"
     break;
 
-  case 98: // CALL_INST: ID PARA EXP_LIST PARC ';'
-#line 479 "parser.y"
+  case 131: // CALL_INST: ID PARA EXP_LIST PARC ';'
+#line 572 "parser.y"
                                       { yylhs.value.as < instruction* > () = new call_inst(0,0,yystack_[4].value.as < std::string > (),yystack_[2].value.as < list_expression* > ());}
-#line 2243 "parser.cpp"
+#line 2643 "parser.cpp"
     break;
 
-  case 99: // CALL_INST: ID PARA PARC ';'
-#line 480 "parser.y"
+  case 132: // CALL_INST: ID PARA PARC ';'
+#line 573 "parser.y"
                            { yylhs.value.as < instruction* > () = new call_inst(0,0,yystack_[3].value.as < std::string > (),nullptr); }
-#line 2249 "parser.cpp"
+#line 2649 "parser.cpp"
     break;
 
 
-#line 2253 "parser.cpp"
+#line 2653 "parser.cpp"
 
             default:
               break;
@@ -2438,417 +2838,548 @@ namespace yy {
 
 
 
-  const signed char Parser::yypact_ninf_ = -75;
+  const signed char Parser::yypact_ninf_ = -120;
 
-  const signed char Parser::yytable_ninf_ = -88;
+  const signed char Parser::yytable_ninf_ = -115;
 
   const short
   Parser::yypact_[] =
   {
-     265,   -75,   -75,   -75,   -75,   -75,   -75,    20,   265,   -75,
-     -75,    14,   -75,   -75,   -75,     9,    17,   107,    26,    18,
-     -14,    39,    31,   771,    34,   265,   -75,   771,   -75,    -7,
-     -75,    48,   -75,   -75,  1194,  1194,  1194,  1194,  1194,    45,
-      46,    47,    49,    57,    58,   -75,   -75,  1194,  1194,   379,
-     -75,    10,   -75,   -75,   -75,    21,   -75,   -75,    22,    23,
-      24,    44,    54,    93,  1047,   -75,   -75,   -75,   -75,   -75,
-     -75,   -13,   -75,   -75,   771,    95,   428,   126,  1194,     6,
-      87,   802,    -9,  1047,  1302,  1285,  1096,  1194,   265,  1194,
-     131,   131,   131,  1047,  1211,   -75,   -75,   -75,   -75,   -75,
-     -75,   -75,   -75,   -75,    56,  1194,  1194,  1194,  1194,   212,
-    1194,  1194,  1194,  1194,  1194,  1194,  1194,  1194,  1194,  1047,
-      13,  1194,   103,   477,   -75,   -75,    64,    -6,  1047,    66,
-     265,   194,   -75,   -75,  1194,   771,   851,    69,   900,   -75,
-     108,   109,   111,  1194,  1302,  1302,    65,    65,    65,  1285,
-    1285,  1285,  1285,  1248,  1248,  1211,  1211,   949,   -75,   -75,
-     -75,    76,   116,  1325,   129,   -75,     2,  1047,   526,   279,
-     121,  1194,   -75,   -75,   -75,   -75,  1047,   -75,   -75,  1194,
-     -75,   142,   100,   -75,   117,   771,   329,     4,   102,   -75,
-       0,   117,   -75,   -75,   575,  1194,   -75,   -75,   771,  1194,
-     -75,   -75,   -75,   998,   624,  1145,   139,   -75,   771,   771,
-     673,   722,   -75,   -75
+     273,    29,  -120,  -120,  -120,    36,  -120,  -120,  -120,    42,
+     309,   273,  -120,  -120,  -120,    57,     0,    68,  -120,  -120,
+    -120,   309,  -120,    93,    92,    95,   351,   329,  -120,    79,
+      96,    69,    -9,   108,   110,   169,   112,   115,     1,   116,
+    1448,   122,  1553,  -120,    82,   136,  -120,   137,    88,   860,
+     130,   860,   106,   860,   103,   146,  -120,    98,    99,  -120,
+    -120,   -13,  -120,   148,   113,  -120,  -120,  1544,  1544,  -120,
+    1544,  1544,  1544,   152,   153,   155,   158,   167,   168,   170,
+     171,   174,  -120,  -120,  1544,  1544,   419,  -120,   126,   133,
+     134,  -120,  -120,   140,  -120,  -120,  -120,   141,  -120,  -120,
+     142,   143,   144,   149,   150,  -120,  -120,  -120,   199,  1439,
+    -120,  -120,  -120,  -120,  -120,  -120,    14,   154,   156,  -120,
+    -120,   860,   468,   201,   517,  1448,  -120,  -120,  -120,  1488,
+     131,  1544,   109,    75,  1448,    -7,   900,   -11,  1439,  1686,
+    1658,   949,  1544,  1448,  1544,   206,   208,   211,   131,   131,
+    1544,  1439,  1584,  -120,  -120,  -120,  -120,  -120,  -120,  -120,
+    -120,  -120,  -120,  -120,  -120,     8,  1544,  1544,  1544,  1544,
+    1714,  1544,  1544,  1544,  1544,  1544,  1544,  1544,  1544,  1544,
+    1439,    39,  1544,   216,  -120,  -120,   566,  -120,  -120,  -120,
+     178,   165,     5,  -120,   207,  1439,   213,   217,   219,   222,
+     224,   182,   198,  1516,   -43,  -120,  -120,  1544,   860,   998,
+     187,   241,     9,   231,   232,   235,   236,   237,  1047,   131,
+    1544,  1686,  1686,  1742,  1742,  1742,  1658,  1658,  1658,  1658,
+    1621,  1621,  1584,  1584,  1096,  -120,  -120,   249,  -120,   197,
+     202,  1544,  1544,  1544,   246,  1544,   240,   258,  -120,    10,
+    1439,   615,   250,  1544,   209,  -120,  -120,  -120,  -120,  -120,
+    -120,  -120,   251,  1439,  -120,  -120,  -120,   131,  1145,  1194,
+    1243,  -120,  1292,  1544,   214,  -120,   255,   860,   364,    13,
+    -120,  -120,  -120,  -120,  -120,    -8,  1544,    47,   255,  -120,
+    -120,   664,  1544,   131,   247,   229,  1439,   860,  1544,  -120,
+    -120,  -120,  1341,   257,  1544,  -120,   713,  1390,   272,    44,
+      46,  -120,   860,   860,   131,   271,  -120,   762,   811,   275,
+    1544,  -120,  -120,   233,    48,   274,  -120,  1544,    51,  -120
   };
 
-  const signed char
+  const unsigned char
   Parser::yydefact_[] =
   {
-       0,    53,    55,    54,    57,    52,    56,     0,     0,     5,
-       2,     0,     1,     4,     3,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     9,     0,    88,    95,
-      89,     0,    90,    91,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    48,    49,    51,     0,     0,
-      12,     0,    15,    16,    17,     0,    20,    21,     0,     0,
-       0,     0,     0,     0,    38,    75,    76,    77,    63,    84,
-      80,    92,    79,    25,     0,     0,     0,     0,     0,     0,
-      95,     0,     0,    44,    73,    86,     0,     0,     0,     0,
-       0,     0,     0,    50,    72,     7,    11,    13,    14,    18,
-      19,    22,    23,    24,    46,     0,     0,     0,     0,    85,
+       0,     0,    75,    77,    76,     0,    79,    74,    78,     0,
+       0,     0,     6,     2,     8,     0,     0,     0,     1,     5,
+       3,     0,     7,     0,     0,     0,     0,     0,     4,     0,
+       0,    79,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,    14,     0,     0,    55,     0,     0,     0,
+       0,     0,     0,     0,    79,     0,    59,     0,     0,    58,
+     115,   123,   116,     0,    79,   118,   119,     0,     0,   117,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-      84,     0,     0,     0,     8,    10,    97,     0,    47,     0,
-       0,     0,    74,    78,     0,     0,     0,     0,     0,    95,
-       0,     0,     0,     0,    58,    59,    60,    61,    62,    64,
-      66,    65,    67,    68,    69,    70,    71,     0,    94,     6,
-      99,    96,     0,     0,     0,    97,     0,    43,     0,    44,
-       0,     0,    26,    81,    82,    83,    45,    93,    98,     0,
-      39,     0,     0,    96,    28,     0,     0,     0,     0,    41,
-       0,    29,    32,    30,     0,     0,    42,    40,     0,     0,
-      31,    27,    36,     0,     0,     0,     0,    34,     0,     0,
-       0,     0,    33,    37
+       0,     0,    67,    68,    70,     0,     0,    18,     0,     0,
+       0,   102,   103,     0,    21,    22,    23,     0,    26,    27,
+       0,     0,     0,     0,     0,   104,   105,   106,     0,    54,
+      97,    98,    99,    85,   111,   107,   120,     0,     0,   101,
+      33,     0,     0,     0,     0,     0,    12,    57,    56,     0,
+       0,     0,     0,     0,     0,   123,     0,     0,    62,    95,
+     113,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,    69,    94,    10,    17,    19,    34,    35,    36,    20,
+      24,    25,    30,    31,    32,    64,     0,     0,     0,     0,
+     112,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,   111,     0,     0,    28,    29,     0,    16,    15,    11,
+       0,   130,     0,   123,     0,    65,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    96,   100,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,    80,    81,    82,    83,    84,    86,    88,    87,    89,
+      90,    91,    92,    93,     0,   122,     9,     0,   132,   129,
+       0,     0,     0,     0,     0,     0,     0,     0,   130,     0,
+      61,     0,     0,     0,    64,    37,    71,    72,    73,   108,
+     109,   110,     0,    63,   121,    13,   131,     0,     0,     0,
+       0,    41,     0,     0,   125,   129,    44,     0,     0,     0,
+      66,    38,    40,    42,    39,     0,     0,     0,    45,    48,
+      46,     0,     0,     0,     0,     0,   124,     0,     0,    47,
+      43,    52,     0,     0,     0,    60,     0,     0,     0,     0,
+       0,    50,     0,     0,     0,     0,   126,     0,     0,     0,
+       0,    49,    53,     0,     0,     0,   127,     0,     0,   128
   };
 
   const short
   Parser::yypgoto_[] =
   {
-     -75,   -75,   -75,   149,   -75,   150,   -25,   -43,   -75,   -75,
-     -75,   -32,   -22,   -75,   -75,   -75,   -75,   -75,   -75,   -74,
-      78,   -75,   -75,   -75,   -75,    19,   -23,   -75,   -75,   -75,
-     -75,   110,   -53,   -75,   -75,   -75
+    -120,  -120,   279,  -120,    67,   266,    71,   -38,   -83,  -120,
+    -120,  -120,  -120,  -120,  -120,  -120,  -120,    26,    30,  -120,
+    -120,  -120,   104,  -120,  -120,   -95,   179,  -120,  -120,  -120,
+    -120,  -120,  -120,  -120,    17,   -49,  -120,  -120,  -120,  -120,
+      78,  -119,  -120,  -120,  -120,  -120,  -120
   };
 
   const short
   Parser::yydefgoto_[] =
   {
-      -1,     7,     8,     9,    20,    10,    49,    50,    51,    52,
-     191,   192,   193,    53,    54,    55,    56,   163,    57,    82,
-      58,    59,    60,    61,    62,    63,   119,    65,    66,    67,
-      68,    69,    70,    71,    72,    73
+      -1,     9,    10,    11,    12,    32,    13,    86,    87,    88,
+      89,    90,    91,    92,    93,    94,   288,   289,   290,    95,
+      96,    97,    98,    35,    99,   137,   100,   101,   102,   103,
+     104,   105,   106,   107,   108,   180,   110,   111,   112,   113,
+     114,   115,   116,   117,   118,   119,   120
   };
 
   const short
   Parser::yytable_[] =
   {
-      64,    24,    76,   127,    64,   121,    96,    77,   133,   161,
-     129,    81,    83,    84,    85,    86,   198,   183,    15,    11,
-      12,   196,   130,    17,    93,    94,    64,    11,   -87,   199,
-     -87,    18,   -87,    96,    23,    16,    21,   140,   141,   142,
-      25,    22,   122,    26,    75,   134,    78,    27,   134,   123,
-      74,    64,    79,    64,    83,   128,   134,   166,   134,    87,
-      88,    89,    97,    90,   136,   -87,   138,   -87,    28,    80,
-      30,    91,    92,    98,    99,   100,   101,    32,    33,    34,
-      96,    35,   144,   145,   146,   147,    85,   148,   149,   150,
-     151,   152,   153,   154,   155,   156,   102,   104,   157,   124,
-      64,   131,    42,    43,    44,   187,   103,   158,    83,   143,
-     168,   167,   169,     1,     2,     3,   160,     4,     5,   162,
-     176,   171,    19,   173,   174,    96,   175,     6,   178,    28,
-      80,    30,   179,   182,    28,   139,    30,   185,    32,    33,
-      34,   126,    35,    32,    33,    64,   188,   190,   186,   164,
-      36,    96,   189,    37,   197,   209,    83,    13,    14,   200,
-     194,    96,    64,    42,    43,    44,   137,    96,    96,   201,
-       0,    64,   203,   204,   120,    64,   205,    48,     0,     0,
-       0,    64,   181,   210,   211,   169,    64,    64,    64,     0,
-       0,   120,     0,   120,   120,   120,   120,    28,    80,    30,
-       0,     0,     0,   120,   120,     0,    32,    33,    34,   165,
-      35,     0,     0,     0,     0,    28,    80,    30,    36,     0,
-       0,    37,     0,     0,    32,    33,    34,     0,    35,   120,
-       0,    42,    43,    44,     0,     0,    36,     0,   120,    37,
-       0,     0,     0,     0,     0,    48,   120,     0,   120,    42,
-      43,    44,     0,     0,   120,   120,   120,   120,   120,   120,
-     120,   120,   120,   120,   120,   120,   120,   120,     0,     0,
-       0,     1,     2,     3,     0,     4,     5,   120,     0,   120,
-       0,     0,    28,    80,    30,     6,   120,     0,     0,     0,
-       0,    32,    33,    34,     0,    35,   120,     0,     0,     0,
-       0,     0,   105,   106,   107,   108,   109,   110,     0,     0,
-       0,     0,     0,   120,     0,   120,    42,    43,    44,     0,
-       0,     0,   111,   112,   113,   114,   115,   116,   117,   118,
-      48,   -38,    28,    80,    30,     0,     0,     0,     0,     0,
-       0,    32,    33,    34,     0,    35,     0,     0,     0,     0,
-       0,     0,   105,   106,   107,   108,   109,   110,     0,     0,
-       0,     0,     0,     0,     0,     0,    42,    43,    44,     0,
-       0,     0,   111,   112,   113,   114,   115,   116,   117,   118,
-      48,   195,    28,    29,    30,     1,     2,     3,    31,     4,
-       5,    32,    33,    34,     0,    35,    95,     0,     0,     6,
-       0,     0,     0,    36,     0,     0,    37,     0,    38,     0,
-      39,    40,    41,     0,     0,     0,    42,    43,    44,    45,
-      46,    47,     0,     0,     0,     0,     0,     0,     0,     0,
-      48,    28,    29,    30,     1,     2,     3,    31,     4,     5,
-      32,    33,    34,     0,    35,   125,     0,     0,     6,     0,
-       0,     0,    36,     0,     0,    37,     0,    38,     0,    39,
-      40,    41,     0,     0,     0,    42,    43,    44,    45,    46,
-      47,     0,     0,     0,     0,     0,     0,     0,     0,    48,
-      28,    29,    30,     1,     2,     3,    31,     4,     5,    32,
-      33,    34,     0,    35,   159,     0,     0,     6,     0,     0,
-       0,    36,     0,     0,    37,     0,    38,     0,    39,    40,
-      41,     0,     0,     0,    42,    43,    44,    45,    46,    47,
-       0,     0,     0,     0,     0,     0,     0,     0,    48,    28,
-      29,    30,     1,     2,     3,    31,     4,     5,    32,    33,
-      34,     0,    35,   184,     0,     0,     6,     0,     0,     0,
-      36,     0,     0,    37,     0,    38,     0,    39,    40,    41,
-       0,     0,     0,    42,    43,    44,    45,    46,    47,     0,
-       0,     0,     0,     0,     0,     0,     0,    48,    28,    29,
-      30,     1,     2,     3,    31,     4,     5,    32,    33,    34,
-       0,    35,   202,     0,     0,     6,     0,     0,     0,    36,
-       0,     0,    37,     0,    38,     0,    39,    40,    41,     0,
-       0,     0,    42,    43,    44,    45,    46,    47,     0,     0,
-       0,     0,     0,     0,     0,     0,    48,    28,    29,    30,
-       1,     2,     3,    31,     4,     5,    32,    33,    34,     0,
-      35,   207,     0,     0,     6,     0,     0,     0,    36,     0,
-       0,    37,     0,    38,     0,    39,    40,    41,     0,     0,
-       0,    42,    43,    44,    45,    46,    47,     0,     0,     0,
-       0,     0,     0,     0,     0,    48,    28,    29,    30,     1,
-       2,     3,    31,     4,     5,    32,    33,    34,     0,    35,
-     212,     0,     0,     6,     0,     0,     0,    36,     0,     0,
-      37,     0,    38,     0,    39,    40,    41,     0,     0,     0,
-      42,    43,    44,    45,    46,    47,     0,     0,     0,     0,
-       0,     0,     0,     0,    48,    28,    29,    30,     1,     2,
-       3,    31,     4,     5,    32,    33,    34,     0,    35,   213,
-       0,     0,     6,     0,     0,     0,    36,     0,     0,    37,
-       0,    38,     0,    39,    40,    41,     0,     0,     0,    42,
-      43,    44,    45,    46,    47,     0,     0,     0,     0,     0,
-       0,     0,     0,    48,    28,    29,    30,     1,     2,     3,
-      31,     4,     5,    32,    33,    34,     0,    35,     0,     0,
-       0,     6,     0,     0,     0,    36,     0,     0,    37,     0,
-      38,     0,    39,    40,    41,    28,    80,    30,    42,    43,
-      44,    45,    46,    47,    32,    33,    34,   132,    35,     0,
-       0,     0,    48,     0,     0,   105,   106,   107,   108,   109,
-     110,     0,     0,     0,     0,     0,     0,     0,     0,    42,
-      43,    44,     0,     0,     0,   111,   112,   113,   114,   115,
-     116,   117,   118,    48,    28,    80,    30,     0,     0,     0,
-       0,     0,     0,    32,    33,    34,   170,    35,     0,     0,
-       0,     0,     0,     0,   105,   106,   107,   108,   109,   110,
-       0,     0,     0,     0,     0,     0,     0,     0,    42,    43,
-      44,     0,     0,     0,   111,   112,   113,   114,   115,   116,
-     117,   118,    48,    28,    80,    30,     0,     0,     0,     0,
-       0,     0,    32,    33,    34,   172,    35,     0,     0,     0,
-       0,     0,     0,   105,   106,   107,   108,   109,   110,     0,
-       0,     0,     0,     0,     0,     0,     0,    42,    43,    44,
-       0,     0,     0,   111,   112,   113,   114,   115,   116,   117,
-     118,    48,    28,    80,    30,     0,     0,     0,     0,     0,
-       0,    32,    33,    34,     0,    35,     0,     0,   177,     0,
-       0,     0,   105,   106,   107,   108,   109,   110,     0,     0,
-       0,     0,     0,     0,     0,     0,    42,    43,    44,     0,
-       0,     0,   111,   112,   113,   114,   115,   116,   117,   118,
-      48,    28,    80,    30,     0,     0,     0,     0,     0,     0,
-      32,    33,    34,   206,    35,     0,     0,     0,     0,     0,
-       0,   105,   106,   107,   108,   109,   110,     0,     0,     0,
-       0,     0,     0,     0,     0,    42,    43,    44,     0,     0,
-       0,   111,   112,   113,   114,   115,   116,   117,   118,    48,
-      28,    80,    30,     0,     0,     0,     0,     0,     0,    32,
-      33,    34,     0,    35,     0,     0,     0,     0,     0,     0,
-     105,   106,   107,   108,   109,   110,     0,     0,     0,     0,
-       0,     0,     0,     0,    42,    43,    44,     0,     0,     0,
-     111,   112,   113,   114,   115,   116,   117,   118,    48,    28,
-      80,    30,     0,     0,     0,     0,     0,     0,    32,    33,
-      34,     0,   135,     0,     0,     0,     0,     0,     0,   105,
-     106,   107,   108,   109,   110,     0,     0,     0,     0,     0,
-       0,     0,     0,    42,    43,    44,     0,     0,     0,   111,
-     112,   113,   114,   115,   116,   117,   118,    48,    28,    80,
-      30,     0,     0,     0,     0,     0,     0,    32,    33,    34,
-       0,   208,     0,     0,     0,     0,     0,     0,   105,   106,
-     107,   108,   109,   110,     0,     0,     0,     0,     0,     0,
-       0,     0,    42,    43,    44,     0,     0,     0,   111,   112,
-     113,   114,   115,   116,   117,   118,    48,    28,    80,    30,
-       0,     0,     0,     0,     0,     0,    32,    33,    34,     0,
-      35,     0,     0,     0,    28,    80,    30,     0,    36,     0,
-       0,    37,     0,    32,    33,    34,     0,    35,     0,     0,
-       0,    42,    43,    44,   105,   106,   107,   108,   109,   110,
-       0,     0,     0,     0,     0,    48,     0,     0,    42,    43,
-      44,    28,    80,    30,   111,   112,   113,   114,   115,   116,
-      32,    33,    34,     0,    35,     0,     0,     0,     0,     0,
-       0,   105,   106,   107,   108,   109,   110,     0,     0,     0,
-       0,     0,     0,     0,     0,    42,    43,    44,    28,    80,
-      30,   111,   112,   113,   114,     0,     0,    32,    33,    34,
-       0,    35,     0,     0,     0,    28,    80,    30,   105,   106,
-     107,   108,   109,   110,    32,    33,    34,     0,    35,     0,
-       0,     0,    42,    43,    44,     0,     0,   107,   108,     0,
-     110,     1,     2,     3,     0,     4,     5,     0,     0,    42,
-      43,    44,   180,     0,     0,     6
+     109,   129,   109,   154,   109,   130,    41,   203,   206,   295,
+     197,   194,   199,   122,    26,   124,    50,    15,   136,   138,
+     239,   139,   140,   141,   255,   275,   219,    15,    23,   216,
+     217,   293,   182,    16,   192,   151,   152,   109,    15,   154,
+      17,   154,    18,    33,    36,   131,    33,   132,   207,   212,
+      42,   207,    47,   204,  -114,  -114,  -114,    52,  -114,    55,
+      42,    24,   314,   297,   207,   316,   220,   326,   207,   207,
+     329,   294,   109,   109,   183,   109,   298,    19,    25,   201,
+     138,    20,   195,   186,    27,     2,     3,     4,    19,    31,
+       7,    27,    28,   209,    37,   138,  -114,    24,  -114,     8,
+     262,   218,   315,   154,    14,   207,    29,   207,   249,    30,
+     207,    39,    43,    40,    44,    22,    48,   221,   222,   223,
+     224,   140,   225,   226,   227,   228,   229,   230,   231,   232,
+     233,    49,    51,   234,    60,   193,    62,   109,    53,    56,
+      57,    58,   190,    65,    66,    59,   121,   125,   280,   123,
+     126,   202,   133,    69,   138,   127,   128,   134,   250,   109,
+     211,   196,   197,   198,   199,   200,   142,   143,   154,   144,
+     251,   263,   145,    45,   303,     2,     3,     4,   285,     6,
+       7,   146,   147,   155,   148,   149,    46,   181,   150,     8,
+     156,   157,   268,   269,   270,   319,   272,   158,   159,   160,
+     161,   162,   109,   165,   278,   188,   163,   164,   154,   310,
+     213,   184,   214,   185,   181,   215,   181,   181,   181,   181,
+     235,   237,   238,   154,   138,   324,   240,   241,   109,   181,
+     181,   242,   328,   243,   154,   154,   244,   296,   245,   291,
+     246,   247,   109,   302,   253,   254,   256,   257,   109,   307,
+     258,   259,   260,   265,   266,   138,   273,   109,   181,   306,
+     267,   271,   274,   109,   109,   304,   277,   220,   109,   109,
+     279,   138,   286,   181,   317,   318,   309,     1,   138,     2,
+       3,     4,     5,     6,     7,   287,   305,   181,   313,   320,
+      21,   325,   327,     8,   323,    38,   181,     0,     0,   181,
+     181,   181,   181,   181,   181,   181,   181,   181,   181,   181,
+     181,   181,   181,     1,   299,     2,     3,     4,   300,     6,
+       7,     0,   210,     0,     0,     0,     0,     0,   181,     8,
+       0,     0,     0,    34,     0,     2,     3,     4,     0,     6,
+       7,   181,     0,     0,     0,     0,   181,   181,   181,     8,
+     181,     0,     0,     0,     0,     0,   181,     2,     3,     4,
+       0,    31,     7,     0,     0,     0,     0,    60,   135,    62,
+       0,     8,     0,     0,   181,     0,    65,    66,    67,     0,
+     181,     0,    68,     0,     0,   181,    69,   166,   167,   168,
+     169,   170,   171,     0,     0,     0,     0,     0,    76,    77,
+      78,    79,    80,    81,     0,     0,     0,   172,   173,   174,
+     175,   176,   177,   178,   179,    85,     0,     0,     0,     0,
+       0,   292,    60,    61,    62,     2,     3,     4,    63,    64,
+       7,    65,    66,    67,     0,     0,   153,    68,     0,     8,
+       0,    69,     0,    70,     0,     0,    71,     0,    72,     0,
+      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
+      83,    84,     0,     0,     0,     0,     0,     0,     0,     0,
+      85,    60,    61,    62,     2,     3,     4,    63,    64,     7,
+      65,    66,    67,     0,     0,   187,    68,     0,     8,     0,
+      69,     0,    70,     0,     0,    71,     0,    72,     0,    73,
+      74,    75,    76,    77,    78,    79,    80,    81,    82,    83,
+      84,     0,     0,     0,     0,     0,     0,     0,     0,    85,
+      60,    61,    62,     2,     3,     4,    63,    64,     7,    65,
+      66,    67,     0,     0,   189,    68,     0,     8,     0,    69,
+       0,    70,     0,     0,    71,     0,    72,     0,    73,    74,
+      75,    76,    77,    78,    79,    80,    81,    82,    83,    84,
+       0,     0,     0,     0,     0,     0,     0,     0,    85,    60,
+      61,    62,     2,     3,     4,    63,    64,     7,    65,    66,
+      67,     0,     0,   236,    68,     0,     8,     0,    69,     0,
+      70,     0,     0,    71,     0,    72,     0,    73,    74,    75,
+      76,    77,    78,    79,    80,    81,    82,    83,    84,     0,
+       0,     0,     0,     0,     0,     0,     0,    85,    60,    61,
+      62,     2,     3,     4,    63,    64,     7,    65,    66,    67,
+       0,     0,   276,    68,     0,     8,     0,    69,     0,    70,
+       0,     0,    71,     0,    72,     0,    73,    74,    75,    76,
+      77,    78,    79,    80,    81,    82,    83,    84,     0,     0,
+       0,     0,     0,     0,     0,     0,    85,    60,    61,    62,
+       2,     3,     4,    63,    64,     7,    65,    66,    67,     0,
+       0,   301,    68,     0,     8,     0,    69,     0,    70,     0,
+       0,    71,     0,    72,     0,    73,    74,    75,    76,    77,
+      78,    79,    80,    81,    82,    83,    84,     0,     0,     0,
+       0,     0,     0,     0,     0,    85,    60,    61,    62,     2,
+       3,     4,    63,    64,     7,    65,    66,    67,     0,     0,
+     311,    68,     0,     8,     0,    69,     0,    70,     0,     0,
+      71,     0,    72,     0,    73,    74,    75,    76,    77,    78,
+      79,    80,    81,    82,    83,    84,     0,     0,     0,     0,
+       0,     0,     0,     0,    85,    60,    61,    62,     2,     3,
+       4,    63,    64,     7,    65,    66,    67,     0,     0,   321,
+      68,     0,     8,     0,    69,     0,    70,     0,     0,    71,
+       0,    72,     0,    73,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,    83,    84,     0,     0,     0,     0,     0,
+       0,     0,     0,    85,    60,    61,    62,     2,     3,     4,
+      63,    64,     7,    65,    66,    67,     0,     0,   322,    68,
+       0,     8,     0,    69,     0,    70,     0,     0,    71,     0,
+      72,     0,    73,    74,    75,    76,    77,    78,    79,    80,
+      81,    82,    83,    84,     0,     0,     0,     0,     0,     0,
+       0,     0,    85,    60,    61,    62,     2,     3,     4,    63,
+      64,     7,    65,    66,    67,     0,     0,     0,    68,     0,
+       8,     0,    69,     0,    70,     0,     0,    71,     0,    72,
+       0,    73,    74,    75,    76,    77,    78,    79,    80,    81,
+      82,    83,    84,    60,   135,    62,     0,     0,     0,     0,
+       0,    85,    65,    66,    67,   205,     0,     0,    68,     0,
+       0,     0,    69,   166,   167,   168,   169,   170,   171,     0,
+       0,     0,     0,     0,    76,    77,    78,    79,    80,    81,
+       0,     0,     0,   172,   173,   174,   175,   176,   177,   178,
+     179,    85,    60,   135,    62,     0,     0,     0,     0,     0,
+       0,    65,    66,    67,     0,   208,     0,    68,     0,     0,
+       0,    69,   166,   167,   168,   169,   170,   171,     0,     0,
+       0,     0,     0,    76,    77,    78,    79,    80,    81,     0,
+       0,     0,   172,   173,   174,   175,   176,   177,   178,   179,
+      85,    60,   135,    62,     0,     0,     0,     0,     0,     0,
+      65,    66,    67,   252,     0,     0,    68,     0,     0,     0,
+      69,   166,   167,   168,   169,   170,   171,     0,     0,     0,
+       0,     0,    76,    77,    78,    79,    80,    81,     0,     0,
+       0,   172,   173,   174,   175,   176,   177,   178,   179,    85,
+      60,   135,    62,     0,     0,     0,     0,     0,     0,    65,
+      66,    67,   261,     0,     0,    68,     0,     0,     0,    69,
+     166,   167,   168,   169,   170,   171,     0,     0,     0,     0,
+       0,    76,    77,    78,    79,    80,    81,     0,     0,     0,
+     172,   173,   174,   175,   176,   177,   178,   179,    85,    60,
+     135,    62,     0,     0,     0,     0,     0,     0,    65,    66,
+      67,     0,     0,     0,    68,   264,     0,     0,    69,   166,
+     167,   168,   169,   170,   171,     0,     0,     0,     0,     0,
+      76,    77,    78,    79,    80,    81,     0,     0,     0,   172,
+     173,   174,   175,   176,   177,   178,   179,    85,    60,   135,
+      62,     0,     0,     0,     0,     0,     0,    65,    66,    67,
+     281,     0,     0,    68,     0,     0,     0,    69,   166,   167,
+     168,   169,   170,   171,     0,     0,     0,     0,     0,    76,
+      77,    78,    79,    80,    81,     0,     0,     0,   172,   173,
+     174,   175,   176,   177,   178,   179,    85,    60,   135,    62,
+       0,     0,     0,     0,     0,     0,    65,    66,    67,   282,
+       0,     0,    68,     0,     0,     0,    69,   166,   167,   168,
+     169,   170,   171,     0,     0,     0,     0,     0,    76,    77,
+      78,    79,    80,    81,     0,     0,     0,   172,   173,   174,
+     175,   176,   177,   178,   179,    85,    60,   135,    62,     0,
+       0,     0,     0,     0,     0,    65,    66,    67,   283,     0,
+       0,    68,     0,     0,     0,    69,   166,   167,   168,   169,
+     170,   171,     0,     0,     0,     0,     0,    76,    77,    78,
+      79,    80,    81,     0,     0,     0,   172,   173,   174,   175,
+     176,   177,   178,   179,    85,    60,   135,    62,     0,     0,
+       0,     0,     0,     0,    65,    66,    67,   284,     0,     0,
+      68,     0,     0,     0,    69,   166,   167,   168,   169,   170,
+     171,     0,     0,     0,     0,     0,    76,    77,    78,    79,
+      80,    81,     0,     0,     0,   172,   173,   174,   175,   176,
+     177,   178,   179,    85,    60,   135,    62,     0,     0,     0,
+       0,     0,     0,    65,    66,    67,   308,     0,     0,    68,
+       0,     0,     0,    69,   166,   167,   168,   169,   170,   171,
+       0,     0,     0,     0,     0,    76,    77,    78,    79,    80,
+      81,     0,     0,     0,   172,   173,   174,   175,   176,   177,
+     178,   179,    85,    60,   135,    62,     0,     0,     0,     0,
+       0,     0,    65,    66,    67,     0,   312,     0,    68,     0,
+       0,     0,    69,   166,   167,   168,   169,   170,   171,     0,
+       0,     0,     0,     0,    76,    77,    78,    79,    80,    81,
+       0,     0,     0,   172,   173,   174,   175,   176,   177,   178,
+     179,    85,    60,   135,    62,     0,     0,     0,     0,     0,
+       0,    65,    66,    67,     2,     3,     4,    68,     6,     7,
+       0,    69,   166,   167,   168,   169,   170,   171,     8,     0,
+       0,     0,     0,    76,    77,    78,    79,    80,    81,     0,
+       0,     0,   172,   173,   174,   175,   176,   177,   178,   179,
+      85,    60,   135,    62,     0,     0,     0,     0,     0,     0,
+      65,    66,    67,   191,     0,     0,    68,     0,     0,     0,
+      69,     0,    70,     0,     0,    71,     0,     0,     0,    60,
+     135,    62,    76,    77,    78,    79,    80,    81,    65,    66,
+      67,   248,     0,     0,    68,     0,     0,     0,    69,    85,
+      70,     0,     0,    71,     0,     0,     0,    60,   135,    62,
+      76,    77,    78,    79,    80,    81,    65,    66,    67,     2,
+       3,     4,    68,    54,     7,     0,    69,    85,    70,     0,
+       0,    71,     0,     8,     0,     0,     0,     0,    76,    77,
+      78,    79,    80,    81,     0,     0,     0,    60,   135,    62,
+       0,     0,     0,     0,     0,    85,    65,    66,    67,     0,
+       0,     0,    68,     0,     0,     0,    69,   166,   167,   168,
+     169,   170,   171,     0,     0,     0,     0,     0,    76,    77,
+      78,    79,    80,    81,    60,   135,    62,   172,   173,   174,
+     175,   176,   177,    65,    66,    67,     0,     0,     0,    68,
+       0,     0,     0,    69,   166,   167,   168,   169,   170,   171,
+       0,     0,     0,     0,     0,    76,    77,    78,    79,    80,
+      81,    60,   135,    62,   172,   173,   174,   175,     0,     0,
+      65,    66,    67,     0,     0,     0,    68,     0,     0,     0,
+      69,   166,   167,   168,   169,   170,   171,     0,     0,    60,
+     135,    62,    76,    77,    78,    79,    80,    81,    65,    66,
+      67,     0,     0,     0,    68,     0,     0,     0,    69,     0,
+       0,   168,   169,     0,   171,     0,     0,    60,   135,    62,
+      76,    77,    78,    79,    80,    81,    65,    66,    67,     0,
+       0,     0,    68,     0,     0,     0,    69,     0,    70,     0,
+       0,    71,     0,     0,     0,    60,   135,    62,    76,    77,
+      78,    79,    80,    81,    65,    66,    67,     0,     0,     0,
+      68,     0,     0,     0,    69,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    76,    77,    78,    79,
+      80,    81
   };
 
   const short
   Parser::yycheck_[] =
   {
-      23,    15,    27,    77,    27,    18,    49,    14,    17,    15,
-       4,    34,    35,    36,    37,    38,    16,    15,     4,     0,
-       0,    17,    16,    14,    47,    48,    49,     8,    15,    29,
-      17,    14,    19,    76,    16,    21,    17,    90,    91,    92,
-      54,    15,    55,     4,    25,    54,    53,    16,    54,    74,
-      16,    74,     4,    76,    77,    78,    54,   131,    54,    14,
-      14,    14,    52,    14,    87,    52,    89,    54,     3,     4,
-       5,    14,    14,    52,    52,    52,    52,    12,    13,    14,
-     123,    16,   105,   106,   107,   108,   109,   110,   111,   112,
-     113,   114,   115,   116,   117,   118,    52,     4,   121,     4,
-     123,    14,    37,    38,    39,   179,    52,     4,   131,    53,
-     135,   134,   135,     6,     7,     8,    52,    10,    11,    53,
-     143,    52,    15,    15,    15,   168,    15,    20,    52,     3,
-       4,     5,    16,     4,     3,     4,     5,    16,    12,    13,
-      14,    15,    16,    12,    13,   168,     4,    30,   171,   130,
-      24,   194,    52,    27,    52,    16,   179,     8,     8,   191,
-     185,   204,   185,    37,    38,    39,    88,   210,   211,   191,
-      -1,   194,   195,   198,    64,   198,   199,    51,    -1,    -1,
-      -1,   204,   163,   208,   209,   208,   209,   210,   211,    -1,
-      -1,    81,    -1,    83,    84,    85,    86,     3,     4,     5,
-      -1,    -1,    -1,    93,    94,    -1,    12,    13,    14,    15,
-      16,    -1,    -1,    -1,    -1,     3,     4,     5,    24,    -1,
-      -1,    27,    -1,    -1,    12,    13,    14,    -1,    16,   119,
-      -1,    37,    38,    39,    -1,    -1,    24,    -1,   128,    27,
-      -1,    -1,    -1,    -1,    -1,    51,   136,    -1,   138,    37,
-      38,    39,    -1,    -1,   144,   145,   146,   147,   148,   149,
-     150,   151,   152,   153,   154,   155,   156,   157,    -1,    -1,
-      -1,     6,     7,     8,    -1,    10,    11,   167,    -1,   169,
-      -1,    -1,     3,     4,     5,    20,   176,    -1,    -1,    -1,
-      -1,    12,    13,    14,    -1,    16,   186,    -1,    -1,    -1,
-      -1,    -1,    23,    24,    25,    26,    27,    28,    -1,    -1,
-      -1,    -1,    -1,   203,    -1,   205,    37,    38,    39,    -1,
-      -1,    -1,    43,    44,    45,    46,    47,    48,    49,    50,
-      51,    52,     3,     4,     5,    -1,    -1,    -1,    -1,    -1,
-      -1,    12,    13,    14,    -1,    16,    -1,    -1,    -1,    -1,
-      -1,    -1,    23,    24,    25,    26,    27,    28,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    37,    38,    39,    -1,
-      -1,    -1,    43,    44,    45,    46,    47,    48,    49,    50,
-      51,    52,     3,     4,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    14,    -1,    16,    17,    -1,    -1,    20,
-      -1,    -1,    -1,    24,    -1,    -1,    27,    -1,    29,    -1,
-      31,    32,    33,    -1,    -1,    -1,    37,    38,    39,    40,
+      49,    14,    51,    86,    53,    18,    15,    14,    19,    17,
+      53,   130,    55,    51,    14,    53,    15,     0,    67,    68,
+      15,    70,    71,    72,    15,    15,    18,    10,    11,   148,
+     149,    18,    18,     4,   129,    84,    85,    86,    21,   122,
+       4,   124,     0,    26,    27,    58,    29,    60,    59,   144,
+      59,    59,    35,    60,    15,    16,    17,    40,    19,    42,
+      59,     4,    18,    16,    59,    19,    58,    19,    59,    59,
+      19,    58,   121,   122,    60,   124,    29,    10,    21,     4,
+     129,    10,   131,   121,    16,     6,     7,     8,    21,    10,
+      11,    16,    21,   142,    15,   144,    57,     4,    59,    20,
+     219,   150,    58,   186,     0,    59,    14,    59,   203,    14,
+      59,    15,     4,    44,     4,    11,     4,   166,   167,   168,
+     169,   170,   171,   172,   173,   174,   175,   176,   177,   178,
+     179,    16,    16,   182,     3,     4,     5,   186,    16,    57,
+       4,     4,   125,    12,    13,    57,    16,    44,   267,    43,
+       4,   134,     4,    22,   203,    57,    57,    44,   207,   208,
+     143,    52,    53,    54,    55,    56,    14,    14,   251,    14,
+     208,   220,    14,     4,   293,     6,     7,     8,   273,    10,
+      11,    14,    14,    57,    14,    14,    17,   109,    14,    20,
+      57,    57,   241,   242,   243,   314,   245,    57,    57,    57,
+      57,    57,   251,     4,   253,     4,    57,    57,   291,   304,
+       4,    57,     4,    57,   136,     4,   138,   139,   140,   141,
+       4,    43,    57,   306,   273,   320,    19,    14,   277,   151,
+     152,    14,   327,    14,   317,   318,    14,   286,    14,   277,
+      58,    43,   291,   292,    57,     4,    15,    15,   297,   298,
+      15,    15,    15,     4,    57,   304,    16,   306,   180,   297,
+      58,    15,     4,   312,   313,    18,    16,    58,   317,   318,
+      19,   320,    58,   195,   312,   313,    19,     4,   327,     6,
+       7,     8,     9,    10,    11,    30,    57,   209,    16,    18,
+      11,    58,    18,    20,    19,    29,   218,    -1,    -1,   221,
+     222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
+     232,   233,   234,     4,   288,     6,     7,     8,   288,    10,
+      11,    -1,   143,    -1,    -1,    -1,    -1,    -1,   250,    20,
+      -1,    -1,    -1,     4,    -1,     6,     7,     8,    -1,    10,
+      11,   263,    -1,    -1,    -1,    -1,   268,   269,   270,    20,
+     272,    -1,    -1,    -1,    -1,    -1,   278,     6,     7,     8,
+      -1,    10,    11,    -1,    -1,    -1,    -1,     3,     4,     5,
+      -1,    20,    -1,    -1,   296,    -1,    12,    13,    14,    -1,
+     302,    -1,    18,    -1,    -1,   307,    22,    23,    24,    25,
+      26,    27,    28,    -1,    -1,    -1,    -1,    -1,    34,    35,
+      36,    37,    38,    39,    -1,    -1,    -1,    43,    44,    45,
+      46,    47,    48,    49,    50,    51,    -1,    -1,    -1,    -1,
+      -1,    57,     3,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    14,    -1,    -1,    17,    18,    -1,    20,
+      -1,    22,    -1,    24,    -1,    -1,    27,    -1,    29,    -1,
+      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
       41,    42,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
       51,     3,     4,     5,     6,     7,     8,     9,    10,    11,
-      12,    13,    14,    -1,    16,    17,    -1,    -1,    20,    -1,
-      -1,    -1,    24,    -1,    -1,    27,    -1,    29,    -1,    31,
-      32,    33,    -1,    -1,    -1,    37,    38,    39,    40,    41,
+      12,    13,    14,    -1,    -1,    17,    18,    -1,    20,    -1,
+      22,    -1,    24,    -1,    -1,    27,    -1,    29,    -1,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
       42,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    51,
        3,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    14,    -1,    16,    17,    -1,    -1,    20,    -1,    -1,
+      13,    14,    -1,    -1,    17,    18,    -1,    20,    -1,    22,
       -1,    24,    -1,    -1,    27,    -1,    29,    -1,    31,    32,
-      33,    -1,    -1,    -1,    37,    38,    39,    40,    41,    42,
+      33,    34,    35,    36,    37,    38,    39,    40,    41,    42,
       -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    51,     3,
        4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
-      14,    -1,    16,    17,    -1,    -1,    20,    -1,    -1,    -1,
+      14,    -1,    -1,    17,    18,    -1,    20,    -1,    22,    -1,
       24,    -1,    -1,    27,    -1,    29,    -1,    31,    32,    33,
-      -1,    -1,    -1,    37,    38,    39,    40,    41,    42,    -1,
+      34,    35,    36,    37,    38,    39,    40,    41,    42,    -1,
       -1,    -1,    -1,    -1,    -1,    -1,    -1,    51,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      -1,    16,    17,    -1,    -1,    20,    -1,    -1,    -1,    24,
-      -1,    -1,    27,    -1,    29,    -1,    31,    32,    33,    -1,
-      -1,    -1,    37,    38,    39,    40,    41,    42,    -1,    -1,
+      -1,    -1,    17,    18,    -1,    20,    -1,    22,    -1,    24,
+      -1,    -1,    27,    -1,    29,    -1,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40,    41,    42,    -1,    -1,
       -1,    -1,    -1,    -1,    -1,    -1,    51,     3,     4,     5,
        6,     7,     8,     9,    10,    11,    12,    13,    14,    -1,
-      16,    17,    -1,    -1,    20,    -1,    -1,    -1,    24,    -1,
-      -1,    27,    -1,    29,    -1,    31,    32,    33,    -1,    -1,
-      -1,    37,    38,    39,    40,    41,    42,    -1,    -1,    -1,
+      -1,    17,    18,    -1,    20,    -1,    22,    -1,    24,    -1,
+      -1,    27,    -1,    29,    -1,    31,    32,    33,    34,    35,
+      36,    37,    38,    39,    40,    41,    42,    -1,    -1,    -1,
       -1,    -1,    -1,    -1,    -1,    51,     3,     4,     5,     6,
-       7,     8,     9,    10,    11,    12,    13,    14,    -1,    16,
-      17,    -1,    -1,    20,    -1,    -1,    -1,    24,    -1,    -1,
-      27,    -1,    29,    -1,    31,    32,    33,    -1,    -1,    -1,
+       7,     8,     9,    10,    11,    12,    13,    14,    -1,    -1,
+      17,    18,    -1,    20,    -1,    22,    -1,    24,    -1,    -1,
+      27,    -1,    29,    -1,    31,    32,    33,    34,    35,    36,
       37,    38,    39,    40,    41,    42,    -1,    -1,    -1,    -1,
       -1,    -1,    -1,    -1,    51,     3,     4,     5,     6,     7,
-       8,     9,    10,    11,    12,    13,    14,    -1,    16,    17,
-      -1,    -1,    20,    -1,    -1,    -1,    24,    -1,    -1,    27,
-      -1,    29,    -1,    31,    32,    33,    -1,    -1,    -1,    37,
+       8,     9,    10,    11,    12,    13,    14,    -1,    -1,    17,
+      18,    -1,    20,    -1,    22,    -1,    24,    -1,    -1,    27,
+      -1,    29,    -1,    31,    32,    33,    34,    35,    36,    37,
       38,    39,    40,    41,    42,    -1,    -1,    -1,    -1,    -1,
       -1,    -1,    -1,    51,     3,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13,    14,    -1,    16,    -1,    -1,
-      -1,    20,    -1,    -1,    -1,    24,    -1,    -1,    27,    -1,
-      29,    -1,    31,    32,    33,     3,     4,     5,    37,    38,
-      39,    40,    41,    42,    12,    13,    14,    15,    16,    -1,
-      -1,    -1,    51,    -1,    -1,    23,    24,    25,    26,    27,
-      28,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    37,
-      38,    39,    -1,    -1,    -1,    43,    44,    45,    46,    47,
-      48,    49,    50,    51,     3,     4,     5,    -1,    -1,    -1,
-      -1,    -1,    -1,    12,    13,    14,    15,    16,    -1,    -1,
-      -1,    -1,    -1,    -1,    23,    24,    25,    26,    27,    28,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    37,    38,
-      39,    -1,    -1,    -1,    43,    44,    45,    46,    47,    48,
-      49,    50,    51,     3,     4,     5,    -1,    -1,    -1,    -1,
-      -1,    -1,    12,    13,    14,    15,    16,    -1,    -1,    -1,
-      -1,    -1,    -1,    23,    24,    25,    26,    27,    28,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    -1,    37,    38,    39,
+       9,    10,    11,    12,    13,    14,    -1,    -1,    17,    18,
+      -1,    20,    -1,    22,    -1,    24,    -1,    -1,    27,    -1,
+      29,    -1,    31,    32,    33,    34,    35,    36,    37,    38,
+      39,    40,    41,    42,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    51,     3,     4,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    -1,    -1,    -1,    18,    -1,
+      20,    -1,    22,    -1,    24,    -1,    -1,    27,    -1,    29,
+      -1,    31,    32,    33,    34,    35,    36,    37,    38,    39,
+      40,    41,    42,     3,     4,     5,    -1,    -1,    -1,    -1,
+      -1,    51,    12,    13,    14,    15,    -1,    -1,    18,    -1,
+      -1,    -1,    22,    23,    24,    25,    26,    27,    28,    -1,
+      -1,    -1,    -1,    -1,    34,    35,    36,    37,    38,    39,
       -1,    -1,    -1,    43,    44,    45,    46,    47,    48,    49,
       50,    51,     3,     4,     5,    -1,    -1,    -1,    -1,    -1,
-      -1,    12,    13,    14,    -1,    16,    -1,    -1,    19,    -1,
-      -1,    -1,    23,    24,    25,    26,    27,    28,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    -1,    37,    38,    39,    -1,
+      -1,    12,    13,    14,    -1,    16,    -1,    18,    -1,    -1,
+      -1,    22,    23,    24,    25,    26,    27,    28,    -1,    -1,
+      -1,    -1,    -1,    34,    35,    36,    37,    38,    39,    -1,
       -1,    -1,    43,    44,    45,    46,    47,    48,    49,    50,
       51,     3,     4,     5,    -1,    -1,    -1,    -1,    -1,    -1,
-      12,    13,    14,    15,    16,    -1,    -1,    -1,    -1,    -1,
-      -1,    23,    24,    25,    26,    27,    28,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    37,    38,    39,    -1,    -1,
+      12,    13,    14,    15,    -1,    -1,    18,    -1,    -1,    -1,
+      22,    23,    24,    25,    26,    27,    28,    -1,    -1,    -1,
+      -1,    -1,    34,    35,    36,    37,    38,    39,    -1,    -1,
       -1,    43,    44,    45,    46,    47,    48,    49,    50,    51,
        3,     4,     5,    -1,    -1,    -1,    -1,    -1,    -1,    12,
-      13,    14,    -1,    16,    -1,    -1,    -1,    -1,    -1,    -1,
+      13,    14,    15,    -1,    -1,    18,    -1,    -1,    -1,    22,
       23,    24,    25,    26,    27,    28,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    37,    38,    39,    -1,    -1,    -1,
+      -1,    34,    35,    36,    37,    38,    39,    -1,    -1,    -1,
       43,    44,    45,    46,    47,    48,    49,    50,    51,     3,
        4,     5,    -1,    -1,    -1,    -1,    -1,    -1,    12,    13,
-      14,    -1,    16,    -1,    -1,    -1,    -1,    -1,    -1,    23,
+      14,    -1,    -1,    -1,    18,    19,    -1,    -1,    22,    23,
       24,    25,    26,    27,    28,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    -1,    37,    38,    39,    -1,    -1,    -1,    43,
+      34,    35,    36,    37,    38,    39,    -1,    -1,    -1,    43,
       44,    45,    46,    47,    48,    49,    50,    51,     3,     4,
        5,    -1,    -1,    -1,    -1,    -1,    -1,    12,    13,    14,
-      -1,    16,    -1,    -1,    -1,    -1,    -1,    -1,    23,    24,
-      25,    26,    27,    28,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    37,    38,    39,    -1,    -1,    -1,    43,    44,
+      15,    -1,    -1,    18,    -1,    -1,    -1,    22,    23,    24,
+      25,    26,    27,    28,    -1,    -1,    -1,    -1,    -1,    34,
+      35,    36,    37,    38,    39,    -1,    -1,    -1,    43,    44,
       45,    46,    47,    48,    49,    50,    51,     3,     4,     5,
-      -1,    -1,    -1,    -1,    -1,    -1,    12,    13,    14,    -1,
-      16,    -1,    -1,    -1,     3,     4,     5,    -1,    24,    -1,
-      -1,    27,    -1,    12,    13,    14,    -1,    16,    -1,    -1,
-      -1,    37,    38,    39,    23,    24,    25,    26,    27,    28,
-      -1,    -1,    -1,    -1,    -1,    51,    -1,    -1,    37,    38,
-      39,     3,     4,     5,    43,    44,    45,    46,    47,    48,
-      12,    13,    14,    -1,    16,    -1,    -1,    -1,    -1,    -1,
-      -1,    23,    24,    25,    26,    27,    28,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    37,    38,    39,     3,     4,
-       5,    43,    44,    45,    46,    -1,    -1,    12,    13,    14,
-      -1,    16,    -1,    -1,    -1,     3,     4,     5,    23,    24,
-      25,    26,    27,    28,    12,    13,    14,    -1,    16,    -1,
-      -1,    -1,    37,    38,    39,    -1,    -1,    25,    26,    -1,
-      28,     6,     7,     8,    -1,    10,    11,    -1,    -1,    37,
-      38,    39,    17,    -1,    -1,    20
+      -1,    -1,    -1,    -1,    -1,    -1,    12,    13,    14,    15,
+      -1,    -1,    18,    -1,    -1,    -1,    22,    23,    24,    25,
+      26,    27,    28,    -1,    -1,    -1,    -1,    -1,    34,    35,
+      36,    37,    38,    39,    -1,    -1,    -1,    43,    44,    45,
+      46,    47,    48,    49,    50,    51,     3,     4,     5,    -1,
+      -1,    -1,    -1,    -1,    -1,    12,    13,    14,    15,    -1,
+      -1,    18,    -1,    -1,    -1,    22,    23,    24,    25,    26,
+      27,    28,    -1,    -1,    -1,    -1,    -1,    34,    35,    36,
+      37,    38,    39,    -1,    -1,    -1,    43,    44,    45,    46,
+      47,    48,    49,    50,    51,     3,     4,     5,    -1,    -1,
+      -1,    -1,    -1,    -1,    12,    13,    14,    15,    -1,    -1,
+      18,    -1,    -1,    -1,    22,    23,    24,    25,    26,    27,
+      28,    -1,    -1,    -1,    -1,    -1,    34,    35,    36,    37,
+      38,    39,    -1,    -1,    -1,    43,    44,    45,    46,    47,
+      48,    49,    50,    51,     3,     4,     5,    -1,    -1,    -1,
+      -1,    -1,    -1,    12,    13,    14,    15,    -1,    -1,    18,
+      -1,    -1,    -1,    22,    23,    24,    25,    26,    27,    28,
+      -1,    -1,    -1,    -1,    -1,    34,    35,    36,    37,    38,
+      39,    -1,    -1,    -1,    43,    44,    45,    46,    47,    48,
+      49,    50,    51,     3,     4,     5,    -1,    -1,    -1,    -1,
+      -1,    -1,    12,    13,    14,    -1,    16,    -1,    18,    -1,
+      -1,    -1,    22,    23,    24,    25,    26,    27,    28,    -1,
+      -1,    -1,    -1,    -1,    34,    35,    36,    37,    38,    39,
+      -1,    -1,    -1,    43,    44,    45,    46,    47,    48,    49,
+      50,    51,     3,     4,     5,    -1,    -1,    -1,    -1,    -1,
+      -1,    12,    13,    14,     6,     7,     8,    18,    10,    11,
+      -1,    22,    23,    24,    25,    26,    27,    28,    20,    -1,
+      -1,    -1,    -1,    34,    35,    36,    37,    38,    39,    -1,
+      -1,    -1,    43,    44,    45,    46,    47,    48,    49,    50,
+      51,     3,     4,     5,    -1,    -1,    -1,    -1,    -1,    -1,
+      12,    13,    14,    15,    -1,    -1,    18,    -1,    -1,    -1,
+      22,    -1,    24,    -1,    -1,    27,    -1,    -1,    -1,     3,
+       4,     5,    34,    35,    36,    37,    38,    39,    12,    13,
+      14,    15,    -1,    -1,    18,    -1,    -1,    -1,    22,    51,
+      24,    -1,    -1,    27,    -1,    -1,    -1,     3,     4,     5,
+      34,    35,    36,    37,    38,    39,    12,    13,    14,     6,
+       7,     8,    18,    10,    11,    -1,    22,    51,    24,    -1,
+      -1,    27,    -1,    20,    -1,    -1,    -1,    -1,    34,    35,
+      36,    37,    38,    39,    -1,    -1,    -1,     3,     4,     5,
+      -1,    -1,    -1,    -1,    -1,    51,    12,    13,    14,    -1,
+      -1,    -1,    18,    -1,    -1,    -1,    22,    23,    24,    25,
+      26,    27,    28,    -1,    -1,    -1,    -1,    -1,    34,    35,
+      36,    37,    38,    39,     3,     4,     5,    43,    44,    45,
+      46,    47,    48,    12,    13,    14,    -1,    -1,    -1,    18,
+      -1,    -1,    -1,    22,    23,    24,    25,    26,    27,    28,
+      -1,    -1,    -1,    -1,    -1,    34,    35,    36,    37,    38,
+      39,     3,     4,     5,    43,    44,    45,    46,    -1,    -1,
+      12,    13,    14,    -1,    -1,    -1,    18,    -1,    -1,    -1,
+      22,    23,    24,    25,    26,    27,    28,    -1,    -1,     3,
+       4,     5,    34,    35,    36,    37,    38,    39,    12,    13,
+      14,    -1,    -1,    -1,    18,    -1,    -1,    -1,    22,    -1,
+      -1,    25,    26,    -1,    28,    -1,    -1,     3,     4,     5,
+      34,    35,    36,    37,    38,    39,    12,    13,    14,    -1,
+      -1,    -1,    18,    -1,    -1,    -1,    22,    -1,    24,    -1,
+      -1,    27,    -1,    -1,    -1,     3,     4,     5,    34,    35,
+      36,    37,    38,    39,    12,    13,    14,    -1,    -1,    -1,
+      18,    -1,    -1,    -1,    22,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    -1,    -1,    -1,    34,    35,    36,    37,
+      38,    39
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,     6,     7,     8,    10,    11,    20,    57,    58,    59,
-      61,    81,     0,    59,    61,     4,    21,    14,    14,    15,
-      60,    81,    15,    16,    15,    54,     4,    16,     3,     4,
-       5,     9,    12,    13,    14,    16,    24,    27,    29,    31,
-      32,    33,    37,    38,    39,    40,    41,    42,    51,    62,
-      63,    64,    65,    69,    70,    71,    72,    74,    76,    77,
-      78,    79,    80,    81,    82,    83,    84,    85,    86,    87,
-      88,    89,    90,    91,    16,    81,    62,    14,    53,     4,
-       4,    82,    75,    82,    82,    82,    82,    14,    14,    14,
-      14,    14,    14,    82,    82,    17,    63,    52,    52,    52,
-      52,    52,    52,    52,     4,    23,    24,    25,    26,    27,
-      28,    43,    44,    45,    46,    47,    48,    49,    50,    82,
-      87,    18,    55,    62,     4,    17,    15,    75,    82,     4,
-      16,    14,    15,    17,    54,    16,    82,    76,    82,     4,
-      88,    88,    88,    53,    82,    82,    82,    82,    82,    82,
-      82,    82,    82,    82,    82,    82,    82,    82,     4,    17,
-      52,    15,    53,    73,    81,    15,    75,    82,    62,    82,
-      15,    52,    15,    15,    15,    15,    82,    19,    52,    16,
-      17,    81,     4,    15,    17,    16,    82,    75,     4,    52,
-      30,    66,    67,    68,    62,    52,    17,    52,    16,    29,
-      67,    68,    17,    82,    62,    82,    15,    17,    16,    16,
-      62,    62,    17,    17
+       0,     4,     6,     7,     8,     9,    10,    11,    20,    62,
+      63,    64,    65,    67,    83,    95,     4,     4,     0,    65,
+      67,    63,    83,    95,     4,    21,    14,    16,    67,    14,
+      14,    10,    66,    95,     4,    84,    95,    15,    66,    15,
+      44,    15,    59,     4,     4,     4,    17,    95,     4,    16,
+      15,    16,    95,    16,    10,    95,    57,     4,     4,    57,
+       3,     4,     5,     9,    10,    12,    13,    14,    18,    22,
+      24,    27,    29,    31,    32,    33,    34,    35,    36,    37,
+      38,    39,    40,    41,    42,    51,    68,    69,    70,    71,
+      72,    73,    74,    75,    76,    80,    81,    82,    83,    85,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+      97,    98,    99,   100,   101,   102,   103,   104,   105,   106,
+     107,    16,    68,    43,    68,    44,     4,    57,    57,    14,
+      18,    58,    60,     4,    44,     4,    96,    86,    96,    96,
+      96,    96,    14,    14,    14,    14,    14,    14,    14,    14,
+      14,    96,    96,    17,    69,    57,    57,    57,    57,    57,
+      57,    57,    57,    57,    57,     4,    23,    24,    25,    26,
+      27,    28,    43,    44,    45,    46,    47,    48,    49,    50,
+      96,   101,    18,    60,    57,    57,    68,    17,     4,    17,
+      95,    15,    86,     4,   102,    96,    52,    53,    54,    55,
+      56,     4,    95,    14,    60,    15,    19,    59,    16,    96,
+      87,    95,    86,     4,     4,     4,   102,   102,    96,    18,
+      58,    96,    96,    96,    96,    96,    96,    96,    96,    96,
+      96,    96,    96,    96,    96,     4,    17,    43,    57,    15,
+      19,    14,    14,    14,    14,    14,    58,    43,    15,    86,
+      96,    68,    15,    57,     4,    15,    15,    15,    15,    15,
+      15,    15,   102,    96,    19,     4,    57,    58,    96,    96,
+      96,    15,    96,    16,     4,    15,    17,    16,    96,    19,
+     102,    15,    15,    15,    15,    86,    58,    30,    77,    78,
+      79,    68,    57,    18,    58,    17,    96,    16,    29,    78,
+      79,    17,    96,   102,    18,    57,    68,    96,    15,    19,
+      86,    17,    16,    16,    18,    58,    19,    68,    68,   102,
+      18,    17,    17,    19,    86,    58,    19,    18,    86,    19
   };
 
   const signed char
   Parser::yyr1_[] =
   {
-       0,    56,    57,    57,    58,    58,    59,    59,    60,    60,
-      61,    62,    62,    63,    63,    63,    63,    63,    63,    63,
-      63,    63,    63,    63,    63,    63,    64,    65,    65,    65,
-      65,    66,    66,    67,    68,    68,    69,    70,    71,    72,
-      73,    73,    74,    75,    75,    76,    76,    77,    78,    79,
-      80,    80,    81,    81,    81,    81,    81,    81,    82,    82,
-      82,    82,    82,    82,    82,    82,    82,    82,    82,    82,
-      82,    82,    82,    82,    82,    82,    82,    82,    82,    82,
-      82,    83,    84,    85,    86,    86,    87,    87,    88,    88,
-      88,    88,    88,    89,    89,    89,    90,    90,    91,    91
+       0,    61,    62,    62,    62,    63,    63,    64,    64,    65,
+      65,    65,    66,    66,    66,    66,    67,    68,    68,    69,
+      69,    69,    69,    69,    69,    69,    69,    69,    69,    69,
+      69,    69,    69,    69,    69,    69,    69,    70,    71,    72,
+      73,    74,    75,    76,    76,    76,    76,    77,    77,    78,
+      79,    79,    80,    81,    82,    83,    84,    84,    84,    84,
+      85,    86,    86,    87,    87,    88,    88,    89,    90,    91,
+      91,    92,    93,    94,    95,    95,    95,    95,    95,    95,
+      96,    96,    96,    96,    96,    96,    96,    96,    96,    96,
+      96,    96,    96,    96,    96,    96,    96,    96,    96,    96,
+      96,    96,    96,    96,    96,    96,    96,    96,    97,    98,
+      99,   100,   100,   101,   101,   102,   102,   102,   102,   102,
+     102,   103,   103,   103,   104,   104,   105,   105,   105,   106,
+     106,   107,   107
   };
 
   const signed char
   Parser::yyr2_[] =
   {
-       0,     2,     1,     2,     2,     1,     8,     7,     4,     2,
-       7,     2,     1,     2,     2,     1,     1,     1,     2,     2,
-       1,     1,     2,     2,     2,     1,     4,     7,     5,     6,
-       6,     2,     1,     6,     4,     0,     7,    11,     1,     5,
-       4,     3,     7,     3,     1,     4,     2,     3,     1,     1,
-       2,     1,     1,     1,     1,     1,     1,     1,     3,     3,
-       3,     3,     3,     1,     3,     3,     3,     3,     3,     3,
-       3,     3,     2,     2,     3,     1,     1,     1,     3,     1,
-       1,     4,     4,     4,     1,     2,     2,     2,     1,     1,
-       1,     1,     1,     4,     3,     1,     4,     3,     5,     4
+       0,     2,     1,     2,     3,     2,     1,     2,     1,     8,
+       7,     8,     4,     7,     2,     5,     7,     2,     1,     2,
+       2,     1,     1,     1,     2,     2,     1,     1,     2,     2,
+       2,     2,     2,     1,     2,     2,     2,     4,     6,     6,
+       6,     5,     6,     7,     5,     6,     6,     2,     1,     6,
+       4,     0,     7,    11,     1,     5,     4,     4,     3,     3,
+       8,     3,     1,     4,     2,     3,     6,     1,     1,     2,
+       1,     4,     4,     4,     1,     1,     1,     1,     1,     1,
+       3,     3,     3,     3,     3,     1,     3,     3,     3,     3,
+       3,     3,     3,     3,     2,     2,     3,     1,     1,     1,
+       3,     1,     1,     1,     1,     1,     1,     1,     4,     4,
+       4,     1,     2,     2,     2,     1,     1,     1,     1,     1,
+       1,     4,     3,     1,     7,     5,     9,    12,    15,     4,
+       3,     5,     4
   };
 
 
@@ -2859,19 +3390,21 @@ namespace yy {
   const Parser::yytname_[] =
   {
   "END", "error", "\"invalid token\"", "NUMERO", "ID", "STRING",
-  "TSTRING", "FLOAT", "BOOLEAN", "STRUCT", "ARRAY", "INT", "BOOLTRUE",
+  "TSTRING", "FLOAT", "BOOLEAN", "RSTRUCT", "RVECTOR", "INT", "BOOLTRUE",
   "BOOLFALSE", "PARA", "PARC", "LLAVA", "LLAVC", "CORA", "CORC", "VOID",
   "RMAIN", "NLL", "SUMA", "MENOS", "POR", "DIV", "INC", "MOD", "RIF",
-  "RELSE", "RWHILE", "RFOR", "PRINTF", "MEDIA", "MEDIANA", "MODA", "RATOI",
-  "RATOF", "RIOTA", "RBREAK", "RCONTINUE", "RRETURN", "MAYOR", "MENOR",
-  "MAYEQU", "MENEQU", "EQU", "DIFF", "AND", "OR", "NOT", "';'", "'='",
-  "','", "'.'", "$accept", "START", "LIST_FUNC", "FUNCTION",
-  "FUNCTION_LIST", "MAIN", "LIST_INST", "INSTRUCTION", "PRINT", "IF",
-  "ELSEIF_LIST", "ELSEIF", "ELSE", "WHILE", "FOR", "EXPRESSION",
-  "DECLARE_STRUCT", "DECLARE_LIST", "CREATE_STRUCT", "EXP_LIST",
-  "DECLARATION", "ASSIGNATION", "BREAK", "CONTINUE", "RETURN", "TYPES",
-  "EXP", "ATOI", "ATOF", "IOTA", "INCREMENT", "PREFIX_INCREMENT",
-  "PRIMITIVE", "LIST_ARR", "CALL_EXP", "CALL_INST", YY_NULLPTR
+  "RELSE", "RWHILE", "RFOR", "PRINTF", "RMEAN", "RMEDIAN", "RMODE",
+  "RATOI", "RATOF", "RIOTA", "RBREAK", "RCONTINUE", "RRETURN", "MAYOR",
+  "MENOR", "MAYEQU", "MENEQU", "EQU", "DIFF", "AND", "OR", "NOT", "VPBACK",
+  "VGET", "VREMOVE", "VSIZE", "VPFRONT", "';'", "'='", "','", "'.'",
+  "$accept", "START", "LIST_FUNC", "LIST_STRUCT", "FUNCTION",
+  "FUNCTION_LIST", "MAIN", "LIST_INST", "INSTRUCTION", "PRINT", "PUSHBACK",
+  "PUSHFRONT", "GET", "SIZE", "REMOVE", "IF", "ELSEIF_LIST", "ELSEIF",
+  "ELSE", "WHILE", "FOR", "EXPRESSION", "DECLARE_STRUCT", "DECLARE_LIST",
+  "CREATE_STRUCT", "EXP_LIST", "DECLARATION", "ASSIGNATION", "BREAK",
+  "CONTINUE", "RETURN", "MEAN", "MEDIAN", "MODE", "TYPES", "EXP", "ATOI",
+  "ATOF", "IOTA", "INCREMENT", "PREFIX_INCREMENT", "PRIMITIVE", "LIST_ARR",
+  "DECLARE_VECTOR", "DECLARE_MATRIX", "CALL_EXP", "CALL_INST", YY_NULLPTR
   };
 #endif
 
@@ -2880,16 +3413,20 @@ namespace yy {
   const short
   Parser::yyrline_[] =
   {
-       0,   186,   186,   192,   201,   206,   213,   217,   223,   228,
-     235,   241,   246,   253,   254,   255,   256,   257,   258,   259,
-     260,   261,   262,   263,   264,   265,   271,   274,   278,   282,
-     286,   292,   297,   304,   310,   311,   315,   318,   321,   324,
-     327,   332,   339,   345,   350,   357,   358,   360,   363,   366,
-     369,   370,   384,   385,   386,   387,   388,   389,   393,   394,
-     395,   396,   397,   399,   401,   402,   403,   404,   405,   406,
-     408,   409,   410,   415,   419,   420,   421,   422,   423,   424,
-     426,   430,   433,   436,   440,   441,   444,   445,   448,   460,
-     466,   467,   468,   471,   472,   473,   475,   476,   479,   480
+       0,   202,   202,   208,   215,   225,   230,   237,   242,   249,
+     253,   257,   263,   268,   273,   278,   285,   291,   296,   303,
+     304,   305,   306,   307,   308,   309,   310,   311,   312,   313,
+     314,   315,   316,   317,   318,   319,   320,   323,   326,   329,
+     332,   335,   338,   341,   345,   349,   353,   359,   364,   371,
+     377,   378,   382,   385,   388,   391,   394,   399,   404,   409,
+     416,   422,   427,   434,   435,   437,   438,   441,   444,   447,
+     448,   451,   454,   457,   460,   461,   462,   463,   464,   465,
+     469,   470,   471,   472,   473,   475,   477,   478,   479,   480,
+     481,   482,   484,   485,   486,   491,   495,   496,   497,   498,
+     499,   500,   501,   502,   503,   504,   505,   507,   511,   514,
+     517,   521,   522,   525,   526,   529,   541,   547,   548,   549,
+     550,   553,   554,   555,   558,   559,   562,   563,   564,   568,
+     569,   572,   573
   };
 
   void
@@ -2921,9 +3458,9 @@ namespace yy {
 
 
 } // yy
-#line 2925 "parser.cpp"
+#line 3462 "parser.cpp"
 
-#line 483 "parser.y"
+#line 576 "parser.y"
 
 
 /* función de error */

@@ -1,11 +1,14 @@
 #include "mainwindow.hpp"
 #include "Environment/ast.hpp"
 #include "ui_mainwindow.h"
+#include <QDir>
+#include <QScrollArea>
 #include <QMessageBox>
 #include "parserctx.hpp"
 #include <iostream>
 #include <vector>
 #include <QMutex>
+#include <QLabel>
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -52,11 +55,12 @@ void MainWindow::on_pushButton_2_clicked()
     if(Root->ErrorTable.empty())
     {
     //despliega el mensaje
+    Root->writeToFile();
     msg->setText(QString::fromStdString(analizador.Salida));
     msg->exec();
     ui->textEdit_2->setText(QString::fromStdString(Root->ConsoleOut));
     ui->textEdit_4->clear();
-    ui->textEdit_4->append(QString::fromStdString("     ID           SYM          TYPE         DATA        LINE    COL  "));
+    ui->textEdit_4->append(QString::fromStdString("     ID           SYM          TYPE                 DATA                LINE    COL  "));
     const std::vector<std::string>& SymbolTable = Root->getSymbolTable();
     for (int i = 0; i < SymbolTable.size(); i++) {
         ui->textEdit_4->append(QString::fromStdString(SymbolTable[i]));
@@ -78,32 +82,27 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    // Generate GraphViz dot code
-    QString dotCode = "digraph {\n"
-                      "   A -> B;\n"
-                      "   B -> C;\n"
-                      "   C -> A;\n"
-                      "}\n";
+    QDir::setCurrent("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment");
 
-    // Create GraphView widget
-    GraphView *graphView = new GraphView();
-    graphView->setDotCode(dotCode);
+    system("dot -Tpng ast.dot -o ast.dot.png");
 
-    // Create new window and set GraphView widget as its central widget
-    QMainWindow *graphWindow = new QMainWindow();
-    graphWindow->setCentralWidget(graphView);
-    graphWindow->show();
+    QPixmap originalPixmap("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment\\ast.dot.png");
+
+    // Calculate the scaled size of the pixmap
+
+    QLabel *label = new QLabel();
+    label->setPixmap(originalPixmap);
+
+    // Create a scroll area to hold the label
+    QScrollArea *scrollArea = new QScrollArea();
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidget(label);
+
+    // Create a main window to hold the scroll area
+    QMainWindow *mainWindow = new QMainWindow();
+    mainWindow->setCentralWidget(scrollArea);
+    mainWindow->resize(800, 600);
+    mainWindow->show();
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

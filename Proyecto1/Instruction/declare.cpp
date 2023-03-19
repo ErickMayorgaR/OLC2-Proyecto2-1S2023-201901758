@@ -39,6 +39,7 @@ void declare::ejecutar(environment *env, ast *tree)
 
         }
         tree->addSymbol(Id,"variable",msgtipo,msgdata,Line,Col);
+
     }
     else
     {

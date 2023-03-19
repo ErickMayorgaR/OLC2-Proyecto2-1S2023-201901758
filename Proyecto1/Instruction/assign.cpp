@@ -39,7 +39,7 @@ void assign::ejecutar(environment *env, ast *tree)
             }
         }
         
-        std::string msgid = sym.Id;
+        std::string msgid = Id;
         tree->changeSymbol(msgid,dataAfter);
     }
     else

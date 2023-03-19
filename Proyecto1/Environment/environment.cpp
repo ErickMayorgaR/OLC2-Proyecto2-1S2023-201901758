@@ -15,7 +15,7 @@ void environment::SaveVariable(symbol sym, std::string id, ast *tree)
     else
     {
         //se reporta un error
-        std::string msg = "Variable exist already"+id;
+        std::string msg = "Variable exist already "+id;
         tree->addError(msg,sym.Line,sym.Col);
     }
 }
@@ -47,6 +47,23 @@ void environment::SaveStruct(int line, int col, map<std::string, TipoDato> tabla
     {
         //se reporta un error
         std::string msg = "Struct exist already"+id;
+        tree->addError(msg,Line,Col);
+    }
+}
+
+void environment::SaveVector(int line, int col, typedata_vector tablavector, std::string id, ast *tree)
+{
+    Line = line;
+    Col = col; 
+
+    if (TablaVector.find(id) == TablaVector.end())
+    {
+        TablaVector[id] = tablavector;
+    }
+    else
+    {
+        //se reporta un error
+        std::string msg = "Vector exist already"+id;
         tree->addError(msg,Line,Col);
     }
 }

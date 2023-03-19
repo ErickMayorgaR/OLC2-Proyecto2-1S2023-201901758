@@ -32,6 +32,7 @@
 %code requires
 {
     /* cabeceras iniciales */
+    #include <sstream>
     #include <iostream>
     #include <string>
     #include <vector>
@@ -45,6 +46,7 @@
     #include "../Proyecto1/Expression/primitive.hpp"
     #include "../Proyecto1/Expression/access.hpp"
     #include "../Proyecto1/Expression/vector_access.hpp"
+    #include "../Proyecto1/Expression/matrix_access.hpp"
     #include "../Proyecto1/Expression/operation.hpp"
     #include "../Proyecto1/Expression/func_atoi.hpp"
     #include "../Proyecto1/Expression/func_atof.hpp"
@@ -77,6 +79,7 @@
     #include "../Proyecto1/Instruction/declare_vector.hpp"
     #include "../Proyecto1/Instruction/declare_matrix.hpp"
     #include "../Proyecto1/Instruction/assign_vector.hpp"
+    #include "../Proyecto1/Instruction/assign_struct.hpp"
     #include "../Proyecto1/Instruction/func_pushback.hpp"
     #include "../Proyecto1/Instruction/func_remove.hpp"
     #include "../Proyecto1/Instruction/func_pushfront.hpp"
@@ -90,6 +93,7 @@
     #include "ui_mainwindow.h"
 
 }
+
 
 /* enlace con la función del retorno de simbolos */
 %code {yy::Parser::symbol_type yylex(void* yyscanner, yy::location& loc, class OCL2Calc::ParserCtx & ctx); }
@@ -117,8 +121,11 @@
 %right INC
 %left SUMA MENOS
 %left DIV MOD POR
-%left PARA PARC LLAVA LLAVC
+%left '.'
+%left PARA PARC LLAVA LLAVC CORA 
 %left RELSE
+%nonassoc NUMERO STRING BOOLFALSE BOOLTRUE NLL
+%nonassoc RMEAN RMEDIAN RMODE RATOF RATOI RIOTA
 
 /* instancia de la clase que creamos */
 %lex-param {void *scanner} {yy::location& loc} { class OCL2Calc::ParserCtx & ctx }
@@ -129,8 +136,8 @@
 %type<expression*> PRIMITIVE;
 %type<expression*> EXP;
 %type<expression*> INCREMENT;
-%type<expression*> PREFIX_INCREMENT;
 %type<expression*> LIST_ARR;
+%type<expression*> STRUCT_ACCESS;
 %type<expression*> CALL_EXP;
 
 //INICIO
@@ -270,6 +277,16 @@ FUNCTION_LIST : FUNCTION_LIST ',' TYPES ID
             $1->newMap($7,VECTOR);
             $$ = $1;
         }
+        | FUNCTION_LIST ',' TYPES ID CORA EXP CORC
+        {
+            $1->newMap($4,$3);
+            $$ = $1;
+        }
+        | FUNCTION_LIST ',' TYPES ID CORA EXP CORC CORA EXP CORC CORA EXP CORC
+        {
+            $1->newMap($4,$3);
+            $$ = $1;
+        }
         | TYPES ID 
         {   
             $$ = new map_struct_dec();
@@ -279,6 +296,16 @@ FUNCTION_LIST : FUNCTION_LIST ',' TYPES ID
         {
             $$ = new map_struct_dec();
             $$->newMap($5, VECTOR);
+        }
+        | TYPES ID CORA EXP CORC
+        {   
+            $$ = new map_struct_dec();
+            $$->newMap($2, $1);
+        }
+        | TYPES ID CORA EXP CORC CORA EXP CORC CORA EXP CORC
+        {   
+            $$ = new map_struct_dec();
+            $$->newMap($2, $1);
         }
 ;
 
@@ -307,8 +334,8 @@ INSTRUCTION : PRINT ';' { $$ = $1; }
             | FOR { $$ = $1; }
             | DECLARATION ';' {$$ = $1;}
             | ASSIGNATION ';' {$$ = $1;}
-            | DECLARE_STRUCT { $$ = $1; }
             | CREATE_STRUCT { $$ = $1; }
+            | DECLARE_STRUCT { $$ = $1; }
             | DECLARE_VECTOR ';' {$$ = $1;}
             | DECLARE_MATRIX ';' {$$ = $1;}
             | BREAK ';' {$$ = $1;}
@@ -375,7 +402,6 @@ ELSEIF : RELSE RIF EXP LLAVA LIST_INST LLAVC
 ;
 
 ELSE : RELSE LLAVA LIST_INST LLAVC { $$ = $3; }
-    | %empty { }
 ;
 
 
@@ -413,10 +439,7 @@ DECLARE_LIST : DECLARE_LIST TYPES ID ';'
         }
 ;
 
-CREATE_STRUCT : RSTRUCT ID ID '=' LLAVA EXP_LIST LLAVC ';'
-                {
-                    $$ = new create_struct(@1.begin.line, @1.begin.column,$2,$3,$6);
-                }
+CREATE_STRUCT : RSTRUCT ID ID '=' LLAVA EXP_LIST LLAVC ';' { $$ = new create_struct(@1.begin.line, @1.begin.column,$2,$3,$6);}
 ;
 
 EXP_LIST : EXP_LIST ',' EXP
@@ -436,6 +459,7 @@ DECLARATION : TYPES ID '=' EXP {$$ = new declare(@1.begin.line, @1.begin.column,
 
 ASSIGNATION : ID '=' EXP {$$ = new assign(@1.begin.line, @1.begin.column,$1,$3);}
             | ID CORA PRIMITIVE CORC '=' PRIMITIVE {$$ = new assign_vector(@1.begin.line, @1.begin.column, $1,$3,$6);}
+            | ID '.' ID '=' EXP {$$ = new assign_struct(@1.begin.line, @1.begin.column,$1,$3,$5);}
 ;   
 
 BREAK : RBREAK {$$ = new func_break(@1.begin.line, @1.begin.column);}
@@ -466,7 +490,7 @@ TYPES : INT { $$ = INTEGER; }
 ;
 //OPERADORES ARITMÉTICOS Y LÓGICOS
 
-EXP : EXP SUMA EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, "+"); }
+EXP : EXP SUMA EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, "+");}
     | EXP MENOS EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, "-"); }
     | EXP POR EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, "*"); }
     | EXP DIV EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, "/"); }
@@ -489,7 +513,7 @@ EXP : EXP SUMA EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, 
     }
     //NEGACION UNARIA
     | MENOS EXP {
-        $$ = new operation(@2.begin.line, @2.begin.column,$2,new primitive(0,0,INTEGER, "", 0,0.0,false),"NEG");
+        $$ = new operation(@2.begin.line, @2.begin.column,new primitive(0,0,INTEGER, "", 0,0.0,false),$2,"-");
         }
     //OTRAS EXPRESIONES
     | PARA EXP PARC { $$ = $2; }
@@ -505,6 +529,7 @@ EXP : EXP SUMA EXP { $$ = new operation(@1.begin.line, @1.begin.column, $1, $3, 
     | MODE {$$ = $1;}   
     //VALOR
     | PRIMITIVE { $$ = $1; }
+    |STRUCT_ACCESS {$$ = $1;}
     
 ;
 
@@ -518,13 +543,9 @@ IOTA : RIOTA PARA EXP PARC {$$ = new func_iota(@1.begin.line, @1.begin.column,$3
 ;
 
 
-INCREMENT: PREFIX_INCREMENT { $$ = $1; }
-            | EXP INC { $$ = new operation(@1.begin.line, @1.begin.column, $1, new primitive(0,0,INTEGER, "", 0,0.0,false), "++A"); }
+INCREMENT: PRIMITIVE INC { $$ = new operation(@1.begin.line, @1.begin.column, $1, new primitive(0,0,INTEGER, "", 0,0.0,false), "++A"); }
 ;
 
-PREFIX_INCREMENT: INC EXP { $$ = new operation(@2.begin.line, @2.begin.column, $2, new primitive(0,0,INTEGER, "", 0,0.0,false), "++B"); }
-                | EXP PREFIX_INCREMENT {$$ = $2;}
-;
 // TIPOS DE DATOS PRIMITIVOS
 PRIMITIVE : NUMERO {
             std::string cadena = $1;
@@ -538,21 +559,29 @@ PRIMITIVE : NUMERO {
                 $$ = new primitive(@1.begin.line, @1.begin.column,FLOAT, "", 0, num,false);}
 
             }
-        | STRING
-        {
-            std::string str1 = $1.erase(0,1);
-            std::string str2 = str1.erase(str1.length()-1,1);
-            $$ = new primitive(@1.begin.line, @1.begin.column,STRING,str2,0,0.0,false);
-        }
-        | NLL {$$ = new primitive(@1.begin.line, @1.begin.column,NULO,"",0,0.0,false);}
-        |BOOLTRUE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, true);}
-        |BOOLFALSE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, false);}
-        |LIST_ARR {$$ = $1;}
+            | STRING
+            {
+                std::string str1 = $1.erase(0,1);
+                std::string str2 = str1.erase(str1.length()-1,1);
+                $$ = new primitive(@1.begin.line, @1.begin.column,STRING,str2,0,0.0,false);
+            }
+            | NLL {$$ = new primitive(@1.begin.line, @1.begin.column,NULO,"",0,0.0,false);}
+            |BOOLTRUE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, true);}
+            |BOOLFALSE {$$ = new primitive(@1.begin.line, @1.begin.column,BOOL, "", 0, 0.0, false);}
+            |LIST_ARR {$$ = $1;}
 ;
 
-LIST_ARR : LIST_ARR CORA EXP CORC { $$ = new vector_access(@1.begin.line, @1.begin.column,$1,$3); }
-        | LIST_ARR '.' ID { $$ = new struct_access(@1.begin.line, @1.begin.column,$1,$3); }
+LIST_ARR : LIST_ARR CORA EXP CORC CORA EXP CORC{ $$ = new matrix_access(@1.begin.line, @1.begin.column,$1,$3,$6); }
+        |LIST_ARR CORA EXP CORC { $$ = new vector_access(@1.begin.line, @1.begin.column,$1,$3); } 
         | ID {$$ = new access(@1.begin.line, @1.begin.column,$1); }
+;
+
+STRUCT_ACCESS : ID '.' ID 
+                { 
+                    std::string str1 = "NO";
+                    $$ = new struct_access(@1.begin.line, @1.begin.column,$1,$3,str1);
+                }
+            |   ID '.' ID '.' ID { $$ = new struct_access(@1.begin.line, @1.begin.column,$1,$3,$5); }
 ;
 
 DECLARE_VECTOR : RVECTOR MENOR TYPES MAYOR ID '=' EXP  {$$ = new declare_vector(@1.begin.line, @1.begin.column, $3, $5, $7);}
@@ -587,3 +616,4 @@ void yy::Parser::error(const yy::location& loc, const std::string& msg)
         // Append the error message to the existing textEdit_3 widget
         textEdit->append(QString::fromStdString(error_message));
 }
+

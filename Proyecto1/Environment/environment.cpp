@@ -20,19 +20,24 @@ void environment::SaveVariable(symbol sym, std::string id, ast *tree)
     }
 }
 
-void environment::AssignVariable(symbol sym, std::string id, ast *tree)
+void environment::AssignVariable(symbol sym, std::string id, environment *env, ast *tree)
 {
-    if (Tabla.find(id) != Tabla.end())
-    {
-        Tabla[id] = sym;
+    environment *currentEnv = env;
+    environment *AnteriorEnv = env;
+    while (currentEnv != nullptr) {
+        if (currentEnv->Tabla.find(id) != currentEnv->Tabla.end()) {
+            currentEnv->Tabla[id] = sym;
+            env = AnteriorEnv;
+            return;
+        }
+        currentEnv = currentEnv->Anterior;
     }
-    else
-    {
-        //se reporta un error
-        std::string msg = "Variable doesn't exist";
-        tree->addError(msg,sym.Line,sym.Col);
-    }
+
+    // Si no se encontró la variable en ningún ambiente, lanzar un error
+    std::string msg = "invalid id";
+    tree->addError(msg, sym.Line, sym.Col);
 }
+
 
 void environment::SaveStruct(int line, int col, map<std::string, TipoDato> tabla, std::string id, ast *tree)
 {

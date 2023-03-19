@@ -31,7 +31,7 @@ void func_pushfront::ejecutar(environment *env, ast *tree)
     }
     result.prepend(sym_data);
     vec_sym.Value = &result;
-    env->AssignVariable(vec_sym, Id, tree);
+    env->AssignVariable(vec_sym, Id, env, tree);
 
     std::string data = "[";
     for (int i = 0; i < result.size(); i++) {

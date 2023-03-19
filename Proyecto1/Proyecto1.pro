@@ -26,11 +26,13 @@ SOURCES += \
     Expression/func_size.cpp \
     Expression/list_expression.cpp \
     Expression/map_struct_dec.cpp \
+    Expression/matrix_access.cpp \
     Expression/operation.cpp \
     Expression/primitive.cpp \
     Expression/struct_access.cpp \
     Expression/vector_access.cpp \
     Instruction/assign.cpp \
+    Instruction/assign_struct.cpp \
     Instruction/assign_vector.cpp \
     Instruction/call_inst.cpp \
     Instruction/create_struct.cpp \
@@ -79,11 +81,13 @@ HEADERS += \
     Expression/func_size.hpp \
     Expression/list_expression.hpp \
     Expression/map_struct_dec.hpp \
+    Expression/matrix_access.hpp \
     Expression/operation.hpp \
     Expression/primitive.hpp \
     Expression/struct_access.hpp \
     Expression/vector_access.hpp \
     Instruction/assign.hpp \
+    Instruction/assign_struct.hpp \
     Instruction/assign_vector.hpp \
     Instruction/call_inst.hpp \
     Instruction/create_struct.hpp \

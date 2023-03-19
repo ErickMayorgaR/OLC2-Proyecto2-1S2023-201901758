@@ -48,6 +48,7 @@
 #line 33 "parser.y"
 
     /* cabeceras iniciales */
+    #include <sstream>
     #include <iostream>
     #include <string>
     #include <vector>
@@ -61,6 +62,7 @@
     #include "../Proyecto1/Expression/primitive.hpp"
     #include "../Proyecto1/Expression/access.hpp"
     #include "../Proyecto1/Expression/vector_access.hpp"
+    #include "../Proyecto1/Expression/matrix_access.hpp"
     #include "../Proyecto1/Expression/operation.hpp"
     #include "../Proyecto1/Expression/func_atoi.hpp"
     #include "../Proyecto1/Expression/func_atof.hpp"
@@ -93,6 +95,7 @@
     #include "../Proyecto1/Instruction/declare_vector.hpp"
     #include "../Proyecto1/Instruction/declare_matrix.hpp"
     #include "../Proyecto1/Instruction/assign_vector.hpp"
+    #include "../Proyecto1/Instruction/assign_struct.hpp"
     #include "../Proyecto1/Instruction/func_pushback.hpp"
     #include "../Proyecto1/Instruction/func_remove.hpp"
     #include "../Proyecto1/Instruction/func_pushfront.hpp"
@@ -106,7 +109,7 @@
     #include "ui_mainwindow.h"
 
 
-#line 110 "parser.hpp"
+#line 113 "parser.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -235,7 +238,7 @@
 #endif
 
 namespace yy {
-#line 239 "parser.hpp"
+#line 242 "parser.hpp"
 
 
 
@@ -439,9 +442,9 @@ namespace yy {
       // ATOF
       // IOTA
       // INCREMENT
-      // PREFIX_INCREMENT
       // PRIMITIVE
       // LIST_ARR
+      // STRUCT_ACCESS
       // CALL_EXP
       char dummy2[sizeof (expression*)];
 
@@ -762,9 +765,9 @@ namespace yy {
         S_ATOF = 98,                             // ATOF
         S_IOTA = 99,                             // IOTA
         S_INCREMENT = 100,                       // INCREMENT
-        S_PREFIX_INCREMENT = 101,                // PREFIX_INCREMENT
-        S_PRIMITIVE = 102,                       // PRIMITIVE
-        S_LIST_ARR = 103,                        // LIST_ARR
+        S_PRIMITIVE = 101,                       // PRIMITIVE
+        S_LIST_ARR = 102,                        // LIST_ARR
+        S_STRUCT_ACCESS = 103,                   // STRUCT_ACCESS
         S_DECLARE_VECTOR = 104,                  // DECLARE_VECTOR
         S_DECLARE_MATRIX = 105,                  // DECLARE_MATRIX
         S_CALL_EXP = 106,                        // CALL_EXP
@@ -819,9 +822,9 @@ namespace yy {
       case symbol_kind::S_ATOF: // ATOF
       case symbol_kind::S_IOTA: // IOTA
       case symbol_kind::S_INCREMENT: // INCREMENT
-      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_STRUCT_ACCESS: // STRUCT_ACCESS
       case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.move< expression* > (std::move (that.value));
         break;
@@ -1100,9 +1103,9 @@ switch (yykind)
       case symbol_kind::S_ATOF: // ATOF
       case symbol_kind::S_IOTA: // IOTA
       case symbol_kind::S_INCREMENT: // INCREMENT
-      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_STRUCT_ACCESS: // STRUCT_ACCESS
       case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.template destroy< expression* > ();
         break;
@@ -2248,7 +2251,7 @@ switch (yykind)
     /// \param yyvalue   the value to check
     static bool yy_table_value_is_error_ (int yyvalue);
 
-    static const signed char yypact_ninf_;
+    static const short yypact_ninf_;
     static const signed char yytable_ninf_;
 
     /// Convert a scanner token kind \a t to a symbol kind.
@@ -2525,7 +2528,7 @@ switch (yykind)
     /// Constants.
     enum
     {
-      yylast_ = 1781,     ///< Last index in yytable_.
+      yylast_ = 1296,     ///< Last index in yytable_.
       yynnts_ = 47,  ///< Number of nonterminal symbols.
       yyfinal_ = 18 ///< Termination state number.
     };
@@ -2615,9 +2618,9 @@ switch (yykind)
       case symbol_kind::S_ATOF: // ATOF
       case symbol_kind::S_IOTA: // IOTA
       case symbol_kind::S_INCREMENT: // INCREMENT
-      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_STRUCT_ACCESS: // STRUCT_ACCESS
       case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.copy< expression* > (YY_MOVE (that.value));
         break;
@@ -2768,9 +2771,9 @@ switch (yykind)
       case symbol_kind::S_ATOF: // ATOF
       case symbol_kind::S_IOTA: // IOTA
       case symbol_kind::S_INCREMENT: // INCREMENT
-      case symbol_kind::S_PREFIX_INCREMENT: // PREFIX_INCREMENT
       case symbol_kind::S_PRIMITIVE: // PRIMITIVE
       case symbol_kind::S_LIST_ARR: // LIST_ARR
+      case symbol_kind::S_STRUCT_ACCESS: // STRUCT_ACCESS
       case symbol_kind::S_CALL_EXP: // CALL_EXP
         value.move< expression* > (YY_MOVE (s.value));
         break;
@@ -2940,7 +2943,7 @@ switch (yykind)
   }
 
 } // yy
-#line 2944 "parser.hpp"
+#line 2947 "parser.hpp"
 
 
 

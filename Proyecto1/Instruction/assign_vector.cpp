@@ -50,7 +50,7 @@ void assign_vector::ejecutar(environment *env, ast *tree)
                 }
                 result[index1] = sym_data;
                 symVec.Value = new QVector<symbol>(result);
-                env->AssignVariable(symVec, Id, tree);
+                env->AssignVariable(symVec, Id, env, tree);
                 
                 std::string data = "[";
                 for (int i = 0; i < result.size(); i++) {
@@ -75,7 +75,7 @@ void assign_vector::ejecutar(environment *env, ast *tree)
                     }
                 }
                 data += "]";
-                tree->changeSymbol(symVec.Id,data);
+                tree->changeSymbol(Id,data);
             }
             else{
                 //se reporta un error

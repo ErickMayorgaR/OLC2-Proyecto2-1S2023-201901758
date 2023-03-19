@@ -38,6 +38,7 @@ void create_struct::ejecutar(environment *env, ast *tree)
         //se guarda el StructValue en el entorno de simbolos
         symbol symStruct (Line,Col,Id,STRUCT,StructValue);
         env->SaveVariable(symStruct,Id, tree);
+        tree->addSymbol(Id,"variable","struct","",Line,Col);
     }
     else
     {

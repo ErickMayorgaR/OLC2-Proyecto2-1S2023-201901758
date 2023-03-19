@@ -46,8 +46,6 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
 
     /* inicia la defincion de tokens   */
 
-
-
     /* caracteres ignorados */
 "/*"           { BEGIN(IN_COMMENT); } /* Cambiar al estado IN_COMMENT */
 <IN_COMMENT>{
@@ -63,9 +61,6 @@ ID  {LETRAS}({DIGITO}|{LETRAS}|"_")*
     /* Lexemas */
     /* defincion moderna
         token::ID ID sin caracteres especiales
-
-
-"^"     return Parser::symbol_type( token::POT, loc );
     */
 
 "+"     return Parser::symbol_type( token::SUMA, loc );

@@ -9,14 +9,27 @@ func_break::func_break(int line, int col)
 
 void func_break::ejecutar(environment *env, ast *tree)
 {
-    if(!env->Inside_While)
+    environment *current_env = env;
+    bool found_loop = false;
+
+    while(current_env != nullptr)
+    {
+        if(current_env->Inside_While)
+        {
+            found_loop = true;
+            break;
+        }
+
+        current_env = current_env->Anterior;
+    }
+
+    if(!found_loop)
     {
         // report an error
         std::string msg = "break statement must be inside a while loop";
         tree->addError(msg, Line, Col);
         return;
     }
-
-    env->Break_flag = true;
+    current_env->Break_flag = true;
 }
 

@@ -1,5 +1,5 @@
 #include "operation.hpp"
-
+#include "Environment/environment.hpp"
 operation::operation(int line, int col, expression *op_izq, expression *op_der, std::string operador){
     Line = line;
     Col = col;
@@ -30,7 +30,9 @@ symbol operation::ejecutar(environment *env, ast *tree)
     {
         if(Dominante == INTEGER)
         {
-            int result = *static_cast<int*>(op1.Value) + *static_cast<int*>(op2.Value);
+            int *val1 = (int *)op1.Value;
+            int *val2 = (int *)op2.Value;
+            int result = *val1 + *val2;
             sym = symbol(Line,Col,"",Dominante,&result);
         }
 

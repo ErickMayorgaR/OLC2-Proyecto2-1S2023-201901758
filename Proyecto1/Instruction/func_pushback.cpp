@@ -32,7 +32,7 @@ void func_pushback::ejecutar(environment *env, ast *tree)
     result.resize(result.size() + 1);
     result[result.size() - 1] = sym_data;
     vec_sym.Value = &result;
-    env->AssignVariable(vec_sym, Id, tree);
+    env->AssignVariable(vec_sym, Id, env, tree);
 
     std::string data = "[";
     for (int i = 0; i < result.size(); i++) {

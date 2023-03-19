@@ -25,7 +25,7 @@ void func_remove::ejecutar(environment *env, ast *tree)
         } else {
             result.remove(index);
             vec_sym.Value = &result;
-            env->AssignVariable(vec_sym, Id, tree);
+            env->AssignVariable(vec_sym, Id, env, tree);
         }
     }
     else{

@@ -1,8 +1,0 @@
-digraph G {
-graph[bgcolor="#141D26" margin=0]
-node [shape=box style=filled color="#48D1CC" fontname= "Ubuntu" fontsize="14"];
-edge[color="#B22222" penwidth="1.5"];node1[label = "Main"];
-
-Raiz->node1;
-
-}

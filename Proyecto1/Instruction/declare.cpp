@@ -15,6 +15,18 @@ void declare::ejecutar(environment *env, ast *tree)
     symbol sym = Valor->ejecutar(env, tree);
     if(Tipo == sym.Tipo)
     {
+        if(env->Inside_For){
+            if (env->Tabla.find(Id) != env->Tabla.end())
+            {
+                env->Tabla.erase(Id);
+                for (auto it = tree->SymbolTable.begin(); it != tree->SymbolTable.end(); ++it) {
+                    if (it->find(Id) != std::string::npos) {
+                        tree->SymbolTable.erase(it);
+                        break;
+                    }
+                }
+            }
+        }
         env->SaveVariable(sym, Id, tree);
         if(Tipo == INTEGER)
         {

@@ -12,12 +12,12 @@ func_for::func_for(int line, int col, instruction *sentence1, expression *compar
 
 void func_for::ejecutar(environment *env, ast *tree)
 {
+    env->Inside_For = true;
     Sentence1->ejecutar(env,tree);
     symbol sym = Comparative->ejecutar(env, tree);
     if(sym.Tipo == BOOL)
     {
         while(*static_cast<bool*>(Comparative->ejecutar(env, tree).Value)){
-            env->Inside_For = true;
             //ejecuta el bloque
             if(env->Continue_flag){
                 env->Continue_flag = false;
@@ -30,6 +30,7 @@ void func_for::ejecutar(environment *env, ast *tree)
         
         env->Inside_For = false;
         return;
+        
 
     }
 

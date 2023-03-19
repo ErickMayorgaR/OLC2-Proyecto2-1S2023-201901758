@@ -27,7 +27,7 @@ public:
 
     environment(environment *anterior, std::string id);
     void SaveVariable(symbol sym, std::string id, ast *tree);
-    void AssignVariable(symbol sym, std::string id, ast *tree);
+    void AssignVariable(symbol sym, std::string id,environment *env, ast *tree);
     void SaveStruct(int line, int col, map<std::string, TipoDato> tabla, std::string id, ast *tree);
     void SaveFunction(func_symbol sym, std::string id, ast *tree);
     void SaveVector(int line, int col, typedata_vector tablavector, std::string id, ast *tree);

@@ -96,6 +96,6 @@ std::string print::VectorToString(QVector<symbol> Vector)
             }
         }
     }
-    strBuffer += "]\n";
+    strBuffer += "]";
     return strBuffer;
 }

@@ -12,5 +12,4 @@ void declare_struct::ejecutar(environment *env, ast *tree)
 {
 
     env->SaveStruct(Line, Col, Array->ListDec,Id, tree);
-    tree->addSymbol(Id,"variable","struct"," ",Line,Col);
 }

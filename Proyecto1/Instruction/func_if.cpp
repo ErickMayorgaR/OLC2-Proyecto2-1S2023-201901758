@@ -1,5 +1,5 @@
 #include "func_if.hpp"
-
+#include "Environment/environment.hpp"
 func_if::func_if(int line, int col, expression *condition, instruction *block, instruction *elseifblock, instruction *elseblock)
 {
     Line = line;
@@ -15,6 +15,9 @@ void func_if::ejecutar(environment *env, ast *tree)
 
     symbol sym = Condition->ejecutar(env, tree);
     //creando entorno if
+    environment *AnteriorEnv = env;
+    environment *IfEnv = new environment(env,"IF");
+    //creando entorno if
     if(sym.Tipo == BOOL)
     {
         //si se cumple el if
@@ -22,13 +25,15 @@ void func_if::ejecutar(environment *env, ast *tree)
         if(*val)
         {
             //ejecuta el bloque
-            Block->ejecutar(env, tree);
+            Block->ejecutar(IfEnv, tree);
             //valida si es else if
             if(tree->ElseIfFlag)
             {
                 tree->ElseIfFlag = false;
                 tree->IfReturn = true;
             }
+            env = AnteriorEnv; // Volvemos al ambiente anterior
+            delete IfEnv;
             return;
         }
         //si no se cumple y existe else if
@@ -37,17 +42,22 @@ void func_if::ejecutar(environment *env, ast *tree)
             //flag de else if
             tree->ElseIfFlag = true;
             tree->IfReturn = false;
-            ElseIfBlock->ejecutar(env, tree);
+            ElseIfBlock->ejecutar(IfEnv, tree);
             //validación return
             if(tree->IfReturn)
             {
+                tree->ElseIfFlag = false;
+                env = AnteriorEnv; // Volvemos al ambiente anterior
+                delete IfEnv;
                 return;
             }
+            tree->ElseIfFlag = false;
         }
         //si aun no se cumple y existe else
         if(ElseBlock != nullptr)
         {
-            ElseBlock->ejecutar(env, tree);
+            ElseBlock->ejecutar(IfEnv, tree);
+            tree->ElseIfFlag = false;
         }
 
     }
@@ -57,5 +67,6 @@ void func_if::ejecutar(environment *env, ast *tree)
         std::string msg = "invalid combination, incorrect type for if";
         tree->addError(msg,Line,Col);
     }
-
+    env = AnteriorEnv; // Volvemos al ambiente anterior
+    delete IfEnv;
 }

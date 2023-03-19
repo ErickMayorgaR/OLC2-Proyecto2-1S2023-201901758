@@ -82,11 +82,11 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_pushButton_3_clicked()
 {
-    QDir::setCurrent("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment");
+    QDir::setCurrent(".\\Environment");
 
     system("dot -Tpng ast.dot -o ast.dot.png");
 
-    QPixmap originalPixmap("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment\\ast.dot.png");
+    QPixmap originalPixmap(".\\Environment\\ast.dot.png");
 
     // Calculate the scaled size of the pixmap
 

@@ -15,7 +15,7 @@ void assign::ejecutar(environment *env, ast *tree)
     symbol sym2 = env->GetVariable(Line, Col, Id, env, tree);
     if(sym2.Tipo == sym.Tipo)
     {
-        env->AssignVariable(sym, Id, tree);
+        env->AssignVariable(sym, Id, env, tree);
         if(sym.Tipo == INTEGER)
         {
             dataAfter = std::to_string(*static_cast<int*>(sym.Value));

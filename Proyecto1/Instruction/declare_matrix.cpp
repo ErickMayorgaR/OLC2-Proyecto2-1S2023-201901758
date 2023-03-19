@@ -1,4 +1,6 @@
 #include "declare_matrix.hpp"
+// Define la estructura de la matriz tridimensional
+typedef std::vector<std::vector<std::vector<symbol>>> Matrix3D;
 
 declare_matrix::declare_matrix(int line, int col, TipoDato tipo, std::string id, expression *dimension1, expression *dimension2, expression *dimension3, list_expression* valores) {
     Line = line;
@@ -53,43 +55,51 @@ void declare_matrix::ejecutar(environment *env, ast *tree)
     }
 
     if(dimension2 != 0 && dimension3 != 0){
-        int filas = dimension1;
-        int columnas = dimension2;
-        int profundidad = dimension3;
-        std::vector<std::vector<std::vector<symbol>>> matrix(filas, std::vector<std::vector<symbol>>(columnas, std::vector<symbol>(profundidad)));
+        Matrix3D matrix(dimension1, std::vector<std::vector<symbol>>(dimension2, std::vector<symbol>(dimension3)));
         if (Valores->ListExp.size() > 0) {
-            if (filas != Valores->ListExp.size()) {
+            if (dimension1 != Valores->ListExp.size()) {
                 std::string msg = "matrix initialization block size does not match rows matrix dimensions.";
                 tree->addError(msg, Line, Col);
                 return;
-            } 
-            for (int i = 0; i < filas; i++) {
-                list_expression *vec_sym = (list_expression*)(Valores->ListExp[i]);
-                if (columnas != vec_sym->ListExp.size()) {
+            }    
+            for (int i = 0; i < dimension1; i++) {
+                symbol vec_sym = Valores->ListExp[i]->ejecutar(env,tree);
+                QVector<symbol> *Vec = (QVector<symbol>*)vec_sym.Value;
+                QVector<symbol> result = *Vec;
+                if (dimension2 != (result).size()) {
                     std::string msg = "matrix initialization block size does not match columns matrix dimensions.";
                     tree->addError(msg, Line, Col);
                     return;
                 } 
-                for (int j = 0; j < columnas; j++) {
-                    symbol vec_sym2 = vec_sym->ListExp[j]->ejecutar(env, tree);
-                    QVector<symbol> *Vec = (QVector<symbol>*)vec_sym2.Value;
-                    QVector<symbol> result = *Vec;
-                    for (int k = 0; k < profundidad; k++) {
-                        if (result[k].Tipo != Tipo) {
-                        std::string msg = "matrix initialization block contains elements of incorrect type.";
+                
+                for (int j = 0; j < dimension2; j++) {
+                    symbol vec_sym2 = result[j];
+                    QVector<symbol> *Vec1 = (QVector<symbol>*)vec_sym2.Value;
+                    QVector<symbol> result1 = *Vec1;
+                    if (dimension3 != result1.size()) {
+                        std::string msg = "matrix initialization block size does not match depth matrix dimensions.";
                         tree->addError(msg, Line, Col);
                         return;
+                    } 
+                    
+                    for (int k = 0; k < dimension3; k++) {
+                        symbol sym = result1[k];
+                        if (sym.Tipo != Tipo) {
+                            std::string msg = "matrix initialization block contains elements of incorrect type.";
+                            tree->addError(msg, Line, Col);
+                            return;
                         }
-                        matrix[i][j][k] = result[k];
+                        
+                        matrix[i][j][k] = sym;
                     }
                 }
             }
         }
-        // Add the matrix to the environment
-        symbol matrix_sym(Line, Col, Id, Tipo, &matrix);
-        env->SaveVariable(matrix_sym, Id, tree);
-    } 
-
+            // Agrega la matriz al entorno
+            symbol matrix_sym(Line, Col, Id, Tipo, &matrix);
+            env->SaveVariable(matrix_sym, Id, tree);
+    }
+    
     else if(dimension2 != 0 && dimension3 == 0){
         int filas = dimension1;
         int columnas = dimension2;

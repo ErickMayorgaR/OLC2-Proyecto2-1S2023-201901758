@@ -8,55 +8,73 @@ func_pushback::func_pushback(int line, int col, std::string id, expression *valo
     Valor = valor;
 }
 
-void func_pushback::ejecutar(environment *env, ast *tree)
+void func_pushback::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym_data (Line,Col,"",NULO,nullptr);
-    symbol sym = Valor->ejecutar(env,tree);
-    symbol vec_sym = env->GetVariable(Line, Col, Id, env, tree);
-    QVector<symbol> *Vec = (QVector<symbol>*)vec_sym.Value;
-    QVector<symbol>& result = *Vec;
-    switch (sym.Tipo)
-    {
-    case STRING:
-        sym_data = symbol(Line,Col,"",STRING,new std::string(*static_cast<std::string*>(sym.Value)));
-        break;
-    case INTEGER:
-        sym_data = symbol(Line,Col,"",INTEGER,new int(*static_cast<int*>(sym.Value)));
-        break;
-    case FLOAT:
-        sym_data = symbol(Line,Col,"",FLOAT,new float(*static_cast<float*>(sym.Value)));
-        break;
-    default:
-        break;
-    }
-    result.resize(result.size() + 1);
-    result[result.size() - 1] = sym_data;
-    vec_sym.Value = &result;
-    env->AssignVariable(vec_sym, Id, env, tree);
+    value val;
+    auto it = env->TablaVector.find(Id);
+    int index = std::distance(env->TablaVector.begin(), it);
+    std::string vec_val = tree->StackVector.at(index);
+    int vec_size = tree->SizeVector.at(index);
+    int new_size = vec_size+1;
 
-    std::string data = "[";
-    for (int i = 0; i < result.size(); i++) {
-        std::string value = "";
-        switch (result[i].Tipo) {
-        case STRING:
-            value = *static_cast<std::string*>(result[i].Value);
-            break;
-        case INTEGER:
-            value = std::to_string(*static_cast<int*>(result[i].Value));
-            break;
-        case FLOAT:
-            value = std::to_string(*static_cast<float*>(result[i].Value));
-            break;
-        default:
-            value = "NULL";
-            break;  
-        }
-        data += value;
-        if (i != result.size() - 1) {
-            data += ",";
-        }
-    }
-    data += "]";
-    tree->changeSymbol(vec_sym.Id,data);
+    std::string nuevo_n = gen->newTemp();
+    gen->AddAssign(nuevo_n,std::to_string(new_size));
+
+    std::string temp = gen->newTempChar(new_size);
+    std::string nuevo_vector = gen->newTemp();
+    gen->AddAssign("int* " + nuevo_vector, "(int*) " + temp);
+
+    std::string nuevo_elem = gen->newTemp();
+    val = Valor->ejecutar(env,tree,gen);
+    gen->AddAssign(nuevo_elem,val.Value);
+
+    std::string i = gen->newTemp();
+    gen->AddAssign(i,"0");
+
+    std::string label1 = gen->newLabel();
+    std::string label2 = gen->newLabel();
+    gen->AddLabel(label1);
+    gen->AddIf(i,std::to_string(vec_size),">=",label2);
+    gen->AddAssign(nuevo_vector + "[(int) " + i + "]", vec_val + "[(int) " + i + "]");
+    gen->AddExpression(i,i,"1","+");
+    gen->AddGoto(label1);
+
+    gen->AddLabel(label2);
+    gen->AddAssign(nuevo_vector + "["+ std::to_string(vec_size)+"]",nuevo_elem);
+    gen->AddAssign(vec_val,nuevo_vector);
+
+
+    symbol newVar = env->AssignVariable(Line, Col, Id, VECTOR, env, tree);
+    symbol Var = env->AssignVector(Line, Col, Id, VECTOR, env, tree);
+    tree->SizeVector.at(index) = new_size;
+    
+    // Crear el nuevo elemento que se agregará al final
+    symbol sym (0, 0, Id, VECTOR, 0);
+    std::pair<std::string, symbol> nuevo_elemento(nuevo_vector, sym);
+
+    // Obtener la última clave existente en el mapa
+    std::string ultima_clave = env->TablaVector.rbegin()->first;
+
+    // Agregar 1 a la última letra de la última clave para obtener una clave mayor
+    char ultima_letra = ultima_clave.back();
+    ultima_letra++;
+    std::string nueva_clave = ultima_clave + ultima_letra;
+
+    // Agregar el nuevo elemento al mapa con la nueva clave
+    env->TablaVector.insert(std::make_pair(nueva_clave, sym));
+
+    // Eliminar el primer elemento del string
+    std::string temp_str = tree->SaveVector.at(index);
+    temp_str.pop_back();
+
+    tree->StackVector.push_back(nuevo_vector);
+    tree->SizeVector.push_back(new_size);
+
+    // Agregar un nuevo elemento al inicio del string
+    std::string new_element = "," + val.Value + "]";
+    temp_str.insert(temp_str.end(), new_element.begin(), new_element.end());
+    tree->SaveVector.at(index) = temp_str;
+    std::string data = tree->SaveVector.at(index);
+    tree->changeSymbol(Id,data);   
 }
 

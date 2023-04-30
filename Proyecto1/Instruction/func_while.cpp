@@ -1,70 +1,61 @@
+
 #include "func_while.hpp"
-#include "Environment/environment.hpp"
-func_while::func_while(int line, int col, expression *sentence,instruction *block)
+
+func_while::func_while(int line, int col, expression *condition, instruction *block)
 {
     Line = line;
     Col = col;
-    Sentence = sentence;
+    Condition = condition;
     Block = block;
 }
 
-void func_while::ejecutar(environment *env, ast *tree)
+void func_while::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
     env->Inside_While = true;
-    bool condicion = false;
-    int contador = 0; // Inicializar el contador en cero
-    symbol sym = Sentence->ejecutar(env, tree);
-
-    if (sym.Tipo != BOOL) {
+    gen->AddComment("generando instruccion while");
+    value condicion;
+    //etiqueta de retorno
+    std::string RetLvl = gen->newLabel();
+    gen->AddLabel(RetLvl);
+    //ejecutando expresion
+    condicion = Condition->ejecutar(env, tree, gen);
+    if (condicion.Tipo != BOOL) {
         std::string msg = "invalid type for while loop condition. Expected boolean.";
         tree->addError(msg, Line, Col);
         return;
-    } else {
-        condicion = *static_cast<bool*>(sym.Value);
     }
 
-    // Usar la variable booleana "condicion" en la condición del ciclo while
-    while (condicion) {
-        environment *AnteriorEnv = env;
-        environment *WhileEnv = new environment(env, "WHILE");
-
-        Block->ejecutar(WhileEnv, tree);
-        contador++;
-        if (contador >= 50) {
-            env = AnteriorEnv; // Volvemos al ambiente anterior
-            delete WhileEnv;
-            break;
-        }
-        if(tree->IfReturn){
-            tree->IfReturn = false;
-        }
-        if(env->Break_flag){
-            env->Break_flag = false;
-            tree->IfReturn = false;
-            env = AnteriorEnv; // Volvemos al ambiente anterior
-            delete WhileEnv;
-            break;
-        }
-        if(env->Continue_flag){
-            env->Continue_flag = false;
-            tree->IfReturn = false;
-            env = AnteriorEnv; // Volvemos al ambiente anterior
-            delete WhileEnv;
-            continue;
-        }
-        env = AnteriorEnv; // Volvemos al ambiente anterior
-        delete WhileEnv;
-        // Volver a evaluar la expresión de la condición al final de cada iteración
-        sym = Sentence->ejecutar(env, tree);
-        if (sym.Tipo != BOOL) {
-            std::string msg = "invalid type for while loop condition. Expected boolean.";
-            tree->addError(msg, Line, Col);
-            break;
-        } else {
-            condicion = *static_cast<bool*>(sym.Value);
-        }
+    //agregando etiquetas verdaderas
+    for(int i=0; i < condicion.TrueLabel.size(); i++)
+    {
+        gen->AddLabel(condicion.TrueLabel[i]);
     }
+    //En caso se encuentre un continue o break
+    std::string continue_label = gen->newLabel();
+    std::string break_label = gen->newLabel();
+    tree->BreakLabel = break_label;
+    tree->ContinueLabel = continue_label;
+
+    //ejecutando instrucciones
+    Block->ejecutar(env, tree, gen);
+    
+    //retorno
+    if(env->Continue_flag){
+        gen->AddLabel(continue_label);
+        env->Continue_flag = false;
+    }
+    
+    gen->AddGoto(RetLvl);
+    if(env->Break_flag){
+        gen->AddLabel(break_label);
+        env->Break_flag = false;
+    }
+    
+    //agregando etiquetas falsas
+    for(int i=0; i < condicion.FalseLabel.size(); i++)
+    {
+        gen->AddLabel(condicion.FalseLabel[i]);
+    }
+
     env->Inside_While = false;
-
 }
-

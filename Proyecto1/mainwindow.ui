@@ -6,167 +6,107 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
-    <height>459</height>
+    <width>800</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>miniOLcIDE</string>
+   <string>MiniOLC v1.2</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextEdit" name="textEdit">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>10</y>
-      <width>771</width>
-      <height>241</height>
+      <y>20</y>
+      <width>311</width>
+      <height>331</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QTextEdit" name="textEdit_2">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>90</y>
-      <width>91</width>
-      <height>24</height>
+      <x>340</x>
+      <y>20</y>
+      <width>311</width>
+      <height>331</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>EJECUTAR</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>140</y>
-      <width>91</width>
-      <height>24</height>
+      <x>670</x>
+      <y>180</y>
+      <width>121</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>MOSTRAR AST</string>
+     <string>COMPILAR</string>
     </property>
    </widget>
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>270</y>
-      <width>781</width>
-      <height>131</height>
+      <x>20</x>
+      <y>360</y>
+      <width>771</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="tab_3">
+    <widget class="QWidget" name="tab">
      <attribute name="title">
       <string>Consola</string>
-     </attribute>
-     <widget class="QTextEdit" name="textEdit_2">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>771</width>
-        <height>101</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_4">
-     <attribute name="title">
-      <string>Errores</string>
      </attribute>
      <widget class="QTextEdit" name="textEdit_3">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>771</width>
-        <height>101</height>
+        <width>761</width>
+        <height>81</height>
        </rect>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="tab">
+    <widget class="QWidget" name="tab_2">
      <attribute name="title">
-      <string>Simbolos</string>
+      <string>Errores</string>
      </attribute>
      <widget class="QTextEdit" name="textEdit_4">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>771</width>
-        <height>101</height>
+        <width>761</width>
+        <height>81</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>Simbolos</string>
+     </attribute>
+     <widget class="QTextEdit" name="textEdit_5">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>81</height>
        </rect>
       </property>
      </widget>
     </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>900</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuArchivo">
-    <property name="title">
-     <string>Archivo</string>
-    </property>
-    <addaction name="actionAbrir_Archivo"/>
-    <addaction name="actionGuardar_Archivo"/>
-    <addaction name="actionGuardar_como"/>
-   </widget>
-   <widget class="QMenu" name="menuEditar">
-    <property name="title">
-     <string>Editar</string>
-    </property>
-    <addaction name="actionEditor_de_c_digo"/>
-   </widget>
-   <widget class="QMenu" name="menuAcerca_de">
-    <property name="title">
-     <string>Acerca de</string>
-    </property>
-   </widget>
-   <addaction name="menuArchivo"/>
-   <addaction name="menuEditar"/>
-   <addaction name="menuAcerca_de"/>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionAbrir_Archivo">
-   <property name="text">
-    <string>Abrir Archivo</string>
-   </property>
-  </action>
-  <action name="actionGuardar_Archivo">
-   <property name="text">
-    <string>Guardar Archivo</string>
-   </property>
-  </action>
-  <action name="actionGuardar_como">
-   <property name="text">
-    <string>Guardar como</string>
-   </property>
-  </action>
-  <action name="actionEditor_de_c_digo">
-   <property name="text">
-    <string>Editor de código</string>
-   </property>
-  </action>
-  <action name="actionReporte_de_errores">
-   <property name="text">
-    <string>Reporte de errores</string>
-   </property>
-  </action>
  </widget>
  <resources/>
  <connections/>

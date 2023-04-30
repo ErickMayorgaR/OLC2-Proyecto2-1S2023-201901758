@@ -7,14 +7,17 @@ func_size::func_size(int line, int col, std::string id)
     Id = id;
 }
 
-symbol func_size::ejecutar(environment *env, ast *tree)
+value func_size::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym (Line,Col,"",NULO,nullptr);
-    symbol vec_sym = env->GetVariable(Line, Col, Id, env, tree);
-    QVector<symbol> *Vec = (QVector<symbol>*)vec_sym.Value;
-    QVector<symbol>& result = *Vec;
-    sym = symbol(Line, Col, "", INTEGER, new int(static_cast<int>(result.size())));
-    return sym;
+    value val;
+    auto it = env->TablaVector.find(Id);
+    int index = std::distance(env->TablaVector.begin(), it);
+    std::string vec_val = tree->StackVector.at(index);
+    int vec_size = tree->SizeVector.at(index);
+
+    std::string sizeVec = std::to_string(vec_size);
+    val = value(sizeVec,false,INTEGER);
+    return val;
 }
 
 

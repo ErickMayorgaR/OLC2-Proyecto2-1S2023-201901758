@@ -1,26 +1,28 @@
 #include "vector_access.hpp"
 
-vector_access::vector_access(int line, int col, expression *vector, expression *index)
+vector_access::vector_access(int line, int col, expression *array, expression *index)
 {
     Line = line;
     Col = col;
-    Vector = vector;
+    Array = array;
     Index = index;
 }
 
-symbol vector_access::ejecutar(environment *env, ast *tree)
+value vector_access::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym (Line,Col,"",NULO,nullptr);
-    symbol symVec = Vector->ejecutar(env, tree);
-    symbol symInd = Index->ejecutar(env, tree);
-    //validando tipo array
-    if(symVec.Tipo == VECTOR && symInd.Tipo == INTEGER)
-    {
-        QVector<symbol> *Vec = (QVector<symbol>*)symVec.Value;
-        QVector<symbol> result = *Vec;
-        int *val = (int *)symInd.Value;
-        sym = result[*val];
+    value val;
+    value Id = Array->ejecutar(env,tree,gen); //Id.Value -> Id del vector (temp donde esta guardado)
+    value val_index = Index->ejecutar(env,tree,gen);
+    
+    std::string temp = gen->newTemp();
+    gen->AddAssign(temp,Id.Value + "[(int) " + val_index.Value + "]");
+
+    if(!tree->InsideAssign){
+        val = value(temp, true, INTEGER);
+    } else{
+        val = value(temp, true, VECTOR);
     }
 
-    return sym;
+    tree->IndexAccess = tree->Index;
+    return val;
 }

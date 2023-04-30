@@ -8,13 +8,13 @@ public:
     int Line;
     int Col;
     TipoDato Tipo;
-    std::string StrVal;
-    int NumVal;
-    float FloatVal;
-    bool BoolVal;
+    std::string strVal;
+    int numVal;
+    float floatVal;
+    bool boolVal;
 
-    primitive(int,int,TipoDato,std::string,int,float,bool);
-    symbol ejecutar(environment *env, ast *tree) override;
+    primitive(int, int, TipoDato, std::string, int, float, bool);
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // PRIMITIVE_HPP

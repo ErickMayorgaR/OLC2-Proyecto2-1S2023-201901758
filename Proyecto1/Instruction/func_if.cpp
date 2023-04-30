@@ -1,5 +1,5 @@
 #include "func_if.hpp"
-#include "Environment/environment.hpp"
+
 func_if::func_if(int line, int col, expression *condition, instruction *block, instruction *elseifblock, instruction *elseblock)
 {
     Line = line;
@@ -10,56 +10,49 @@ func_if::func_if(int line, int col, expression *condition, instruction *block, i
     ElseBlock = elseblock;
 }
 
-void func_if::ejecutar(environment *env, ast *tree)
+void func_if::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-
-    symbol sym = Condition->ejecutar(env, tree);
-    //creando entorno if
-    environment *AnteriorEnv = env;
-    environment *IfEnv = new environment(env,"IF");
-    //creando entorno if
-    if(sym.Tipo == BOOL)
+    gen->AddComment("generando instruccion if");
+    value condicion = Condition->ejecutar(env, tree, gen);
+    if(condicion.Tipo == BOOL)
     {
-        //si se cumple el if
-        bool *val = (bool *)sym.Value;
-        if(*val)
+        std::string newLabel = gen->newLabel(); //etiqueta de salida
+        //agregando etiquetas verdaderas
+        for(int i=0; i < condicion.TrueLabel.size(); i++)
         {
-            //ejecuta el bloque
-            Block->ejecutar(IfEnv, tree);
-            //valida si es else if
-            if(tree->ElseIfFlag)
-            {
-                tree->ElseIfFlag = false;
-                tree->IfReturn = true;
-            }
-            env = AnteriorEnv; // Volvemos al ambiente anterior
-            delete IfEnv;
-            return;
+            gen->AddLabel(condicion.TrueLabel[i]);
         }
-        //si no se cumple y existe else if
+        //instrucción del IF
+        Block->ejecutar(env, tree, gen);
+        //etiqueta salida
+        if(!tree->ElseIfFlag){
+            gen->AddGoto(newLabel);
+        }
+        else{
+            gen->AddGoto(tree->ElseIfLabel);
+        }
+        //agregando etiquetas falsas
+        for(int i=0; i < condicion.FalseLabel.size(); i++)
+        {
+            gen->AddLabel(condicion.FalseLabel[i]);
+        }
+        
+        //instrucción del else if
         if(ElseIfBlock != nullptr)
         {
-            //flag de else if
             tree->ElseIfFlag = true;
-            tree->IfReturn = false;
-            ElseIfBlock->ejecutar(IfEnv, tree);
-            //validación return
-            if(tree->IfReturn)
-            {
-                tree->ElseIfFlag = false;
-                env = AnteriorEnv; // Volvemos al ambiente anterior
-                delete IfEnv;
-                return;
-            }
+            tree->ElseIfLabel = newLabel;
+            ElseIfBlock->ejecutar(env, tree, gen);
             tree->ElseIfFlag = false;
         }
-        //si aun no se cumple y existe else
+        
+        //instrucción del else
         if(ElseBlock != nullptr)
         {
-            ElseBlock->ejecutar(IfEnv, tree);
-            tree->ElseIfFlag = false;
+            ElseBlock->ejecutar(env, tree, gen);
         }
-
+        //etiqueta salida
+        gen->AddLabel(newLabel);
     }
     else
     {
@@ -67,6 +60,4 @@ void func_if::ejecutar(environment *env, ast *tree)
         std::string msg = "invalid combination, incorrect type for if";
         tree->addError(msg,Line,Col);
     }
-    env = AnteriorEnv; // Volvemos al ambiente anterior
-    delete IfEnv;
 }

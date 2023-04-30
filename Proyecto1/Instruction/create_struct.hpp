@@ -12,7 +12,7 @@ public:
     std::string Id;
     list_expression *ExpList;
     create_struct(int,int, std::string, std::string, list_expression*);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // CREATE_STRUCT_HPP

@@ -13,7 +13,7 @@ public:
     expression *Idafter;
 
     assign_vector(int line, int col,std::string id, expression *index,expression *idafter);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // ASSIGN_VECTOR_HPP

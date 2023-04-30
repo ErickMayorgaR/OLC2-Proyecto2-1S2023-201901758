@@ -11,7 +11,7 @@ public:
     expression *Valor;
 
     func_iota(int line, int col, expression *valor);
-    symbol ejecutar(environment *env, ast *tree) override;
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_IOTA_HPP

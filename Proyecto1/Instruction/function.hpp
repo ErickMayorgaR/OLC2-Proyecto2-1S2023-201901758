@@ -15,7 +15,7 @@ public:
     list_instruction *InstList;
 
     function(int,int, TipoDato, std::string, map_struct_dec*, list_instruction*);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNCTION_HPP

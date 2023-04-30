@@ -10,7 +10,7 @@ public:
     int Col;
 
     func_continue(int line, int col);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_CONTINUE_HPP

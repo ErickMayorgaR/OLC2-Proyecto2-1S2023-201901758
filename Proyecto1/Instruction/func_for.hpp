@@ -14,7 +14,7 @@ public:
     instruction *Block;
 
     func_for(int line, int col, instruction *sentence1, expression *comparative, expression *sentence2, instruction *block);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_FOR_HPP

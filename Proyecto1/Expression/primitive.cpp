@@ -1,33 +1,67 @@
 #include "primitive.hpp"
 
-primitive::primitive(int line, int col, TipoDato tipo, std::string StrVal, int NumVal, float FloatVal, bool BoolVal){
-    this->Line = line;
-    this->Col = col;
-    this->Tipo = tipo;
-    this->StrVal = StrVal;
-    this->NumVal = NumVal;
-    this->FloatVal = FloatVal;
-    this->BoolVal = BoolVal;
+primitive::primitive(int line, int col, TipoDato tipo, std::string strval, int numval, float floatval, bool boolval){
+    Line = line;
+    Col = col;
+    Tipo = tipo;
+    strVal = strval;
+    numVal = numval;
+    floatVal = floatval;
+    boolVal = boolval;
 }
 
-symbol primitive::ejecutar(environment *env, ast* tree)
+value primitive::ejecutar(environment *env, ast* tree, generator_code *gen)
 {
-    symbol sym (Line,Col,"",NULO,nullptr);
-    switch (Tipo) {
-    case INTEGER:
-        sym = symbol(Line,Col,"",Tipo,&NumVal);
-        break;
-    case STRING:
-        sym = symbol(Line,Col,"",Tipo,&StrVal);
-        break;
-    case BOOL:
-        sym = symbol(Line,Col,"",Tipo,&BoolVal);
-        break;
-    case FLOAT:
-        sym = symbol(Line,Col,"",Tipo,&FloatVal);
-        break;
-    default:
-        break;
+    value val;
+
+    if(Tipo == INTEGER)
+    {
+       val = value(std::to_string(numVal),false,Tipo);    
+       tree->Index = std::to_string(numVal);
     }
-    return sym;
+    else if(Tipo == FLOAT)
+    {
+       val = value(std::to_string(floatVal),false,Tipo);
+    }
+    else if(Tipo == NULO)
+    {
+       val = value("",false,Tipo);
+    }
+    else if(Tipo == STRING)
+    {
+       //nuevo temporal
+       std::string newTemp = gen->newTemp();
+       //igualar a Heap Pointer
+       gen->AddAssign(newTemp, "H");
+       //recorrer cadena
+       for (int i = 0; i < strVal.length(); i++) {
+           //se agrega ascii a heap
+           gen->AddSetHeap("(int)H", std::to_string(int(strVal[i])));
+           //suma heap pointer
+           gen->AddExpression("H", "H", "1", "+");
+       }
+       //caracteres de escape
+       gen->AddSetHeap("(int)H", "-1");
+       gen->AddExpression("H", "H", "1", "+");
+       gen->AddEnter();
+       val = value(newTemp,true,Tipo);
+    }
+    else if(Tipo == BOOL)
+    {
+       gen->AddComment("Primitivo bool");
+       std::string trueLabel = gen->newLabel();
+       std::string falseLabel = gen->newLabel();
+       if(boolVal)
+       {
+           gen->AddGoto(trueLabel);
+       }
+       else
+       {
+           gen->AddGoto(falseLabel);
+       }
+       val = value("",false, Tipo);
+       val.TrueLabel.append(trueLabel);
+       val.FalseLabel.append(falseLabel);
+    }
+    return val;
 }

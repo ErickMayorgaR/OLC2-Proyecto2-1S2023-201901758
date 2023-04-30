@@ -34,11 +34,11 @@ Por el contrario, si encuentra algún tipo de error semántico o sintáctico mue
 
 Al encontrar un error este lo almacena en la tabla de errores. Estos se encuentran clasificados en errores semánticos y sintácticos, además brinda información importante como la línea y columna en el archivo de entrada en donde se encuentra el error y el mensaje descriptivo del error. 
 ### Tabla de errores
-<img src="./Imagenes/ErrorTableQT.png" alt="drawing"/>
+<img src="./Imagenes/ErrorTable.png" alt="drawing"/>
 
 Si logra ejecutar correctamente el programa, almacena todas las variables guardadas y las muestra en la tabla de símbolos. 
 ### Tabla de símbolos
-<img src="./Imagenes/SymbolTableQT.png" alt="drawing"/>
+<img src="./Imagenes/SymbolTable.png" alt="drawing"/>
 
 Además, si se desea observar el árbol AST que describe el programa ejecutado se debe presionar el botón "Mostar AST" para que lo muestre en una ventana externa.
 ### Botón "Mostrar AST"

@@ -8,11 +8,11 @@ class func_while : public instruction
 public:
     int Line;
     int Col;
-    expression *Sentence;
+    expression *Condition;
     instruction *Block;
-    
-    func_while(int line, int col,expression *sentence,instruction *block);
-    void ejecutar(environment *env, ast *tree) override;
+
+    func_while(int line, int col, expression *condition, instruction *block);
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_WHILE_HPP

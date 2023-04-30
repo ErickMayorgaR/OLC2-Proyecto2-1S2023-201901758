@@ -430,24 +430,24 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[179] =
     {   0,
-        0,    0,    0,    0,   70,   68,    9,    8,   18,   68,
+        0,    0,    0,    0,   70,   68,    9,    8,   24,   68,
        14,   68,   29,   30,   12,   10,   28,   11,   27,   13,
-       66,   25,   22,   26,   21,   65,   65,   33,   34,   65,
+       66,   25,   17,   26,   16,   65,   65,   33,   34,   65,
        65,   65,   65,   65,   65,   65,   65,   65,   65,   65,
        65,   65,   65,   31,   68,   32,    3,    4,    5,   20,
-        0,   67,    0,   16,   15,    1,    7,    0,   66,   24,
-       19,   23,   65,   65,   65,   65,   65,   65,   65,   65,
+        0,   67,    0,   22,   15,    1,    7,    0,   66,   19,
+       21,   18,   65,   65,   65,   65,   65,   65,   65,   65,
        65,   65,   65,   38,   65,   65,   65,   65,   65,   65,
-       65,   65,   65,   65,   65,   65,   65,   65,   17,    3,
+       65,   65,   65,   65,   65,   65,   65,   65,   23,    3,
         6,    2,    7,   66,   65,   65,   65,   65,   65,   65,
 
        65,   65,   40,   53,   57,   65,   65,   65,   65,   65,
        65,   65,   65,   65,   65,   65,   65,   65,   65,   65,
-       48,   45,   44,   60,   65,   65,   39,   65,   65,   46,
-       37,   49,   65,   51,   65,   65,   65,   65,   55,   65,
-       65,   62,   65,   36,   65,   42,   65,   63,   58,   65,
-       65,   65,   65,   65,   65,   65,   65,   41,   65,   50,
-       35,   65,   65,   54,   47,   59,   61,   64,   65,   65,
+       51,   46,   45,   60,   65,   65,   39,   65,   65,   47,
+       37,   48,   65,   50,   65,   65,   65,   65,   55,   65,
+       65,   61,   65,   36,   65,   42,   65,   62,   58,   65,
+       65,   65,   65,   65,   65,   65,   65,   41,   65,   49,
+       35,   65,   65,   54,   44,   59,   63,   64,   65,   65,
        65,   43,   65,   65,   52,   65,   56,    0
     } ;
 
@@ -607,13 +607,13 @@ static const flex_int16_t yy_chk[258] =
 
 static const flex_int16_t yy_rule_linenum[69] =
     {   0,
-       51,   53,   54,   55,   56,   57,   59,   60,   61,   67,
-       68,   69,   70,   71,   72,   75,   76,   77,   80,   81,
-       82,   83,   84,   85,   88,   89,   90,   91,   93,   94,
-       95,   96,   97,   98,  101,  102,  103,  104,  105,  106,
-      107,  108,  109,  110,  111,  112,  113,  114,  115,  116,
-      117,  120,  121,  122,  123,  124,  127,  128,  129,  130,
-      131,  132,  133,  134,  136,  137,  138,  140
+       55,   57,   58,   59,   60,   61,   63,   64,   65,   72,
+       73,   74,   75,   76,   77,   79,   80,   81,   82,   83,
+       84,   86,   87,   88,   90,   91,   92,   93,   95,   96,
+       97,   98,   99,  100,  104,  105,  106,  107,  108,  109,
+      110,  111,  112,  113,  114,  115,  116,  117,  118,  119,
+      120,  123,  124,  125,  126,  127,  130,  131,  132,  133,
+      134,  135,  136,  137,  139,  140,  141,  143
     } ;
 
 /* The intent behind this definition is that it'll catch
@@ -625,33 +625,37 @@ static const flex_int16_t yy_rule_linenum[69] =
 #define YY_RESTORE_YY_MORE_OFFSET
 #line 1 "lexer.l"
 /* se convierte con: flex --verbose lexer.l*/
+/* opcciones para encapsulamiento */
 #define YY_NO_INPUT 1
-/* %option outfile="lexer.cpp" */
+/*%option outfile="lexer.cpp" */
 /* %option header-file="lexer.hpp"*/
-#line 8 "lexer.l"
+#line 9 "lexer.l"
     #include <iostream>
+    // definicion del tipo de funcion del retorno de simbolos
+    // yy::Parser ¿Por qué?
+    // yy es el namespace de parser
+    // Parser es el nombre de la clase que lo envuelve (wapper)
     #define YY_DECL yy::Parser::symbol_type yylex(yyscan_t yyscanner, yy::location& loc, class OCL2Calc::ParserCtx & ctx)
     // definición de acciones
     #define YY_USER_ACTION loc.columns(yyleng);
-
     // defincion de caracter EOF
     #define yyterminate() return Parser::make_END(loc)
-    
     //se incrusta el parser
     #include "parser.hpp"
+
 
     using namespace yy;
     //typedefs (abreviaturas DefLarga DefCorta) para definiciones de tokens
     typedef yy::Parser::token token;
     typedef yy::Parser::token_type token_type;
+/// código adicinoal aquí
 
-
-#line 649 "lex.yy.c"
+#line 653 "lex.yy.c"
 /* ============== INICIO DE SCANNER ==========  */
 /* expresiones regulares */
 /* Cambiar al estado IN_COMMENT */
  
-#line 654 "lex.yy.c"
+#line 658 "lex.yy.c"
 
 #define INITIAL 0
 #define IN_COMMENT 1
@@ -977,11 +981,11 @@ YY_DECL
 
 	{
 /* %% [7.0] user's declarations go here */
-#line 40 "lexer.l"
-
-
-
 #line 44 "lexer.l"
+
+
+
+#line 48 "lexer.l"
 // inicia la lectura
     loc.step();
 
@@ -989,7 +993,7 @@ YY_DECL
     /* inicia la defincion de tokens   */
 
     /* caracteres ignorados */
-#line 992 "lex.yy.c"
+#line 996 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1067,368 +1071,366 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 51 "lexer.l"
+#line 55 "lexer.l"
 { BEGIN(IN_COMMENT); } /* Cambiar al estado IN_COMMENT */
 	YY_BREAK
 
 case 2:
 YY_RULE_SETUP
-#line 53 "lexer.l"
+#line 57 "lexer.l"
 { BEGIN(INITIAL); }    /* Volver al estado inicial */
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 54 "lexer.l"
+#line 58 "lexer.l"
 { }                    /* Ignorar todo lo demás */
 	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 59 "lexer.l"
 { loc.lines(yyleng);loc.step(); }        /* Contar las nuevas líneas */
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 56 "lexer.l"
+#line 60 "lexer.l"
 { /* Ignorar */ }      /* Ignorar los asteriscos */
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 57 "lexer.l"
+#line 61 "lexer.l"
 { /* Ignorar */ }      /* Ignorar más de un asterisco */
 	YY_BREAK
 
 case 7:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 63 "lexer.l"
 ; /* comentarios de una linea */
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 60 "lexer.l"
+#line 64 "lexer.l"
 {loc.lines(yyleng);loc.step();}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 61 "lexer.l"
+#line 65 "lexer.l"
 {loc.step();} /* caracteres en blanco */                
 	YY_BREAK
 /* Lexemas */
 /* defincion moderna
         token::ID ID sin caracteres especiales
     */
+/* defincion clásica / para caracteres especiales */
 case 10:
 YY_RULE_SETUP
-#line 67 "lexer.l"
+#line 72 "lexer.l"
 return Parser::symbol_type( token::SUMA, loc );
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 68 "lexer.l"
+#line 73 "lexer.l"
 return Parser::symbol_type( token::MENOS, loc );
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 69 "lexer.l"
+#line 74 "lexer.l"
 return Parser::symbol_type( token::POR, loc );
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 70 "lexer.l"
+#line 75 "lexer.l"
 return Parser::symbol_type( token::DIV, loc );
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 71 "lexer.l"
+#line 76 "lexer.l"
 return Parser::symbol_type( token::MOD, loc );
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 72 "lexer.l"
+#line 77 "lexer.l"
 return Parser::symbol_type( token::INC, loc );
 	YY_BREAK
-/* Caracteres para operaciones lógicas */
 case 16:
 YY_RULE_SETUP
-#line 75 "lexer.l"
-return Parser::symbol_type(token::AND, loc);
+#line 79 "lexer.l"
+return Parser::symbol_type( token::MAY, loc );
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 76 "lexer.l"
-return Parser::symbol_type(token::OR, loc);
+#line 80 "lexer.l"
+return Parser::symbol_type( token::MEN, loc );
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 77 "lexer.l"
-return Parser::symbol_type(token::NOT, loc);
+#line 81 "lexer.l"
+return Parser::symbol_type( token::MAY_IG, loc );
 	YY_BREAK
-/*Caracteres para operaciones comparativas */
 case 19:
 YY_RULE_SETUP
-#line 80 "lexer.l"
-return Parser::symbol_type(token::EQU, loc); //Equal
+#line 82 "lexer.l"
+return Parser::symbol_type( token::MEN_IG, loc );
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 81 "lexer.l"
-return Parser::symbol_type(token::DIFF, loc);//Not Equal 
+#line 83 "lexer.l"
+return Parser::symbol_type( token::DIF, loc );
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 82 "lexer.l"
-return Parser::symbol_type(token::MAYOR, loc);
+#line 84 "lexer.l"
+return Parser::symbol_type( token::IG, loc );
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 83 "lexer.l"
-return Parser::symbol_type(token::MENOR, loc);
+#line 86 "lexer.l"
+return Parser::symbol_type( token::AND, loc );
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 84 "lexer.l"
-return Parser::symbol_type(token::MAYEQU, loc);
+#line 87 "lexer.l"
+return Parser::symbol_type( token::OR, loc );
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 85 "lexer.l"
-return Parser::symbol_type(token::MENEQU, loc);
+#line 88 "lexer.l"
+return Parser::symbol_type(token::NOT, loc);
 	YY_BREAK
-/* defincion clásica / para caracteres especiales */
 case 25:
 YY_RULE_SETUP
-#line 88 "lexer.l"
+#line 90 "lexer.l"
 return Parser::symbol_type( token_type(';'), loc );
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 89 "lexer.l"
-return Parser::symbol_type(token_type('='), loc); //PARA ASIGNACION DE VARIABLES
+#line 91 "lexer.l"
+return Parser::symbol_type( token_type('='), loc );
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 90 "lexer.l"
+#line 92 "lexer.l"
 return Parser::symbol_type( token_type('.'), loc );
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 91 "lexer.l"
+#line 93 "lexer.l"
 return Parser::symbol_type( token_type(','), loc );
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 93 "lexer.l"
+#line 95 "lexer.l"
 return Parser::symbol_type( token::PARA, loc );
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 94 "lexer.l"
+#line 96 "lexer.l"
 return Parser::symbol_type( token::PARC, loc );
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 95 "lexer.l"
+#line 97 "lexer.l"
 return Parser::symbol_type( token::LLAVA, loc );
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 96 "lexer.l"
+#line 98 "lexer.l"
 return Parser::symbol_type( token::LLAVC, loc );
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 97 "lexer.l"
+#line 99 "lexer.l"
 return Parser::symbol_type( token::CORA, loc );
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 98 "lexer.l"
+#line 100 "lexer.l"
 return Parser::symbol_type( token::CORC, loc );
 	YY_BREAK
 /* TOKENS  */
 case 35:
 YY_RULE_SETUP
-#line 101 "lexer.l"
+#line 104 "lexer.l"
 return Parser::symbol_type( token::PRINTF, loc );
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 102 "lexer.l"
+#line 105 "lexer.l"
 return Parser::symbol_type( token::VOID, loc );
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 103 "lexer.l"
+#line 106 "lexer.l"
 return Parser::symbol_type( token::RMAIN, loc );
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 104 "lexer.l"
+#line 107 "lexer.l"
 return Parser::symbol_type( token::RIF, loc );
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 105 "lexer.l"
+#line 108 "lexer.l"
 return Parser::symbol_type( token::RELSE, loc );
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 106 "lexer.l"
+#line 109 "lexer.l"
 return Parser::symbol_type( token::RFOR, loc );
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 107 "lexer.l"
+#line 110 "lexer.l"
 return Parser::symbol_type( token::RWHILE, loc );
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 108 "lexer.l"
+#line 111 "lexer.l"
 return Parser::symbol_type( token::RBREAK, loc );
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 109 "lexer.l"
+#line 112 "lexer.l"
 return Parser::symbol_type( token::RCONTINUE, loc );
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 110 "lexer.l"
-return Parser::symbol_type( token::RATOI, loc );
-	YY_BREAK
-case 45:
-YY_RULE_SETUP
-#line 111 "lexer.l"
-return Parser::symbol_type( token::RATOF, loc );
-	YY_BREAK
-case 46:
-YY_RULE_SETUP
-#line 112 "lexer.l"
-return Parser::symbol_type( token::RIOTA, loc );
-	YY_BREAK
-case 47:
-YY_RULE_SETUP
 #line 113 "lexer.l"
 return Parser::symbol_type( token::RRETURN, loc );
 	YY_BREAK
-case 48:
+case 45:
 YY_RULE_SETUP
 #line 114 "lexer.l"
-return Parser::symbol_type( token::NLL, loc);
+return Parser::symbol_type( token::RATOI, loc );
+	YY_BREAK
+case 46:
+YY_RULE_SETUP
+#line 115 "lexer.l"
+return Parser::symbol_type( token::RATOF, loc );
+	YY_BREAK
+case 47:
+YY_RULE_SETUP
+#line 116 "lexer.l"
+return Parser::symbol_type( token::RIOTA, loc );
+	YY_BREAK
+case 48:
+YY_RULE_SETUP
+#line 117 "lexer.l"
+return Parser::symbol_type( token::RMEAN, loc );
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 115 "lexer.l"
-return Parser::symbol_type( token::RMEAN, loc );
+#line 118 "lexer.l"
+return Parser::symbol_type( token::RMEDIAN, loc );
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 116 "lexer.l"
-return Parser::symbol_type( token::RMEDIAN, loc );
+#line 119 "lexer.l"
+return Parser::symbol_type( token::RMODE, loc );
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 117 "lexer.l"
-return Parser::symbol_type( token::RMODE, loc );
+#line 120 "lexer.l"
+return Parser::symbol_type( token::NLL, loc);
 	YY_BREAK
 /* VECTOR FUNCTIONS  */
 case 52:
 YY_RULE_SETUP
-#line 120 "lexer.l"
+#line 123 "lexer.l"
 return Parser::symbol_type( token::VPBACK, loc );
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 121 "lexer.l"
+#line 124 "lexer.l"
 return Parser::symbol_type( token::VGET, loc );
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 122 "lexer.l"
+#line 125 "lexer.l"
 return Parser::symbol_type( token::VREMOVE, loc );
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 123 "lexer.l"
+#line 126 "lexer.l"
 return Parser::symbol_type( token::VSIZE, loc );
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 124 "lexer.l"
+#line 127 "lexer.l"
 return Parser::symbol_type( token::VPFRONT, loc );
 	YY_BREAK
 /* TIPOS DE DATOS */
 case 57:
 YY_RULE_SETUP
-#line 127 "lexer.l"
+#line 130 "lexer.l"
 return Parser::symbol_type( token::INT, loc );
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 128 "lexer.l"
+#line 131 "lexer.l"
 return Parser::symbol_type( token::FLOAT, loc );
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 129 "lexer.l"
+#line 132 "lexer.l"
 return Parser::symbol_type( token::TSTRING, loc );
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 130 "lexer.l"
+#line 133 "lexer.l"
 return Parser::symbol_type( token::BOOLEAN, loc );
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 131 "lexer.l"
-return Parser::symbol_type( token::RSTRUCT, loc );
+#line 134 "lexer.l"
+return Parser::symbol_type( token::RTRUE, loc );
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 132 "lexer.l"
-return Parser::symbol_type( token::BOOLTRUE, loc );
+#line 135 "lexer.l"
+return Parser::symbol_type( token::RFALSE, loc );
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 133 "lexer.l"
-return Parser::symbol_type( token::BOOLFALSE, loc );
+#line 136 "lexer.l"
+return Parser::symbol_type( token::STRUCT, loc );
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 134 "lexer.l"
+#line 137 "lexer.l"
 return Parser::symbol_type(token::RVECTOR, loc);
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 136 "lexer.l"
+#line 139 "lexer.l"
 return Parser::make_ID(yytext, loc);
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 137 "lexer.l"
+#line 140 "lexer.l"
 return Parser::make_NUMERO(yytext, loc);
 	YY_BREAK
 case 67:
 /* rule 67 can match eol */
 YY_RULE_SETUP
-#line 138 "lexer.l"
+#line 141 "lexer.l"
 return Parser::make_STRING (yytext, loc);
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 140 "lexer.l"
+#line 143 "lexer.l"
 {std::cerr<<loc <<": "<<"error token no esperado"<<  std::endl; }
 	YY_BREAK
 /*si no se usa yyterminate() se agrega lo siguiente*/
 /* <<EOF>> {return Parser::make_END(loc);} */
 case 69:
 YY_RULE_SETUP
-#line 145 "lexer.l"
+#line 150 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1431 "lex.yy.c"
+#line 1433 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_COMMENT):
 	yyterminate();
@@ -2702,8 +2704,10 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 /* %ok-for-header */
 
-#line 145 "lexer.l"
+#line 150 "lexer.l"
 
 
+
+ // más código - normalmente para manejo de errores
 
 

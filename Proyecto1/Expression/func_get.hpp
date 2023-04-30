@@ -12,7 +12,7 @@ public:
     expression *Valor;
 
     func_get(int line, int col,std::string id,expression *valor);
-    symbol ejecutar(environment *env, ast *tree) override;
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_GET_HPP

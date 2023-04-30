@@ -154,7 +154,7 @@ ast::ASTNode* ast::create_function_node(std::vector<std::string> tokens, int cur
 }
 
 void ast::writeToFile() {
-        FILE* outfile = fopen(".\\Environment\\ast.dot", "w");
+        FILE* outfile = fopen("C:\\Users\\mmvg2\\Documents\\PROGRA\\PRY1\\Proyecto1\\Environment\\ast.dot", "w");
     }
 
 // Función que genera el archivo .dot para visualizar el árbol

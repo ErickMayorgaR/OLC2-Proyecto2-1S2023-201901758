@@ -11,8 +11,8 @@ public:
     int Col;
     TipoDato Tipo;
     std::string Id;
-    void *ParamList; 
-    void *InstList; 
+    void *ParamList; //map_struct_dec
+    void *InstList; //list_instruction
     func_symbol();
     func_symbol(int,int,TipoDato,std::string,void*,void*);
 };

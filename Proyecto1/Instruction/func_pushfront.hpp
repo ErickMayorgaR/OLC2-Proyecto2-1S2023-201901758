@@ -12,7 +12,7 @@ public:
     expression *Valor;
 
     func_pushfront(int line, int col,std::string id,expression *valor);
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_PUSHFRONT_HPP

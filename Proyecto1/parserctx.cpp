@@ -20,14 +20,15 @@ ParserCtx::~ParserCtx(){
     delete loc;
     delete Parser;
 }
+
 std::string ParserCtx::Analizar(std::string entrada){
     // cargamos la entrada
     yy_scan_string(entrada .c_str(), lexer );
     // se muestra el debug
-    this->Parser->set_debug_level(true);
+    this->Parser->set_debug_level(false);
     //se analiza
     this->Parser->parse();
-
     return "";
 }
+
 }

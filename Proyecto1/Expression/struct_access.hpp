@@ -7,12 +7,11 @@ class struct_access : public expression
 public:
     int Line;
     int Col;
-    std::string StructExp;
+    expression *StructExp;
     std::string Id;
-    std::string Id2;
 
-    struct_access(int,int, std::string, std::string, std::string);
-    symbol ejecutar(environment *env, ast *tree) override;
+    struct_access(int,int, expression*, std::string);
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // STRUCT_ACCESS_HPP

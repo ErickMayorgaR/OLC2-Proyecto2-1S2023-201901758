@@ -4,40 +4,50 @@ environment::environment(environment *anterior, std::string id)
 {
     Anterior = anterior;
     Id = id;
+    Size = 0;
 }
 
-void environment::SaveVariable(symbol sym, std::string id, ast *tree)
+symbol environment::SaveVariable(int line, int col, std::string id, TipoDato tipo, ast *tree)
 {
+    Line = line;
+    Col = col;
     if (Tabla.find(id) == Tabla.end())
     {
+        symbol sym (0, 0, id, tipo, Size);
         Tabla[id] = sym;
+        Size += 1;
+        return sym;
     }
     else
     {
         //se reporta un error
         std::string msg = "Variable exist already "+id;
-        tree->addError(msg,sym.Line,sym.Col);
+        tree->addError(msg,Line,Col);
+        return Tabla[id];
     }
 }
 
-void environment::AssignVariable(symbol sym, std::string id, environment *env, ast *tree)
+symbol environment::AssignVariable(int line, int col, std::string id, TipoDato tipo, environment *env, ast *tree)
 {
+    Line = line;
+    Col = col;
     environment *currentEnv = env;
     environment *AnteriorEnv = env;
     while (currentEnv != nullptr) {
         if (currentEnv->Tabla.find(id) != currentEnv->Tabla.end()) {
+            symbol sym (0, 0, id, tipo, Size);
             currentEnv->Tabla[id] = sym;
             env = AnteriorEnv;
-            return;
+            return sym;
         }
         currentEnv = currentEnv->Anterior;
     }
 
     // Si no se encontró la variable en ningún ambiente, lanzar un error
     std::string msg = "invalid id";
-    tree->addError(msg, sym.Line, sym.Col);
+    tree->addError(msg, Line, Col);
+    return Tabla[id];
 }
-
 
 void environment::SaveStruct(int line, int col, map<std::string, TipoDato> tabla, std::string id, ast *tree)
 {
@@ -56,21 +66,46 @@ void environment::SaveStruct(int line, int col, map<std::string, TipoDato> tabla
     }
 }
 
-void environment::SaveVector(int line, int col, typedata_vector tablavector, std::string id, ast *tree)
+symbol environment::SaveVector(int line, int col, std::string id, TipoDato tipo, ast *tree)
 {
     Line = line;
-    Col = col; 
-
+    Col = col;
     if (TablaVector.find(id) == TablaVector.end())
     {
-        TablaVector[id] = tablavector;
+        symbol sym (0, 0, id, tipo, Size);
+        TablaVector[id] = sym;
+        Size += 1;
+        return sym;
     }
     else
     {
         //se reporta un error
-        std::string msg = "Vector exist already"+id;
+        std::string msg = "Variable exist already "+id;
         tree->addError(msg,Line,Col);
+        return TablaVector[id];
     }
+}
+
+symbol environment::AssignVector(int line, int col, std::string id, TipoDato tipo, environment *env, ast *tree)
+{
+    Line = line;
+    Col = col;
+    environment *currentEnv = env;
+    environment *AnteriorEnv = env;
+    while (currentEnv != nullptr) {
+        if (currentEnv->TablaVector.find(id) != currentEnv->TablaVector.end()) {
+            symbol sym (0, 0, id, tipo, Size);
+            currentEnv->TablaVector[id] = sym;
+            env = AnteriorEnv;
+            return sym;
+        }
+        currentEnv = currentEnv->Anterior;
+    }
+
+    // Si no se encontró la variable en ningún ambiente, lanzar un error
+    std::string msg = "invalid id";
+    tree->addError(msg, Line, Col);
+    return TablaVector[id];
 }
 
 void environment::SaveFunction(func_symbol funcSym, std::string id, ast *tree)
@@ -89,14 +124,14 @@ void environment::SaveFunction(func_symbol funcSym, std::string id, ast *tree)
 
 symbol environment::GetVariable(int rline, int rcol, std::string id, environment *env, ast *tree)
 {
-    symbol sym (0,0,"",NULO,nullptr);
-    environment glbEnv = *env;
+    symbol sym = *new symbol;
+    environment tmpEnv = *env;
 
     for( ; ;)
     {
-        if (glbEnv.Tabla.find(id) == glbEnv.Tabla.end())
+        if (tmpEnv.Tabla.find(id) == tmpEnv.Tabla.end())
         {
-            if(glbEnv.Anterior == nullptr)
+            if(tmpEnv.Anterior == nullptr)
             {
                 std::string msg = "invalid id";
                 tree->addError(msg,rline,rcol);
@@ -104,16 +139,16 @@ symbol environment::GetVariable(int rline, int rcol, std::string id, environment
             }
             else
             {
-                glbEnv = *glbEnv.Anterior;
+                tmpEnv = *tmpEnv.Anterior;
             }
         }
         else
         {
-            symbol tempSym (glbEnv.Tabla[id].Line,
-                            glbEnv.Tabla[id].Col,
-                            glbEnv.Tabla[id].Id,
-                            glbEnv.Tabla[id].Tipo,
-                            glbEnv.Tabla[id].Value);
+            symbol tempSym (tmpEnv.Tabla[id].Line,
+                            tmpEnv.Tabla[id].Col,
+                            tmpEnv.Tabla[id].Id,
+                            tmpEnv.Tabla[id].Tipo,
+                            tmpEnv.Tabla[id].Value);
             sym = tempSym;
             break;
         }
@@ -123,58 +158,59 @@ symbol environment::GetVariable(int rline, int rcol, std::string id, environment
     return sym;
 }
 
-map<std::string, TipoDato> environment::GetStruct(std::string id, environment *env, ast *tree)
-{
-    map<std::string, TipoDato> sym_struct;
-    environment glbEnv = *env;
+//map<std::string, TipoDato> environment::GetStruct(std::string id, environment *env, ast *tree)
+//{
+//    map<std::string, TipoDato> sym_struct;
+//    environment tmpEnv = *env;
 
-    for( ; ;)
-    {
-        if (glbEnv.TablaStructs.find(id) == glbEnv.TablaStructs.end())
-        {
-            if(glbEnv.Anterior == nullptr)
-            {
-                break;
-            }
-            else
-            {
-                glbEnv = *glbEnv.Anterior;
-            }
-        }
-        else
-        {
-            sym_struct = glbEnv.TablaStructs[id];
-            break;
-        }
+//    for( ; ;)
+//    {
+//        if (tmpEnv.TablaStructs.find(id) == tmpEnv.TablaStructs.end())
+//        {
+//            if(tmpEnv.Anterior == nullptr)
+//            {
+//                break;
+//            }
+//            else
+//            {
+//                tmpEnv = *tmpEnv.Anterior;
+//            }
+//        }
+//        else
+//        {
+//            sym_struct = tmpEnv.TablaStructs[id];
+//            break;
+//        }
 
-    }
-    return sym_struct;
-}
+//    }
+//    return sym_struct;
+//}
 
-func_symbol environment::GetFunction(std::string id, environment *env, ast *tree)
-{
-    func_symbol sym_func;
-    environment glbEnv = *env;
+//func_symbol environment::GetFunc(std::string id, environment *env, ast *tree)
+//{
+//    func_symbol sym_func;
+//    environment tmpEnv = *env;
 
-    for( ; ;)
-    {
-        if (glbEnv.TablaFunctions.find(id) == glbEnv.TablaFunctions.end())
-        {
-            if(glbEnv.Anterior == nullptr)
-            {
-                break;
-            }
-            else
-            {
-                glbEnv = *glbEnv.Anterior;
-            }
-        }
-        else
-        {
-            sym_func = glbEnv.TablaFunctions[id];
-            break;
-        }
+//    for( ; ;)
+//    {
+//        if (tmpEnv.TablaFunctions.find(id) == tmpEnv.TablaFunctions.end())
+//        {
+//            if(tmpEnv.Anterior == nullptr)
+//            {
+//                break;
+//            }
+//            else
+//            {
+//                tmpEnv = *tmpEnv.Anterior;
+//            }
+//        }
+//        else
+//        {
+//            sym_func = tmpEnv.TablaFunctions[id];
+//            break;
+//        }
 
-    }
-    return sym_func;
-}
+//    }
+//    return sym_func;
+//}
+

@@ -11,7 +11,7 @@ public:
     std::string Id;
 
     func_mean(int line, int col, std::string id);
-    symbol ejecutar(environment *env, ast *tree) override;
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // FUNC_MEAN_HPP

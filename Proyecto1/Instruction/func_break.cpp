@@ -7,21 +7,16 @@ func_break::func_break(int line, int col)
 
 }
 
-void func_break::ejecutar(environment *env, ast *tree)
+void func_break::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    environment *current_env = env;
     bool found_loop = false;
 
-    while(current_env != nullptr)
+    if(env->Inside_While)
     {
-        if(current_env->Inside_While)
-        {
-            found_loop = true;
-            break;
-        }
-
-        current_env = current_env->Anterior;
+        found_loop = true;
+        gen->AddGoto(tree->BreakLabel);
     }
+
 
     if(!found_loop)
     {
@@ -30,6 +25,6 @@ void func_break::ejecutar(environment *env, ast *tree)
         tree->addError(msg, Line, Col);
         return;
     }
-    current_env->Break_flag = true;
+    env->Break_flag = true;
 }
 

@@ -10,85 +10,167 @@ assign_vector::assign_vector(int line, int col,std::string id, expression *index
 }
 
 
-void assign_vector::ejecutar(environment *env, ast *tree)
+void assign_vector::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym_data (Line,Col,"",NULO,nullptr);
-    //Se ejecutan ambos datos
-    symbol val_index = Index->ejecutar(env, tree); //Se obtiene el indice 
-    symbol data_after = Idafter->ejecutar(env, tree); //El valor por el que se quiere cambiar
+    value val_index;
+    value data_after;
+
+    value val;
 
     //Se obtienen el vector 
     symbol symVec = env->GetVariable(Line, Col, Id, env, tree);
+    val_index = Index->ejecutar(env,tree,gen);
+    std::string valor_index = tree->Index;
+
+    // vec[1] = vec[0];
+    // vec[i] = vec[j]; tree -> index = 7 
 
     //validando tipo array
     if(symVec.Tipo == VECTOR && val_index.Tipo == INTEGER)
     {
-        QVector<symbol> *Vec = (QVector<symbol>*)symVec.Value;
-        QVector<symbol> result = *Vec;
-        int index1 = *static_cast<int*>(val_index.Value);
-        if (index1 < 0 || index1 >= result.size()) {
-            // reportar un error
-            std::string msg = "index out of range.";
-            tree->addError(msg, Line, Col);
-        } else {
-            int *val = (int *)val_index.Value;
+        tree->InsideAssign = true;
+        auto it = env->TablaVector.find(Id);
+        int index = std::distance(env->TablaVector.begin(), it);
+        std::string vec_val = tree->StackVector.at(index);
+        int vec_size = tree->SizeVector.at(index);
 
-            if(result[0].Tipo == data_after.Tipo){
-                switch (data_after.Tipo)
-                {
-                case STRING:
-                    sym_data = symbol(Line,Col,"",STRING,new std::string(*static_cast<std::string*>(data_after.Value)));
-                    break;
-                case INTEGER:
-                    sym_data = symbol(Line,Col,"",INTEGER,new int(*static_cast<int*>(data_after.Value)));
-                    break;
-                case FLOAT:
-                    sym_data = symbol(Line,Col,"",FLOAT,new float(*static_cast<float*>(data_after.Value)));
-                    break;
-                default:
-                    break;
-                }
-                result[index1] = sym_data;
-                symVec.Value = new QVector<symbol>(result);
-                env->AssignVariable(symVec, Id, env, tree);
-                
-                std::string data = "[";
-                for (int i = 0; i < result.size(); i++) {
-                    std::string value = "";
-                    switch (result[i].Tipo) {
-                    case STRING:
-                        value = *static_cast<std::string*>(result[i].Value);
-                        break;
-                    case INTEGER:
-                        value = std::to_string(*static_cast<int*>(result[i].Value));
-                        break;
-                    case FLOAT:
-                        value = std::to_string(*static_cast<float*>(result[i].Value));
-                        break;
-                    default:
-                        value = "NULL";
-                        break;  
+        data_after = Idafter->ejecutar(env,tree,gen);
+
+        gen->AddAssign(vec_val + "[(int) " + val_index.Value + "]",data_after.Value);
+
+        symbol newVar = env->AssignVariable(Line, Col, Id, VECTOR, env, tree);
+        symbol Var = env->AssignVector(Line, Col, Id, VECTOR, env, tree);
+
+
+        std::string temp_str = tree->SaveVector.at(index);
+
+        if(data_after.Tipo == VECTOR){
+            /* // Definir la posición del elemento a eliminar
+            int pos_after = std::stoi(tree->IndexAccess);
+            int pos_before = std::stoi(valor_index);
+
+            // Obtener la posición de la primera coma a eliminar
+            int start_pos;
+            if (pos_before == 0) {
+                start_pos = temp_str.find('[') + 1;
+            } else {
+                int num_comas = 0;
+                int while_i = 0;
+                while(num_comas < pos_before){
+                    if (temp_str[while_i] == ',') {
+                        num_comas++;
                     }
-                    data += value;
-                    if (i != result.size() - 1) {
-                        data += ",";
-                    }
+                    while_i++;
                 }
-                data += "]";
-                tree->changeSymbol(Id,data);
+                start_pos = while_i;
             }
-            else{
-                //se reporta un error
-                std::string msg = "incompatible types.";
-                tree->addError(msg,Line,Col);
+
+
+            // Obtener la posición de la segunda coma a eliminar
+            int num_comas = 0;
+            int while_i_end = start_pos;
+                while(num_comas < 1){
+                    if (temp_str[while_i_end] == ',') {
+                        num_comas++;
+                    }
+                    while_i_end++;
+                }
+            int end_pos = while_i_end-1;
+
+            std::string data_temp;
+
+            for(int i = 0; i < end_pos; i++){
+                data_temp += temp_str[start_pos + i];
             }
+
+            // Obtener la posición de la primera coma a eliminar
+            if (pos_after == 0) {
+                start_pos = temp_str.find('[') + 1;
+            } else {
+                int num_comas = 0;
+                int while_i = 0;
+                while(num_comas < pos_after){
+                    if (temp_str[while_i] == ',') {
+                        num_comas++;
+                    }
+                    while_i++;
+                }
+                start_pos = while_i;
+            }
+
+
+            // Obtener la posición de la segunda coma a eliminar
+            num_comas = 0;
+            while_i_end = start_pos;
+                while(num_comas < 1){
+                    if (temp_str[while_i_end] == ',') {
+                        num_comas++;
+                    }
+                    while_i_end++;
+                }
+            end_pos = while_i_end-1;
+
+            // Si no se encontró la segunda coma, significa que estamos eliminando el último elemento
+            if (end_pos == std::string::npos) {
+                end_pos = temp_str.find(']', start_pos + 1);
+            }
+
+            // Eliminar el substring que se encuentra entre las dos posiciones obtenidas
+            temp_str.erase(start_pos, end_pos - start_pos + 1);
+            temp_str.insert(start_pos,data_temp);
+            tree->SaveVector.at(index) = temp_str; */
+            std::string data = tree->SaveVector.at(index);
+            tree->changeSymbol(Id,data); 
+        } else{
+            /* int pos_after = std::stoi(valor_index);
+
+            // Obtener la posición de la primera coma a eliminar
+            int start_pos;
+            if (pos_after == 0) {
+                start_pos = temp_str.find('[') + 1;
+            } else {
+                int num_comas = 0;
+                int while_i = 0;
+                while(num_comas < pos_after){
+                    if (temp_str[while_i] == ',') {
+                        num_comas++;
+                    }
+                    while_i++;
+                }
+                start_pos = while_i;
+
+            }
+
+
+            // Obtener la posición de la segunda coma a eliminar
+            int num_comas = 0;
+            int while_i_end = start_pos;
+                while(num_comas < 1){
+                    if (temp_str[while_i_end] == ',') {
+                        num_comas++;
+                    }
+                    while_i_end++;
+                }
+            int end_pos = while_i_end-1;
+
+            // Si no se encontró la segunda coma, significa que estamos eliminando el último elemento
+            if (end_pos == std::string::npos) {
+                end_pos = temp_str.find(']', start_pos + 1);
+            }
+
+            // Eliminar el substring que se encuentra entre las dos posiciones obtenidas
+            temp_str.erase(start_pos, end_pos - start_pos + 1);
+            temp_str.insert(start_pos,data_after.Value);
+            tree->SaveVector.at(index) = temp_str; */
+            std::string data = tree->SaveVector.at(index);
+            tree->changeSymbol(Id,data);
         }
+        tree->InsideAssign = false; 
     }
-
     else
     {
         //se reporta un error
         std::string msg = "invalid type for assign.";
         tree->addError(msg,Line,Col);
-    }
+    } 
 }

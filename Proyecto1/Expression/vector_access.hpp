@@ -7,10 +7,10 @@ class vector_access : public expression
 public:
     int Line;
     int Col;
-    expression *Vector;
+    expression *Array;
     expression *Index;
     vector_access(int,int, expression*, expression*);
-    symbol ejecutar(environment *env, ast *tree) override;
+    value ejecutar(environment *env, ast *tree, generator_code *gen) override;
 };
 
 #endif // VECTOR_ACCESS_HPP

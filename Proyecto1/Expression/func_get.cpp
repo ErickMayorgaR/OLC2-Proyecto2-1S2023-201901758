@@ -8,29 +8,26 @@ func_get::func_get(int line, int col, std::string id, expression *valor)
     Valor = valor;
 }
 
-symbol func_get::ejecutar(environment *env, ast *tree)
+value func_get::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym (Line,Col,"",NULO,nullptr);
-    symbol sym_data = Valor->ejecutar(env,tree);
-    symbol vec_sym = env->GetVariable(Line, Col, Id, env, tree);
-    QVector<symbol> *Vec = (QVector<symbol>*)vec_sym.Value;
-    QVector<symbol>& result = *Vec;
- 
-    if(sym_data.Tipo == INTEGER){
-        int index = *static_cast<int*>(sym_data.Value);
-        if (index < 0 || index >= result.size()) {
-            // reportar un error
-            std::string msg = "index out of range.";
-            tree->addError(msg, Line, Col);
-        } else {
-            sym = symbol(Line, Col, "", result.at(index).Tipo, result.at(index).Value);
-        }
+    value val;
+    auto it = env->TablaVector.find(Id);
+    int index = std::distance(env->TablaVector.begin(), it);
+    std::string vec_val = tree->StackVector.at(index);
+    int vec_size = tree->SizeVector.at(index);
+
+    value val_index = Valor->ejecutar(env,tree,gen);
+    
+    std::string temp = gen->newTemp();
+    gen->AddAssign(temp,vec_val + "[(int) " + val_index.Value + "]");
+
+    if(!tree->InsideAssign){
+        val = value(temp, true, INTEGER);
+    } else{
+        val = value(temp, true, VECTOR);
     }
-    else{
-        // report an error
-            std::string msg = "invalid type for get.";
-            tree->addError(msg, Line, Col);
-    }
-    return sym;
+
+    tree->IndexAccess = tree->Index;
+    return val;
 }
 

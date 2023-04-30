@@ -8,7 +8,7 @@ class list_instruction : public instruction
 public:
     QVector<instruction*> ListInst;
     list_instruction();
-    void ejecutar(environment *env, ast *tree) override;
+    void ejecutar(environment *env, ast *tree, generator_code *gen) override;
     void newInst(instruction *inst);
 };
 

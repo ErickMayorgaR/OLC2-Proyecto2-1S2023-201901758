@@ -22,6 +22,18 @@ public:
     std::string GraphOut;
     bool ElseIfFlag = false;
     bool IfReturn = false;
+    std::string ElseIfLabel;
+    std::string ContinueLabel;
+    std::string BreakLabel;
+    std::string Index;
+    std::string IndexAccess;
+    std::string Vector;
+    int VectorSize;
+    std::vector<std::string> StackVector;
+    std::vector<std::string> SaveVector;
+    bool InsideAssign = false;
+    bool InsideRemove = false;
+    std::vector<int> SizeVector;
     QVector<symbol> ListReturn;
     map<std::string, std::string> nodes;
     int nodeCount = 2;

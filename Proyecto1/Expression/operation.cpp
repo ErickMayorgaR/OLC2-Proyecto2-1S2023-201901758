@@ -1,5 +1,6 @@
 #include "operation.hpp"
-#include "Environment/environment.hpp"
+#include <string>
+
 operation::operation(int line, int col, expression *op_izq, expression *op_der, std::string operador){
     Line = line;
     Col = col;
@@ -8,11 +9,9 @@ operation::operation(int line, int col, expression *op_izq, expression *op_der, 
     Operator = operador;
 }
 
-symbol operation::ejecutar(environment *env, ast *tree)
+value operation::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    symbol sym (Line,Col,"",NULO,nullptr);
-    symbol op1 = Op_izq->ejecutar(env, tree);
-    symbol op2 = Op_der->ejecutar(env, tree);
+    value val ("",false,NULO);
 
     //matriz dominante: esta matriz retorna el tipo dominante entre dos operandos
     TipoDato Matrz[4][4] = {
@@ -22,33 +21,25 @@ symbol operation::ejecutar(environment *env, ast *tree)
         {INTEGER, FLOAT, STRING, INTEGER}
     };
 
-    TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+    std::string newTemp = gen->newTemp();
 /*-----------------------------------------------------------------------------------------------------------------------
                                           OPERADORES ALGEBRAICOS
 -----------------------------------------------------------------------------------------------------------------------*/
     if(Operator == "+")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 + *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
+            gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            val = value(newTemp, true, Dominante);
+            return val;
         }
-
-        else if(Dominante == STRING)
-        {
-            std::string *val1 = (std::string *)op1.Value;
-            std::string *val2 = (std::string *)op2.Value;
-            std::string result = *val1 + *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
-        }
-
-        else if(Dominante == FLOAT){
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            float result = *val1 + *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
+        else if(Dominante == STRING){
+            gen->AddExpression(newTemp,op1.Value,op2.Value,"+");
+            val = value(newTemp, true, Dominante);
+            return val;
         }
         else
         {
@@ -59,19 +50,21 @@ symbol operation::ejecutar(environment *env, ast *tree)
     }
     else if(Operator == "-")
     {
-        if(Dominante == INTEGER)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+        if(Dominante == INTEGER || Dominante == FLOAT)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 - *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            float result = *val1 - *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
+            gen->AddExpression(newTemp,op1.Value,op2.Value,"-");
+            val = value(newTemp, true, Dominante);
+
+            if(tree->InsideRemove){
+                int val_op1 = std::stoi(op1.Value);
+                int val_op2 = std::stoi(op2.Value);
+                int result = val_op1 - val_op2;
+                tree->Index = std::to_string(result);
+            }
+            return val;
         }
         else
         {
@@ -82,19 +75,14 @@ symbol operation::ejecutar(environment *env, ast *tree)
     }
     else if(Operator == "*")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 * *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            float result = *val1 * *val2;
-            sym = symbol(Line,Col,"",Dominante,&result);
+            gen->AddExpression(newTemp,op1.Value,op2.Value,"*");
+            val = value(newTemp, true, Dominante);
+            return val;
         }
         else
         {
@@ -105,30 +93,16 @@ symbol operation::ejecutar(environment *env, ast *tree)
     }
     else if(Operator == "/")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            if(*val2 != 0)
+            if(op2.Value != "0")
             {
-                int result = *val1 / *val2;
-                sym = symbol(Line,Col,"",Dominante,&result);
-            }
-            else
-            {
-                //se reporta un error
-                std::string msg = "can not divide by zero";
-                tree->addError(msg,Line,Col);
-            }
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            if(*val2 != 0)
-            {
-                float result = *val1 / *val2;
-                sym = symbol(Line,Col,"",Dominante,&result);
+                gen->AddExpression(newTemp,op1.Value,op2.Value,"/");
+                val = value(newTemp, true, Dominante);
+                return val;
             }
             else
             {
@@ -144,49 +118,59 @@ symbol operation::ejecutar(environment *env, ast *tree)
             tree->addError(msg,Line,Col);
         }
     }
-     else if(Operator == "%")
+    else if (Operator == "%")
     {
-        if(Dominante == INTEGER)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+
+        if (Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            if(*val2 != 0)
+            if (op1.FlagTemp)
             {
-                int result = *val1 % *val2;
-                sym = symbol(Line,Col,"",Dominante,&result);
+                std::string newTempInt = gen->newTempInt();
+                std::string TargetInt = gen->newTempInt();
+                gen->AddFloat2Int(op1.Value,newTempInt);
+                if (op2.Value != "0")
+                {
+                    gen->AddExpression(TargetInt, newTempInt, op2.Value, "%");
+                    val = value(TargetInt, true, Dominante);
+                    return val;
+                }
+                else
+                {
+                    // Se reporta un error
+                    std::string msg = "can not obtain module of zero";
+                    tree->addError(msg, Line, Col);
+                }
             }
             else
             {
-                //se reporta un error
-                std::string msg = "can not obtain module of zero";
-                tree->addError(msg,Line,Col);
+                gen->AddExpression(newTemp, op1.Value, op2.Value, "%");
+                val = value(newTemp, true, Dominante);
+                return val;
             }
         }
-         
         else
         {
-            //se reporta un error
+            // Se reporta un error
             std::string msg = "invalid combination, incorrect type for module";
-            tree->addError(msg,Line,Col);
+            tree->addError(msg, Line, Col);
         }
-    } 
+    }
 /*-----------------------------------------------------------------------------------------------------------------------
                                           OPERADOR ++
 -----------------------------------------------------------------------------------------------------------------------*/
-     else if(Operator == "++A")
+     else if(Operator == "++")
     {
-        if(Dominante == INTEGER)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+        
+        if(Dominante == INTEGER || Dominante == FLOAT)
         {
-            int *val1 = (int *)op1.Value;
-            int result = (*val1)++;
-            sym = symbol(Line,Col,"",Dominante,&result);  
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float result = (*val1)++;
-            sym = symbol(Line,Col,"",Dominante,&result); 
-            
+            gen->AddExpression(newTemp,op1.Value,"1","+");
+            val = value(newTemp, true, Dominante); 
         }
         else
         {
@@ -195,120 +179,53 @@ symbol operation::ejecutar(environment *env, ast *tree)
             tree->addError(msg,Line,Col);
         }
     }  
-
-    else if(Operator == "++B")
-    {
-        if(Dominante == INTEGER)
-        {
-            int *val1 = (int *)op1.Value;
-            *val1 = (*val1) + 1;
-            int result = (*val1);
-            sym = symbol(Line,Col,"",Dominante,&result);  
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            *val1 = (*val1) + 1.0;
-            float result = (*val1);
-            sym = symbol(Line,Col,"",Dominante,&result); 
-            
-        }
-        else
-        {
-            //se reporta un error
-            std::string msg = "invalid combination, incorrect type for ++inc";
-            tree->addError(msg,Line,Col);
-        }
-    }  
-/*-----------------------------------------------------------------------------------------------------------------------
-                                          NEGACION UNARIA
------------------------------------------------------------------------------------------------------------------------*/
-    else if(Operator == "NEG")
-    {
-        if(Dominante == INTEGER)
-        {
-            int *val1 = (int *)op1.Value;
-            int result = -(*val1);
-            sym = symbol(Line,Col,"",Dominante,&result);  
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float result = -(*val1);
-            sym = symbol(Line,Col,"",Dominante,&result); 
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool result = -(*val1);
-            sym = symbol(Line,Col,"",Dominante,&result); 
-        }
-        else
-        {
-            //se reporta un error
-            std::string msg = "invalid combination, incorrect type for negation";
-            tree->addError(msg,Line,Col);
-        }
-    } 
 /*-----------------------------------------------------------------------------------------------------------------------
                                           OPERADORES LOGICOS
 -----------------------------------------------------------------------------------------------------------------------*/
-
-    else if(Operator == "&&")
+else if(Operator == "&&")
     {
-        if(op1.Tipo == BOOL)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        //se agregan etiquetas verdaderas de op1
+        for(int i=0; i < op1.TrueLabel.size(); i++)
         {
-            if(op2.Tipo == BOOL){
-                bool *val1 = (bool *)op1.Value;
-                bool *val2 = (bool *)op2.Value;
-                bool result = *val1 && *val2;
-                sym = symbol(Line,Col,"",BOOL,&result);
-            }
-            else
-            {
-                //se reporta un error
-                std::string msg = "invalid type, type has to be bool";
-                tree->addError(msg,Line,Col);
-            }
+            gen->AddLabel(op1.TrueLabel[i]);
         }
-        else
-        {
-            //se reporta un error
-            std::string msg = "invalid type, type has to be bool";
-            tree->addError(msg,Line,Col);
-        }
-    } 
+        value op2 = Op_der->ejecutar(env, tree, gen);
+
+        val = value("", false, BOOL);
+
+        val.TrueLabel += op2.TrueLabel;
+        val.FalseLabel += op1.FalseLabel;
+        val.FalseLabel += op2.FalseLabel;
+
+        return val;
+    }
     else if(Operator == "||")
     {
-        if(op1.Tipo == BOOL)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        //se agregan etiquetas falsas de op1
+        for(int i=0; i < op1.FalseLabel.size(); i++)
         {
-            if(op2.Tipo == BOOL){
-                bool *val1 = (bool *)op1.Value;
-                bool *val2 = (bool *)op2.Value;
-                bool result = *val1 || *val2;
-                sym = symbol(Line,Col,"",BOOL,&result);
-            }
-            else
-            {
-                //se reporta un error
-                std::string msg = "invalid type, type has to be bool";
-                tree->addError(msg,Line,Col);
-            }
+            gen->AddLabel(op1.FalseLabel[i]);
         }
-        else
-        {
-            //se reporta un error
-            std::string msg = "invalid type, type has to be bool";
-            tree->addError(msg,Line,Col);
-        }
-    } 
+        value op2 = Op_der->ejecutar(env, tree, gen);
+
+        val = value("", false, BOOL);
+
+        val.TrueLabel += op1.TrueLabel;
+        val.TrueLabel += op2.TrueLabel;
+        val.FalseLabel += op2.FalseLabel;
+        return val;
+    }
     else if(Operator == "!")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
         if(op1.Tipo == BOOL)
         {
-            bool *val1 = (bool *)op1.Value;
-            bool result = !(*val1) ;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            val = value("", false, BOOL);
+            val.TrueLabel += op1.FalseLabel;
+            val.FalseLabel += op1.TrueLabel;
+            return val;
         }
         else
         {
@@ -316,39 +233,29 @@ symbol operation::ejecutar(environment *env, ast *tree)
             std::string msg = "invalid type, type has to be bool";
             tree->addError(msg,Line,Col);
         }
-    } 
+    }
 /*-----------------------------------------------------------------------------------------------------------------------
                                 OPERADORES DE COMPARACION - IGUALDAD Y DESIGUALDAD
 -----------------------------------------------------------------------------------------------------------------------*/
-    else if(Operator == "==")
+else if(Operator == "==")
     {
-        if(Dominante == INTEGER)
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+        if(Dominante == INTEGER || Dominante == FLOAT)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 == *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == STRING)
-        {
-            std::string *val1 = (std::string *)op1.Value;
-            std::string *val2 = (std::string *)op2.Value;
-            int result = *val1 == *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 == *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 == *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, "==", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
         }
         else
         {
@@ -359,33 +266,23 @@ symbol operation::ejecutar(environment *env, ast *tree)
     }
     else if(Operator == "!=")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 != *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == STRING)
-        {
-            std::string *val1 = (std::string *)op1.Value;
-            std::string *val2 = (std::string *)op2.Value;
-            int result = *val1 != *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 != *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 != *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, "!=", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
         }
         else
         {
@@ -397,126 +294,113 @@ symbol operation::ejecutar(environment *env, ast *tree)
 /*-----------------------------------------------------------------------------------------------------------------------
                                 OPERADORES DE COMPARACION - RELACIONALES
 -----------------------------------------------------------------------------------------------------------------------*/
-    else if(Operator == ">")
-    {
-        if(Dominante == INTEGER)
-        {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 > *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 > *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 > *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }       
-        else
-        {
-            //se reporta un error
-            std::string msg = "invalid combination, incorrect type for >";
-            tree->addError(msg,Line,Col);
-        }     
-    }
     else if(Operator == "<")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 < *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, "<", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
         }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 < *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 < *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }       
         else
         {
             //se reporta un error
             std::string msg = "invalid combination, incorrect type for <";
             tree->addError(msg,Line,Col);
-        }      
+        }
+    }
+    else if(Operator == ">")
+    {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
+        if(Dominante == INTEGER)
+        {
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, ">", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
+        }
+        else
+        {
+            //se reporta un error
+            std::string msg = "invalid combination, incorrect type for >";
+            tree->addError(msg,Line,Col);
+        }
     }
     else if(Operator == ">=")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 >= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, ">=", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
         }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 >= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 >= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }       
         else
         {
             //se reporta un error
             std::string msg = "invalid combination, incorrect type for >=";
             tree->addError(msg,Line,Col);
-        }        
+        }
     }
     else if(Operator == "<=")
     {
+        value op1 = Op_izq->ejecutar(env, tree, gen);
+        value op2 = Op_der->ejecutar(env, tree, gen);
+        TipoDato Dominante = Matrz[op1.Tipo][op2.Tipo];
         if(Dominante == INTEGER)
         {
-            int *val1 = (int *)op1.Value;
-            int *val2 = (int *)op2.Value;
-            int result = *val1 <= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
+            std::string trueLabel = gen->newLabel();
+            std::string falseLabel = gen->newLabel();
+
+            gen->AddIf(op1.Value,op2.Value, "<=", trueLabel);
+            gen->AddGoto(falseLabel);
+
+            val = value("", false, BOOL);
+
+            val.TrueLabel.append(trueLabel);
+            val.FalseLabel.append(falseLabel);
+
+            return val;
         }
-        else if(Dominante == FLOAT)
-        {
-            float *val1 = (float *)op1.Value;
-            float *val2 = (float *)op2.Value;
-            int result = *val1 <= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }
-        else if(Dominante == BOOL)
-        {
-            bool *val1 = (bool *)op1.Value;
-            bool *val2 = (bool *)op2.Value;
-            int result = *val1 <= *val2;
-            sym = symbol(Line,Col,"",BOOL,&result);
-        }       
         else
         {
             //se reporta un error
             std::string msg = "invalid combination, incorrect type for <=";
             tree->addError(msg,Line,Col);
-        }       
-    }
-
-    return sym;
+        }
+    }    
+    return val;
 }

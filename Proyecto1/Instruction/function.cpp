@@ -10,8 +10,7 @@ function::function(int line, int col, TipoDato tipo, std::string id, map_struct_
     InstList = instlist;
 }
 
-void function::ejecutar(environment *env, ast *tree)
+void function::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    func_symbol funcSym = func_symbol(Line, Col, Tipo, Id, ParamList, InstList);
-    env->SaveFunction(funcSym, Id, tree);
+    std::cout << "execute\n";
 }

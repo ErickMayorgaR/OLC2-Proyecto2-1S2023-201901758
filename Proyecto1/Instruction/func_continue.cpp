@@ -7,21 +7,16 @@ func_continue::func_continue(int line, int col)
 
 }
 
-void func_continue::ejecutar(environment *env, ast *tree)
+void func_continue::ejecutar(environment *env, ast *tree, generator_code *gen)
 {
-    environment *current_env = env;
     bool found_loop = false;
 
-    while(current_env != nullptr)
+    if(env->Inside_For || env->Inside_While)
     {
-        if(current_env->Inside_For || current_env->Inside_While)
-        {
-            found_loop = true;
-            break;
-        }
-
-        current_env = current_env->Anterior;
+        found_loop = true;
+        gen->AddGoto(tree->ContinueLabel);
     }
+   
 
     if(!found_loop)
     {
@@ -31,7 +26,7 @@ void func_continue::ejecutar(environment *env, ast *tree)
         return;
     }
 
-    current_env->Continue_flag = true;
+    env->Continue_flag = true;
 }
 
 
